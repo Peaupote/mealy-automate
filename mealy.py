@@ -28,3 +28,16 @@ def inverse(machine):
             in_ret[p][y] = q
             out_ret[p][y] = x
     return in_ret, out_ret
+
+def minimize(machine):
+    # TODO
+    return machine
+
+def md_reduction(machine):
+    prev, current = None, machine
+    while prev != current:
+        prev, current = current, minimize(current)
+        if current == prev: # automaton is minimal
+            prev = dual(prev)
+            current = minimize(prev)
+    return current
