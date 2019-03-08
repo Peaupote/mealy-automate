@@ -137,7 +137,7 @@ def show(machine):
         for x in range(len(in_matrix[0])):
             key = str(in_matrix[p][x])
             if key in edges:
-                edges[key] = edges[key] + " -- " + \
+                edges[key] = edges[key] + "\n" + \
                     str(x) + " | " + str(out_matrix[p][x])
             else:
                 edges[key] = str(x) + " | " + str(out_matrix[p][x])
