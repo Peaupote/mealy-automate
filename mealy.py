@@ -1,3 +1,6 @@
+from graphviz import Digraph
+
+
 def execute(entry, state, machine):
     in_matrix, out_matrix = machine
     out = []
@@ -105,3 +108,21 @@ def md_reduction(machine):
             prev = dual(prev)
             current = minimize(prev)
     return current
+
+
+def show(machine):
+    in_matrix, out_matrix = machine
+
+    graph = Digraph(comment="Mealy Machine")
+
+    for i in range(len(in_matrix)):
+        graph.node(str(i))
+
+    graph.attr('node', shape='circle')
+
+    for p in range(len(in_matrix)):
+        for x in range(len(in_matrix[0])):
+            l = str(x) + " | " + str(out_matrix[p][x])
+            graph.edge(str(p), str(in_matrix[p][x]), label=l)
+
+    graph.view()
