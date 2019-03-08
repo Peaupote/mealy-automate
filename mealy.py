@@ -114,6 +114,7 @@ def show(machine):
     in_matrix, out_matrix = machine
 
     graph = Digraph(comment="Mealy Machine")
+    graph.attr(rankdir='LR')
 
     for i in range(len(in_matrix)):
         graph.node(str(i))
@@ -121,8 +122,15 @@ def show(machine):
     graph.attr('node', shape='circle')
 
     for p in range(len(in_matrix)):
+        edges = {}
         for x in range(len(in_matrix[0])):
-            l = str(x) + " | " + str(out_matrix[p][x])
-            graph.edge(str(p), str(in_matrix[p][x]), label=l)
+            key = str(in_matrix[p][x])
+            if key in edges:
+                edges[key] = edges[key] + " -- " + \
+                    str(x) + " | " + str(out_matrix[p][x])
+            else:
+                edges[key] = str(x) + " | " + str(out_matrix[p][x])
+        for key in edges:
+            graph.edge(str(p), key, label=edges[key])
 
     graph.view()
