@@ -1,3 +1,4 @@
+
 from graphviz import Digraph
 
 
@@ -45,59 +46,69 @@ def bireversible(machine):
     return inv and dual(inv)
 
 
-def minimize(machine):
-    in_matrix, out_matrix = machine
-    delta = list(in_matrix)
-    rho = list(out_matrix)
-    stop = False
-    replace = []
-    keep = [i for i in range(len(delta))]
-    while not stop:
-        stop = True
-        # On cherche les pairs de sommets à fusionner
-        for p1 in range(len(delta)):
+def init_nerode_class(rho):
+    compteur = 0
+    cl = [None for i in range(len(rho))]
+    for p1 in range(len(rho)):
+        if cl[p1] == None:
+            cl[p1] = compteur
+            compteur += 1
+            for p2 in range(p1+1, len(rho)):
+                if cl[p2] == None:
+                    equivalent = True
+                    for x in range(len(rho[0])):
+                        if rho[p1][x] != rho[p2][x]:
+                            equivalent = False
+                    if equivalent:
+                        cl[p2] = cl[p1]
+    return cl
+
+
+def next_nerode_class(delta, cl):
+    compteur = 0
+    new_cl = [None for i in range(len(delta))]
+    for p1 in range(len(delta)):
+        if new_cl[p1] == None:
+            new_cl[p1] = compteur
+            compteur += 1
             for p2 in range(p1+1, len(delta)):
-                fusion = True
-                for x in range(len(delta[0])):
-                    if (delta[p1][x] != delta[p2][x] or
-                            rho[p1][x] != rho[p2][x]):
-                        fusion = False
-                        break
-                # Si toutes les liaisons sont identiques, on fusionnent
-                if fusion:
-                    stop = False
-                    replace.append((p1, p2))
-
-        # On les fusionnent effectivement
-        for p1, p2 in replace:
-            keep.remove(p2)
-            # On remplace les arcs arrivant sur p2 par des arcs arrivant sur p1
-            for p in range(len(delta)):
-                for x in range(len(delta[0])):
-                    if delta[p][x] == p2:
-                        delta[p][x] = p1
-
-        # On réindice
-        new_delta = []
-        new_rho = []
-        for p in keep:
-            new_delta.append(delta[p])
-            new_rho.append(rho[p])
-        delta = new_delta
-        rho = new_rho
-
-        for i in range(len(keep)):
-            if i != keep[i]:
-                for p in range(len(delta)):
+                if new_cl[p2] == None and cl[p1] == cl[p2]:
+                    equivalent = True
                     for x in range(len(delta[0])):
-                        if delta[p][x] == keep[i]:
-                            delta[p][x] = i
+                        if cl[delta[p1][x]] != cl[delta[p2][x]]:
+                            equivalent = False
+                    if equivalent:
+                        new_cl[p2] = new_cl[p1]
+    return new_cl
 
-        # On réinitilise keep et replace
-        keep = [i for i in range(len(delta))]
-        replace = []
 
-    return delta, rho
+def fusion(machine, cl):
+    delta, rho = machine
+    new_delta, new_rho = [], []
+
+    for p in range(len(delta)):
+        if p == cl[p]:
+            new_delta.append(list(delta[p]))
+            new_rho.append(list(rho[p]))
+
+    for p in range(len(new_delta)):
+        for x in range(len(new_delta[0])):
+            new_delta[p][x] = cl[delta[p][x]]
+
+    return new_delta, new_rho
+
+
+def minimize(machine):
+    delta, rho = machine
+    stop = False
+    cl = init_nerode_class(rho)
+    while not stop:
+        new_cl = next_nerode_class(delta, cl)
+        if new_cl == cl:
+            stop = True
+        else:
+            cl = new_cl
+    return fusion(machine, cl)
 
 
 def md_reduction(machine):
