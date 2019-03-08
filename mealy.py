@@ -47,12 +47,10 @@ def bireversible(machine):
 
 
 def init_nerode_class(rho):
-    compteur = 0
     cl = [None for i in range(len(rho))]
     for p1 in range(len(rho)):
         if cl[p1] == None:
-            cl[p1] = compteur
-            compteur += 1
+            cl[p1] = p1
             for p2 in range(p1+1, len(rho)):
                 if cl[p2] == None:
                     equivalent = True
@@ -65,12 +63,10 @@ def init_nerode_class(rho):
 
 
 def next_nerode_class(delta, cl):
-    compteur = 0
     new_cl = [None for i in range(len(delta))]
     for p1 in range(len(delta)):
         if new_cl[p1] == None:
-            new_cl[p1] = compteur
-            compteur += 1
+            new_cl[p1] = p1
             for p2 in range(p1+1, len(delta)):
                 if new_cl[p2] == None and cl[p1] == cl[p2]:
                     equivalent = True
@@ -91,9 +87,16 @@ def fusion(machine, cl):
             new_delta.append(list(delta[p]))
             new_rho.append(list(rho[p]))
 
+    new_id = {}
+    compteur = 0
+    for i in range(len(delta)):
+        if not cl[i] in new_id:
+            new_id[cl[i]] = compteur
+            compteur += 1
+
     for p in range(len(new_delta)):
         for x in range(len(new_delta[0])):
-            new_delta[p][x] = cl[delta[p][x]]
+            new_delta[p][x] = new_id[cl[delta[p][x]]]
 
     return new_delta, new_rho
 
