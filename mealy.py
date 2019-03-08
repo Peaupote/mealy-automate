@@ -8,26 +8,30 @@ def execute(entry, state, machine):
 
 def dual(machine):
     in_matrix, out_matrix = machine
-    in_ret = [[None for i in range(len(in_matrix))] for j in range(len(out_matrix))]
-    out_ret = [[None for i in range(len(in_matrix))] for j in range(len(out_matrix))]
+    delta = [[None for i in range(len(in_matrix))] for j in range(len(in_matrix[0]))]
+    rho = [[None for i in range(len(in_matrix))] for j in range(len(in_matrix[0]))]
     for p in range(len(in_matrix)):
-        for x in range(len(out_matrix)):
-            in_ret[x][p] = out_matrix[p][x]
-            out_ret[x][p] = in_matrix[p][x]
-
-    return in_ret, out_ret
+        for x in range(len(in_matrix[0])):
+            q, y = in_matrix[p][x], out_matrix[p][x]
+            if delta[x][p] != None: return False
+            delta[x][p] = out_matrix[p][x]
+            rho[x][p] = in_matrix[p][x]
+    return delta, rho
 
 def inverse(machine):
     in_matrix, out_matrix = machine
-    in_ret = [[None for i in range(len(out_matrix))] for j in range(len(in_matrix))]
-    out_ret = [[None for i in range(len(out_matrix))] for j in range(len(in_matrix))]
+    delta = in_matrix[:]
+    rho = [[None for i in range(len(in_matrix[0]))] for j in range(len(in_matrix))]
     for p in range(len(in_matrix)):
-        for x in range(len(out_matrix)):
+        for x in range(len(in_matrix[0])):
             q, y = in_matrix[p][x], out_matrix[p][x]
-            if in_ret[p][y] != None: return False
-            in_ret[p][y] = q
-            out_ret[p][y] = x
-    return in_ret, out_ret
+            if rho[p][y] != None: return False
+            rho[p][y] = x
+    return delta, rho
+
+def bireversible(machine):
+    inv = inverse(machine)
+    return inv and dual(inv)
 
 def minimize(machine):
     # TODO
