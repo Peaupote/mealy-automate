@@ -1,4 +1,5 @@
 import random
+import mealy
 
 basilica = ([[1, 2], [0, 2], [2, 2], [4, 2], [2, 3], [6, 2], [2, 5]],
             [[0, 1], [1, 0], [0, 1], [1, 0], [1, 0], [1, 0], [1, 0]])
@@ -10,10 +11,18 @@ grigorchuk = ([[4, 4], [0, 2], [0, 3], [4, 1], [4, 4]],
 sample1 = ([[1, 0, 1, 0], [0, 1, 0, 1]],
            [[1, 0, 3, 2], [3, 0, 1, 2]])
 
-sample2 = ([[1, 3, 0], [0, 0, 1], [0, 0, 1], [1, 3, 0]],
-           [[0, 1, 2], [0, 1, 2], [0, 1, 2], [0, 1, 2]])
+fantastique1 = ([[0, 1, 2], [1, 0, 3], [3, 2, 0], [2, 3, 1]],
+                [[2, 0, 1], [2, 1, 0], [1, 2, 0], [0, 2, 1]])
 
-# TODO: 4 fantastiques
+fantastique2 = ([[1, 2, 3], [0, 3, 2], [3, 1, 0], [2, 0, 1]],
+                [[1, 0, 2], [2, 0, 1], [1, 2, 0], [2, 1, 0]])
+
+fantastique3 = ([[0, 1, 2], [1, 0, 3], [3, 2, 0], [2, 3, 1]],
+                [[0, 2, 1], [1, 2, 0], [2, 0, 1], [2, 1, 0]])
+
+# inverse de fantastique3
+fantastique4 = ([[0, 1, 2], [1, 0, 3], [3, 2, 0], [2, 3, 1]],
+                [[0, 2, 1], [2, 0, 1], [1, 2, 0], [2, 1, 0]])
 
 
 def random_machine(nb_states, nb_letters):
@@ -41,9 +50,6 @@ def random_inv(nb_states, nb_letters):
         for x in range(nb_letters):
             out_ret[p][x] = rho[x]
     return in_ret, out_ret
-
-
-import mealy
 
 
 def random_birev(nb_states, nb_letters):
