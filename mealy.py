@@ -16,13 +16,15 @@ def dual(machine):
              for j in range(len(in_matrix[0]))]
     rho = [[None for i in range(len(in_matrix))]
            for j in range(len(in_matrix[0]))]
-    for p in range(len(in_matrix)):
-        for x in range(len(in_matrix[0])):
+    for x in range(len(in_matrix[0])):
+        S = [False] * len(in_matrix)
+        for p in range(len(in_matrix)):
             q, y = in_matrix[p][x], out_matrix[p][x]
-            if delta[x][p] != None:
+            if S[q]:
                 return False
-            delta[x][p] = out_matrix[p][x]
-            rho[x][p] = in_matrix[p][x]
+            delta[x][p] = y
+            rho[x][p] = q
+            S[q] = True
     return delta, rho
 
 
@@ -43,11 +45,11 @@ def inverse(machine):
 def reversible(machine):
     delta, _ = machine
     for x in range(len(delta[0])):
-        out = set()
+        out = [False] * len(delta)
         for p in range(len(delta)):
-            if delta[p][x] in out:
+            if out[delta[p][x]]:
                 return False
-            out.add(delta[p][x])
+            out[delta[p][x]] = True
     return True
 
 
@@ -159,8 +161,7 @@ def show(machine, view=True, destfile=None):
         for key in edges:
             graph.edge(str(p), key, label=edges[key])
 
-        if destfile:
-            graph.render('outputs/' + destfile, view=view)
-        elif view:
-            graph.view()
-            input()
+    if destfile:
+        graph.render('outputs/' + destfile, view=view)
+    elif view:
+        graph.view()
