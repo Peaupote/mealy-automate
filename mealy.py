@@ -1,4 +1,3 @@
-
 from graphviz import Digraph
 
 
@@ -124,7 +123,7 @@ def md_reduction(machine):
     return current
 
 
-def show(machine):
+def show(machine, view=True, destfile=None):
     in_matrix, out_matrix = machine
 
     graph = Digraph(comment="Mealy Machine")
@@ -147,4 +146,8 @@ def show(machine):
         for key in edges:
             graph.edge(str(p), key, label=edges[key])
 
-    graph.view()
+        if destfile:
+            graph.render('outputs/' + destfile, view=view)
+        elif view:
+            graph.view()
+            input()
