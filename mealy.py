@@ -40,9 +40,22 @@ def inverse(machine):
     return delta, rho
 
 
+def reversible(machine):
+    delta, _ = machine
+    for x in range(len(delta[0])):
+        out = set()
+        for p in range(len(delta)):
+            if delta[p][x] in out:
+                return False
+            out.add(delta[p][x])
+    return True
+
+
 def bireversible(machine):
     inv = inverse(machine)
-    return inv and dual(inv)
+    if not inv:
+        return False
+    return reversible(machine) and reversible(inv)
 
 
 def init_nerode_class(rho):
