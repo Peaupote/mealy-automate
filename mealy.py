@@ -43,9 +43,9 @@ def inverse(machine):
 
 def reversible(machine):
     delta, _ = machine
-    for p in range(len(delta)):
+    for x in range(len(delta[0])):
         out = set()
-        for x in range(len(delta[0])):
+        for p in range(len(delta)):
             if delta[p][x] in out:
                 return False
             out.add(delta[p][x])
