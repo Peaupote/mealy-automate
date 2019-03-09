@@ -47,7 +47,10 @@ import mealy
 
 
 def random_birev(nb_states, nb_letters):
+    # compteur = 0
     while True:
+        # print(compteur)
+        # compteur += 1
         m = random_inv(nb_states, nb_letters)
         if mealy.bireversible(m):
             return m
