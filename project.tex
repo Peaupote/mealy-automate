@@ -1,0 +1,52 @@
+\documentclass{article}
+
+\usepackage[francais]{babel}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Théorème}
+
+\title{À propos du problème de finitude des (semi)groupes d'automates}
+\author{Tristan François \& Maxime Flin}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  Compte rendu du projet de dernière année de la licence de Mathématique et d'informatique.
+\end{abstract}
+
+
+\section*{Introduction}
+Blablabla automate
+
+\section{Automates de Mealy}
+
+\subsection{Cloture de classes d'automates}
+\begin{prop}[Cloture des inversibles par produit]
+  Soient $\mathcal{A}$ et $\mathcal{B}$ des automates de Mealy \textbf{inversibles}. Alors $\mathcal{A}\cdot\mathcal{B}$ est inversible
+\end{prop}
+
+\begin{proof}
+  Soient $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B}=\left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates inversibles, et soit $\mathcal{A\cdot B}=\left(\mathcal{Q\times Q'}, \Sigma, \delta'', \rho''\right)$ leur produit.
+
+
+  Considérons un état $(p, r)$ de ce produit. Alors $\rho_p\circ\rho'_r=\rho_{(p,r)}$, or puisque les automates $\mathcal{A}$ et $\mathcal{B}$ sont inversibles, $\rho_p$ et $\rho'_r$ sont des permutations du groupe de symétrie de $\Sigma$, on en déduit que $\rho_{(p, r)}$ en est une aussi.
+
+
+  On a bien que tous les $(\rho''_q)_{q\in Q\times Q'}$ sont des permutations sur les lettres, c'est à dire que l'automate est inversible.
+\end{proof}
+
+\begin{prop}[Cloture des inversibles par facteurs]
+  Soit $\mathcal{A}$ un automate de Mealy \textbf{inversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$. Alors ces deux automates sont aussi inversibles.
+\end{prop}
+
+\begin{proof}
+  Soient $\mathcal{A}=\left(\mathcal{Q\cdot Q'}, \Sigma, \delta, \rho\right)$, $\mathcal{A}_1=\left(\mathcal{Q}, \Sigma, \delta', \rho'\right)$ et $\mathcal{A}_2=\left(\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ tel que ci dessus.
+
+  Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in S(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho'_p\circ\rho''_r$. Puisque $\rho_{(p, r)}$ est une permutation, on en déduit que $\rho'_p$ et $\rho''_r$ en sont aussi, d'où le résultat.
+\end{proof}
+
+\end{document}
