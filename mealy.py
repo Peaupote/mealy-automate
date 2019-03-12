@@ -2,13 +2,13 @@ from graphviz import Digraph
 
 class MealyAutomaton:
 
-    def __init__(self, delta, rho, states, letters):
+    def __init__(self, delta, rho, states=None, letters=None):
         self.delta = delta
         self.rho = rho
-        self.states = states
-        self.letters = letters
-        self.nb_states = len(states)
-        self.nb_letters = len(letters)
+        self.states = states if states != None else [str(i) for i in range(len(delta))]
+        self.letters = letters if letters != None else [str(i) for i in range(len(delta[0]))]
+        self.nb_states = len(self.states)
+        self.nb_letters = len(self.letters)
 
 
     def __eq__(self, other):
@@ -195,6 +195,7 @@ def product(m1, m2):
                 rho[p * M + r][x] = m2.rho[r][y]
                 states[p * M + r] = m1.states[p] + m2.states[r]
     return MealyAutomaton(delta, rho, states, list(m1.letters))
+
 
 def mass(m, n):
     current = m
