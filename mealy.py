@@ -1,7 +1,10 @@
+"""Mealy Machine : dualisation, inversion, produit, factorisation..."""
+
 from graphviz import Digraph
 
 
 class MealyAutomaton:
+    """Machine de Mealy : class docstring ^^"""
 
     def __init__(self, delta, rho, states, letters):
         self.delta = delta
@@ -68,33 +71,31 @@ class MealyAutomaton:
             return False
         return self.is_reversible() and inv.is_reversible()
 
-    @staticmethod
-    def __init_nerode_class(rho):
-        cl = [None for i in range(len(rho))]
-        for p1 in range(len(rho)):
+    def __init_nerode_class(self):
+        cl = [None for i in range(self.nb_states)]
+        for p1 in range(self.nb_states):
             if cl[p1] is None:
                 cl[p1] = p1
-                for p2 in range(p1+1, len(rho)):
+                for p2 in range(p1+1, self.nb_states):
                     if cl[p2] is None:
                         equivalent = True
-                        for x in range(len(rho[0])):
-                            if rho[p1][x] != rho[p2][x]:
+                        for x in range(self.nb_letters):
+                            if self.rho[p1][x] != self.rho[p2][x]:
                                 equivalent = False
                         if equivalent:
                             cl[p2] = cl[p1]
         return cl
 
-    @staticmethod
-    def __next_nerode_class(delta, cl):
-        new_cl = [None for i in range(len(delta))]
-        for p1 in range(len(delta)):
+    def __next_nerode_class(self, cl):
+        new_cl = [None for i in range(self.nb_states)]
+        for p1 in range(self.nb_states):
             if new_cl[p1] is None:
                 new_cl[p1] = p1
-                for p2 in range(p1+1, len(delta)):
+                for p2 in range(p1+1, self.nb_states):
                     if new_cl[p2] is None and cl[p1] == cl[p2]:
                         equivalent = True
-                        for x in range(len(delta[0])):
-                            if cl[delta[p1][x]] != cl[delta[p2][x]]:
+                        for x in range(self.nb_letters):
+                            if cl[self.delta[p1][x]] != cl[self.delta[p2][x]]:
                                 equivalent = False
                         if equivalent:
                             new_cl[p2] = new_cl[p1]
@@ -127,9 +128,9 @@ class MealyAutomaton:
 
     def minimize(self):
         stop = False
-        cl = self.__init_nerode_class(self.rho)
+        cl = self.__init_nerode_class()
         while not stop:
-            new_cl = self.__next_nerode_class(self.delta, cl)
+            new_cl = self.__next_nerode_class(cl)
             if new_cl == cl:
                 stop = True
             else:
