@@ -7,8 +7,10 @@ basilica = MealyAutomaton( \
     ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
     ['0', '1', '2', '3', '4', '5', '6'])
 
-grigorchuk = ([[4, 4], [0, 2], [0, 3], [4, 1], [4, 4]],
-              [[1, 0], [0, 1], [0, 1], [0, 1], [0, 1]])
+grigorchuk = MealyAutomaton( \
+    [[4, 4], [0, 2], [0, 3], [4, 1], [4, 4]],
+    [[1, 0], [0, 1], [0, 1], [0, 1], [0, 1]],
+    ['a', 'b', 'c', 'd', 'e'], ['0', '1'])
 
 # md reduce to trivial pair
 sample1 = MealyAutomaton( \

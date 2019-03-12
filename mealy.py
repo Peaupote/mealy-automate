@@ -7,6 +7,8 @@ class MealyAutomaton:
         self.rho = rho
         self.states = states
         self.letters = letters
+        self.nb_states = len(states)
+        self.nb_letters = len(letters)
 
 
     def __eq__(self, other):
@@ -22,13 +24,13 @@ class MealyAutomaton:
 
 
     def dual(self):
-        delta = [[None for i in range(len(self.delta))]
-                 for j in range(len(self.delta[0]))]
-        rho = [[None for i in range(len(self.delta))]
-               for j in range(len(self.delta[0]))]
-        for x in range(len(self.delta[0])):
-            S = [False] * len(self.delta)
-            for p in range(len(self.delta)):
+        delta = [[None for i in range(self.nb_states)]
+                 for j in range(self.nb_letters)]
+        rho = [[None for i in range(self.nb_states)]
+               for j in range(self.nb_letters)]
+        for x in range(self.nb_letters):
+            S = [False] * self.nb_states
+            for p in range(self.nb_states):
                 q, y = self.delta[p][x], self.rho[p][x]
                 if S[q]:
                     return False
@@ -40,10 +42,10 @@ class MealyAutomaton:
 
     def inverse(self):
         delta = list(self.delta)
-        rho = [[None for i in range(len(self.delta[0]))]
-               for j in range(len(self.delta))]
-        for p in range(len(self.delta)):
-            for x in range(len(self.delta[0])):
+        rho = [[None for i in range(self.nb_letters)]
+               for j in range(self.nb_states)]
+        for p in range(self.nb_states):
+            for x in range(self.nb_letters):
                 q, y = self.delta[p][x], self.rho[p][x]
                 if rho[p][y] != None:
                     return False
@@ -53,9 +55,9 @@ class MealyAutomaton:
 
 
     def is_reversible(self):
-        for x in range(len(self.delta[0])):
-            out = [False] * len(self.delta)
-            for p in range(len(self.delta)):
+        for x in range(self.nb_letters):
+            out = [False] * self.nb_states
+            for p in range(self.nb_states):
                 if out[self.delta[p][x]]:
                     return False
                 out[self.delta[p][x]] = True
@@ -112,7 +114,7 @@ class MealyAutomaton:
         new_id = {}
         states = []
         compteur = 0
-        for i in range(len(self.delta)):
+        for i in range(self.nb_states):
             if not cl[i] in new_id:
                 new_id[cl[i]] = compteur
                 states.append(self.states[i])
@@ -143,13 +145,9 @@ class MealyAutomaton:
         prev, current = None, self
         while prev != current:
             prev, current = current, current.minimize()
-            current.show()
-            input()
             if current == prev:  # automaton is minimal
                 prev = prev.dual()
                 current = prev.minimize()
-                current.show()
-                input()
         return current
 
 
@@ -162,9 +160,9 @@ class MealyAutomaton:
 
         graph.attr('node', shape='circle')
 
-        for p in range(len(self.delta)):
+        for p in range(self.nb_states):
             edges = {}
-            for x in range(len(self.delta[0])):
+            for x in range(self.nb_letters):
                 key = self.states[self.delta[p][x]]
                 if key in edges:
                     edges[key] = edges[key] + "\n" + \
@@ -179,3 +177,30 @@ class MealyAutomaton:
             if view:
                 graph.view()
         else: graph.view()
+
+def product(m1, m2):
+    M = max(m1.nb_states, m2.nb_states)
+    nb_states = m1.nb_states * m2.nb_states
+    delta = [[None for i in range(m1.nb_letters)]
+             for i in range(nb_states)]
+    rho = [[None for i in range(m1.nb_letters)]
+           for i in range(nb_states)]
+    states = [None for i in range(nb_states)]
+
+    for p in range(m1.nb_states):
+        for x in range(m1.nb_letters):
+            q, y = m1.delta[p][x], m1.rho[p][x]
+            for r in range(m2.nb_states):
+                delta[p * M + r][x] = q * M + m2.delta[r][y]
+                rho[p * M + r][x] = m2.rho[r][y]
+                states[p * M + r] = m1.states[p] + m2.states[r]
+    return MealyAutomaton(delta, rho, states, list(m1.letters))
+
+def mass(m, n):
+    current = m
+    size = []
+    for i in range(n):
+        current = current.minimize()
+        size.append(current.nb_states)
+        current = product(current, current)
+    return size
