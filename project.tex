@@ -9,7 +9,7 @@
 \newtheorem{thm}{Théorème}
 
 \title{À propos du problème de finitude des (semi)groupes d'automates}
-\author{Tristan François \& Maxime Flin}
+\author{Maxime Flin \& Tristan François}
 
 \begin{document}
 \maketitle
@@ -33,7 +33,7 @@ Blablabla automate
   Soient $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B}=\left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates inversibles, et soit $\mathcal{A\cdot B}=\left(\mathcal{Q\times Q'}, \Sigma, \delta'', \rho''\right)$ leur produit.
 
 
-  Considérons un état $(p, r)$ de ce produit. Alors $\rho_p\circ\rho'_r=\rho_{(p,r)}$, or puisque les automates $\mathcal{A}$ et $\mathcal{B}$ sont inversibles, $\rho_p$ et $\rho'_r$ sont des permutations du groupe de symétrie de $\Sigma$, on en déduit que $\rho_{(p, r)}$ en est une aussi.
+  Considérons un état $(p, r)$ de ce produit. Alors $\rho_r\circ\rho'_p=\rho_{(p,r)}$, or puisque les automates $\mathcal{A}$ et $\mathcal{B}$ sont inversibles, $\rho_p$ et $\rho'_r$ sont des permutations du groupe de symétrie de $\Sigma$, on en déduit que $\rho_{(p, r)}$ en est une aussi.
 
 
   On a bien que tous les $(\rho''_q)_{q\in Q\times Q'}$ sont des permutations sur les lettres, c'est à dire que l'automate est inversible.
@@ -46,7 +46,24 @@ Blablabla automate
 \begin{proof}
   Soient $\mathcal{A}=\left(\mathcal{Q\cdot Q'}, \Sigma, \delta, \rho\right)$, $\mathcal{A}_1=\left(\mathcal{Q}, \Sigma, \delta', \rho'\right)$ et $\mathcal{A}_2=\left(\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ tel que ci dessus.
 
-  Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in S(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho'_p\circ\rho''_r$. Puisque $\rho_{(p, r)}$ est une permutation, on en déduit que $\rho'_p$ et $\rho''_r$ en sont aussi, d'où le résultat.
+  Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in S(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho'_r\circ\rho''_p$. Puisque $\rho_{(p, r)}$ est une permutation, on en déduit que $\rho'_p$ et $\rho''_r$ en sont aussi, d'où le résultat.
+\end{proof}
+
+\begin{prop}
+	Soit $\mathcal{A}$ un automate de Mealy \textbf{inversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$.
+	Alors $\mathcal{A}^{-1} = \mathcal{A}_2^{-1} \cdot \mathcal{A}_1^{-1}$.
+\end{prop}
+
+\begin{proof}
+	
+\end{proof}
+
+\begin{prop}
+	
+\end{prop}
+
+\begin{proof}
+	
 \end{proof}
 
 \end{document}
