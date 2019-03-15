@@ -39,6 +39,24 @@ Blablabla automate
   On a bien que tous les $(\rho''_q)_{q\in Q\times Q'}$ sont des permutations sur les lettres, c'est à dire que l'automate est inversible.
 \end{proof}
 
+\begin{prop}[Cloture des réversibles par produit]
+  Soient $\mathcal{A}$ et $\mathcal{B}$ des automates de Mealy \textbf{réversibles}. Si $\mathcal{A}$ est \textbf{inversible}, alors $\mathcal{A}\cdot\mathcal{B}$ est réversible.
+\end{prop}
+
+\begin{proof}
+  Soient $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B}=\left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates réversibles, et soit $\mathcal{A\cdot B}=\left(\mathcal{Q\times Q'}, \Sigma, \delta'', \rho''\right)$ leur produit.
+
+
+  On suppose $\mathcal{A}$ inversible.
+
+
+  Par définition $\delta''_x(pr)=(\delta_x(p), \delta'_{\rho_p(x)}(r))$. Or, puisque les automates sont réversibles, les $(\delta_x)_{x\in\Sigma}$ et $(\delta'_x)_{x\in\Sigma}$ sont des bijections. De plus, $\mathcal{A}$ esr inversible donc les $(\rho_p)_{p\in \mathcal{Q}}$ sont des bijections. On en conclut que les $(\delta''_{pr})_{pr\in\mathcal{Q}\times\mathcal{Q'}}$ sont aussi des bijections.
+\end{proof}
+
+\begin{prop}[Clôture des biréversibles par produit]
+  Soient $\mathcal{A}$ et $\mathcal{B}$ des automates \textbf{biréversibles}, alors $\mathcal{A}\cdot\mathcal{B}$ est \textbf{biréversible}.
+\end{prop}
+
 \begin{prop}[Cloture des inversibles par facteurs]
   Soit $\mathcal{A}$ un automate de Mealy \textbf{inversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$. Alors ces deux automates sont aussi inversibles.
 \end{prop}
@@ -65,5 +83,26 @@ Blablabla automate
 \begin{proof}
 	
 \end{proof}
+
+\begin{prop}[Cloture des réversibles par facteurs]
+  Soit $\mathcal{A}$ un automate de Mealy \textbf{réversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$. Alors
+  \begin{itemize}
+  \item $\mathcal{A}_1$ est réversible.
+  \item si $\mathcal{A}_1$ est inversible, alors $\mathcal{A}_2$ est réversible.
+  \end{itemize}
+\end{prop}
+
+\begin{proof}
+  Soient $\mathcal{A}=\left(\mathcal{Q\cdot Q'}, \Sigma, \delta, \rho\right)$ réversible, $\mathcal{A}_1=\left(\mathcal{Q}, \Sigma, \delta', \rho'\right)$ et $\mathcal{A}_2=\left(\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ tels que $\mathcal{A} = \mathcal{A}_1\cdot\mathcal{A}_2$.
+
+  Par définition, on a que $\delta_x(pr) = (\delta'_x(p), \delta''_{\rho'_p(x)}(r))$. Les $(\delta_x)_{x\in\Sigma}$ sont inversibles, alors il est clair les $(\delta'_x)_{x\in\Sigma}$ sont inversibles.
+
+  De plus, chacun des $\delta''_{\rho_p(x)}$ est inversibles, donc si $\mathcal{A}_1$ est inversible, les $(\rho_p)_{p\in\Sigma}$ étant inversibles, alors tous les $(\delta''_x)_{x\in\Sigma}$ sont inversibles. D'où $\mathcal{A}_2$ est réversible.
+
+\end{proof}
+
+\begin{prop}[Clôture des biréversibles par facteurs]
+  Soit $\mathcal{A}$ un automate \textbf{biréversible} et $\mathcal{A}_1$, $\mathcal{A}_2$ des automates tels que $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, alors $\mathcal{A}_1$ et $\mathcal{A}_2$ sont biréversible.
+\end{prop}
 
 \end{document}
