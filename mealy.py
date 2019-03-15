@@ -1,7 +1,7 @@
 """Mealy Machine : dualisation, inversion, produit, factorisation..."""
 
 from graphviz import Digraph
-
+import igraph
 
 class MealyAutomaton:
     """Machine de Mealy : class docstring ^^"""
@@ -175,6 +175,66 @@ class MealyAutomaton:
                 graph.view()
         else:
             graph.view()
+
+
+    def helix_graph(self):
+        adj = {}
+        for p in range(self.nb_states):
+            for x in range(self.nb_letters):
+                adj[p, x] = self.delta[p][x], self.rho[p][x]
+        return adj
+
+
+    def show_helix_graph(self):
+        graph = Digraph(comment="Helix Graph")
+        graph.attr(rankdir='LR')
+        graph.attr('node', shape='circle')
+
+        H = self.helix_graph()
+
+        for i in H:
+            p, x = i
+            q, y = H[i]
+            graph.node(self.states[p] + ", " + self.letters[x])
+            graph.edge(self.states[p] + ", " + self.letters[x],
+                       self.states[q] + ", " + self.letters[y])
+
+        graph.view()
+
+
+    def automorphisms(self):
+        # construction of helix graph using igraph
+        H = igraph.Graph(directed=True)
+        M = max(self.nb_states, self.nb_letters)
+        S = self.nb_states * self.nb_letters
+        ST = S + self.nb_states
+        SL = ST + self.nb_letters
+        H.add_vertices(SL + 3)
+
+        labels = [None] * (SL + 3)
+        labels[SL + 2] = "Idle"
+        labels[SL + 1] = "Sigma"
+        labels[SL] = "Q"
+
+        H.add_edge(SL + 1, SL + 2)
+        for x in range(self.nb_letters):
+            H.add_edge(ST + x, SL + 1)
+            labels[ST + x] = self.letters[x]
+        for p in range(self.nb_states):
+            H.add_edge(S + p, SL)
+            labels[S + p] = self.states[p]
+            for x in range(self.nb_letters):
+                st = p * M + x
+                labels[st] = self.states[p] + ", " + self.letters[x]
+                H.add_edge(st, self.delta[p][x] * M + self.rho[p][x])
+                H.add_edge(st, S + p)
+                H.add_edge(st, ST + x)
+        H.vs["label"] = labels
+
+        Aut = H.get_automorphisms_vf2()
+        # TODO: transform into nice output format
+        # sympy PermutationGroup ?
+        return Aut
 
 
 def product(m1, m2):

@@ -12,7 +12,8 @@ grigorchuk = MealyAutomaton( \
 # md reduce to trivial pair
 sample1 = MealyAutomaton( \
     [[1, 0, 1, 0], [0, 1, 0, 1]],
-    [[1, 0, 3, 2], [3, 0, 1, 2]])
+    [[1, 0, 3, 2], [3, 0, 1, 2]],
+    ['a', 'b'])
 
 # generate group of order 1 494 186 269 970 473 680 896
 sample2 = ([[0, 0, 0], [0, 2, 1], [1, 1, 1]],
