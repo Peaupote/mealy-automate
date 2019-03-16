@@ -1,16 +1,20 @@
 """Mealy Machine : dualisation, inversion, produit, factorisation..."""
 
-from graphviz import Digraph
 import igraph
+from graphviz import Digraph
 
-class MealyAutomaton:
+
+class MealyMachine:
     """Machine de Mealy : class docstring ^^"""
 
-    def __init__(self, delta, rho, states=None, letters=None):
+    def __init__(self, delta, rho, states=None, letters=None, name=None):
         self.delta = delta
         self.rho = rho
-        self.states = states if states != None else [str(i) for i in range(len(delta))]
-        self.letters = letters if letters != None else [str(i) for i in range(len(delta[0]))]
+        self.states = states if states is not None else [
+            str(i) for i in range(len(delta))]
+        self.letters = letters if letters is not None else [
+            str(i) for i in range(len(delta[0]))]
+        self.name = name if name is not None else None
         self.nb_states = len(self.states)
         self.nb_letters = len(self.letters)
 
@@ -40,7 +44,8 @@ class MealyAutomaton:
                 delta[x][p] = y
                 rho[x][p] = q
                 S[q] = True
-        return MealyAutomaton(delta, rho, list(self.letters), list(self.states))
+        name_dual = self.name + "_dual" if self.name is not None else None
+        return MealyMachine(delta, rho, list(self.letters), list(self.states), name_dual)
 
     def inverse(self):
         """Renvoie l'automate inverse si l'automate est inversible, renvoie Faux sinon"""
@@ -53,8 +58,9 @@ class MealyAutomaton:
                 if rho[p][y] is not None:
                     return False
                 rho[p][y] = x
-        states = [p + "**-1" for p in self.states]
-        return MealyAutomaton(delta, rho, states, list(self.letters))
+        states = [p + "*" for p in self.states]
+        name_inverse = self.name + "_inverse" if self.name is not None else None
+        return MealyMachine(delta, rho, states, list(self.letters), name_inverse)
 
     def is_reversible(self):
         for x in range(self.nb_letters):
@@ -124,7 +130,7 @@ class MealyAutomaton:
             for x in range(len(new_delta[0])):
                 new_delta[p][x] = new_id[cl[self.delta[p][x]]]
 
-        return MealyAutomaton(new_delta, new_rho, states, self.letters)
+        return MealyMachine(new_delta, new_rho, states, self.letters)
 
     def minimize(self):
         stop = False
@@ -171,12 +177,11 @@ class MealyAutomaton:
 
         if destfile:
             graph.render('outputs/' + destfile, view=view)
-            if view:
-                graph.view()
+        elif self.name is not None:
+            graph.render('outputs/' + self.name, view=view)
         else:
-            graph.view()
-
-
+            graph.render('outputs/default', view=view)
+            
     def helix_graph(self):
         adj = {}
         for p in range(self.nb_states):
@@ -184,8 +189,7 @@ class MealyAutomaton:
                 adj[p, x] = self.delta[p][x], self.rho[p][x]
         return adj
 
-
-    def show_helix_graph(self):
+    def show_helix_graph(self, view=True, destfile=None):
         graph = Digraph(comment="Helix Graph")
         graph.attr(rankdir='LR')
         graph.attr('node', shape='circle')
@@ -199,8 +203,12 @@ class MealyAutomaton:
             graph.edge(self.states[p] + ", " + self.letters[x],
                        self.states[q] + ", " + self.letters[y])
 
-        graph.view()
-
+        if destfile:
+            graph.render('outputs/' + destfile, view=view)
+        elif self.name is not None:
+            graph.render('outputs/' + self.name + "_helix", view=view)
+        else:
+            graph.render('outputs/default', view=view)
 
     def automorphisms(self):
         # construction of helix graph using igraph
@@ -254,7 +262,7 @@ def product(m1, m2):
                 delta[p * M + r][x] = q * M + m2.delta[r][y]
                 rho[p * M + r][x] = m2.rho[r][y]
                 states[p * M + r] = m1.states[p] + m2.states[r]
-    return MealyAutomaton(delta, rho, states, list(m1.letters))
+    return MealyMachine(delta, rho, states, list(m1.letters))
 
 
 def mass(m, n):

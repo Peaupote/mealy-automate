@@ -1,3 +1,5 @@
+outputs/
+
 # Show Graphviz
 *.pdf
 *.gv
