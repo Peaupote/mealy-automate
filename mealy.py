@@ -51,18 +51,20 @@ class MealyMachine:
 
     def inverse(self):
         """Renvoie l'automate inverse si l'automate est inversible, renvoie Faux sinon"""
-        delta = list(self.delta)
-        rho = [[None for i in range(self.nb_letters)]
-               for j in range(self.nb_states)]
+        new_delta = [[None for i in range(self.nb_letters)]
+                     for j in range(self.nb_states)]
+        new_rho = [[None for i in range(self.nb_letters)]
+                   for j in range(self.nb_states)]
         for p in range(self.nb_states):
             for x in range(self.nb_letters):
-                _, y = self.delta[p][x], self.rho[p][x]
-                if rho[p][y] is not None:
+                e, y = self.delta[p][x], self.rho[p][x]
+                if new_rho[p][y] is not None:
                     return False
-                rho[p][y] = x
-        states = [p + "*" for p in self.states]
+                new_delta[p][y] = e
+                new_rho[p][y] = x
+        new_states = [p + "*" for p in self.states]
         name_inverse = self.name + "_inverse" if self.name is not None else None
-        return MealyMachine(delta, rho, states, list(self.letters), name_inverse)
+        return MealyMachine(new_delta, new_rho, new_states, list(self.letters), name_inverse)
 
     def is_reversible(self):
         for x in range(self.nb_letters):
