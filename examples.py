@@ -32,10 +32,6 @@ fantastique3 = MealyMachine([[0, 1, 2], [1, 0, 3], [3, 2, 0], [2, 3, 1]],
                             [[0, 2, 1], [1, 2, 0], [2, 0, 1], [2, 1, 0]],
                             ['a', 'b', 'c', 'd'], name="fantastique3")
 
-birev33_1 = MealyMachine([[0, 0, 0], [1, 1, 2], [2, 2, 1]],
-                         [[0, 2, 1], [1, 2, 0], [1, 2, 0]],
-                         ['a', 'b', 'c'], name="birev33_1")
-
 
 def random_machine(nb_states, nb_letters):
     in_ret = [[randint(0, nb_states - 1)
@@ -86,33 +82,41 @@ def dumb_factorization(m):
     return None
 
 
-def helix_birev(nb_states, nb_letters):
-    size = nb_states*nb_letters
+def random_cycles(size):
     cycles = []
     c = 0
     while c < size:
         s = randint(0, size-c)
         cycles.append([None for _ in range(s)])
         c += s
-    check_letters = [[(p, i) for i in range(nb_letters)]
+    return cycles
+
+
+def helix_birev(nb_states, nb_letters):
+    cycles = random_cycles(nb_states*nb_letters)
+    check_letters = [random_permutation(nb_letters)
                      for p in range(nb_states)]
-    check_states = {i: [p for p in range(nb_states)]
-                    for i in range(nb_letters)}
+    check_states = [random_permutation(nb_states)
+                    for p in range(nb_letters)]
+    available_states = list(range(nb_states))
+
     for C in cycles:
         for i in range(len(C)):
             state = None
             letter = None
+            previous_letter = None
             while state is None or letter is None:
-                s = randint(0, len(check_letters) - 1)
-                state, letter = check_letters[s][randint(
-                    0, len(check_letters[s]) - 1)]
-                if not check_states[letter] or not state in check_states[letter]:
-                    state, letter = None, None
+                if previous_letter is not None:
+                    state = check_states[previous_letter][
+                        randint(0, len(check_states[previous_letter] - 1))]
                 else:
-                    check_letters[s].remove((state, letter))
-                    if not check_letters[s]:
-                        del check_letters[s]
-                    check_states[letter].remove(state)
+                    state = available_states[randint(
+                        0, len(available_states) - 1)]
+                letter = check_letters[state][0]
+                check_letters[state].remove(letter)
+                if not check_letters[state]:
+                    available_states.remove(state)
+                check_states[letter].remove(state)
             C[i] = (state, letter)
 
     delta = [[None for i in range(nb_letters)]
@@ -125,7 +129,6 @@ def helix_birev(nb_states, nb_letters):
             state, letter = C[i]
             delta[prev_state][prev_letter] = state
             rho[prev_state][prev_letter] = letter
-    # print(cycles)
     return MealyMachine(delta, rho)
 
 
@@ -253,5 +256,5 @@ birev33 = [MealyMachine([[0, 0, 0], [1, 1, 2], [2, 2, 1]],
            MealyMachine([[1, 1, 1], [2, 2, 2], [0, 0, 0]],
                         [[0, 2, 1], [1, 0, 2], [2, 0, 1]])]
 
-for i in range(len(birev33)):
-    birev33[i].name = "birev33_" + str(i)
+for indice, machine in enumerate(birev33):
+    machine.name = "birev33_" + str(indice)
