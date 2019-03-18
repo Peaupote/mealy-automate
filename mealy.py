@@ -1,11 +1,12 @@
-"""Mealy Machine : dualisation, inversion, produit, factorisation..."""
+"""Mealy Machine : md-réduction, dualisation, inversion, produit, factorisation..."""
 
 import igraph
 from graphviz import Digraph
 
 
 class MealyMachine:
-    """Machine de Mealy : class docstring ^^"""
+    """Machine de Mealy : dualisation, inversion, minimisation, md-réduction,
+    test d'inversibilité, test de réversibilité"""
 
     def __init__(self, delta, rho, states=None, letters=None, name=None):
         self.delta = delta
@@ -183,7 +184,7 @@ class MealyMachine:
             graph.render('outputs/' + self.name, view=view)
         else:
             graph.render('outputs/default', view=view)
-            
+
     def helix_graph(self):
         adj = {}
         for p in range(self.nb_states):
