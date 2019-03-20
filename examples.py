@@ -258,3 +258,40 @@ birev33 = [MealyMachine([[0, 0, 0], [1, 1, 2], [2, 2, 1]],
 
 for indice, machine in enumerate(birev33):
     machine.name = "birev33_" + str(indice)
+
+def count_cycle_size(H):
+    cycles = {}
+    done = set()
+    for i in H:
+        if i in done: continue
+        done.add(i)
+        j = H[i]
+        length = 1
+        while j != i:
+            done.add(j)
+            j = H[j]
+            length += 1
+        if length not in cycles: cycles[length] = 0
+        cycles[length] += 1
+    return cycles
+
+def count_cycle_size_in_inverse():
+    for i in range(len(birev33)):
+        h1 = birev33[i].helix_graph()
+        h2 = birev33[i].inverse().helix_graph()
+        c1 = count_cycle_size(h1)
+        c2 = count_cycle_size(h2)
+        print(i, c1, c2)
+
+def count_cycle_size_in_product():
+    for i in range(len(birev33)):
+        b1 = birev33[i]
+        for j in range(i, len(birev33)):
+            b2 = birev33[j]
+            h1 = b1.helix_graph()
+            h2 = b2.helix_graph()
+            h3 = product(b1, b2).helix_graph()
+            c1 = count_cycle_size(h1)
+            c2 = count_cycle_size(h2)
+            c3 = count_cycle_size(h3)
+            print(i, c1, c2, c3)

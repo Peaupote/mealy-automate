@@ -7,6 +7,7 @@
 \usepackage[hidelinks]{hyperref}
 
 \newtheorem{prop}{Proposition}
+\newtheorem{lemma}{Lemme}
 \newtheorem{thm}{Théorème}
 
 \title{À propos du problème de finitude des (semi)groupes d'automates}
@@ -69,12 +70,12 @@ Blablabla automate
 \end{proof}
 
 \begin{prop}\label{prop_inverse_produit}
-	Soit $\mathcal{A}$ un automate de Mealy \textbf{inversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$.
-	Alors $\mathcal{A}^{-1} = \mathcal{A}_2^{-1} \cdot \mathcal{A}_1^{-1}$.
+    Soit $\mathcal{A}$ un automate de Mealy \textbf{inversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$.
+    Alors $\mathcal{A}^{-1} = \mathcal{A}_2^{-1} \cdot \mathcal{A}_1^{-1}$.
 \end{prop}
 
 \begin{proof}
-	
+
 \end{proof}
 
 \begin{prop}[Cloture des réversibles par facteurs]\label{prop_cloture_rev_facteurs}
@@ -98,11 +99,13 @@ Blablabla automate
 \end{prop}
 
 \begin{proof}
-	$\mathcal{A}$ est biréversible, donc en particulier $\mathcal{A}$ est inversible et réversible. D'après la proposition \ref{prop_cloture_inv_facteurs}, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont inversibles. Puisque $\mathcal{A}_1$ est inversible, d'après la proposition \ref{prop_cloture_rev_facteurs}, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont réversibles.
-	
-	D'après la proposition \ref{prop_inverse_produit}, $\mathcal{A}^{-1} = \mathcal{A}_2^{-1} \cdot \mathcal{A}_1^{-1}$. Or $\mathcal{A}^{-1}$ est réversible puisque $\mathcal{A}$ est biréversible. Donc, toujours d'après la proposition \ref{prop_cloture_rev_facteurs} et puisque $\mathcal{A}_1^{-1}$ est inversible, $\mathcal{A}_1^{-1}$ et $\mathcal{A}_2^{-1}$ sont réversibles.
-	
-	Ainsi, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont bien biréversibles.
+    $\mathcal{A}$ est biréversible, donc en particulier $\mathcal{A}$ est inversible et réversible. D'après la proposition \ref{prop_cloture_inv_facteurs}, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont inversibles. Puisque $\mathcal{A}_1$ est inversible, d'après la proposition \ref{prop_cloture_rev_facteurs}, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont réversibles.
+
+    D'après la proposition \ref{prop_inverse_produit}, $\mathcal{A}^{-1} = \mathcal{A}_2^{-1} \cdot \mathcal{A}_1^{-1}$. Or $\mathcal{A}^{-1}$ est réversible puisque $\mathcal{A}$ est biréversible. Donc, toujours d'après la proposition \ref{prop_cloture_rev_facteurs} et puisque $\mathcal{A}_1^{-1}$ est inversible, $\mathcal{A}_1^{-1}$ et $\mathcal{A}_2^{-1}$ sont réversibles.
+
+    Ainsi, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont bien biréversibles.
 \end{proof}
+
+\subsection{Graphes en hélices}
 
 \end{document}

@@ -157,6 +157,13 @@ class MealyMachine:
                 current = prev.minimize()
         return current
 
+    def is_trivial(self):
+        # is trivial iff one state and rho is identity
+        return self.nb_states == 1 and self.rho[0] == [i for i in range(self.nb_letters)]
+
+    def is_md_trivial(self):
+        return self.md_reduce().is_trivial()
+
     def show(self, view=True, destfile=None):
         """Affiche l'automate"""
         graph = Digraph(comment="Mealy Machine")
@@ -218,7 +225,7 @@ class MealyMachine:
     def automorphisms(self):
         # construction of helix graph using igraph
         H = igraph.Graph(directed=True)
-        M = max(self.nb_states, self.nb_letters)
+        M = self.nb_letters
         S = self.nb_states * self.nb_letters
         ST = S + self.nb_states
         SL = ST + self.nb_letters
@@ -243,18 +250,21 @@ class MealyMachine:
                 H.add_edge(st, S + p)
                 H.add_edge(st, ST + x)
         #H.vs["label"] = labels
+        #igraph.plot(H, layout=H.layout())
 
         aut = H.get_automorphisms_vf2()
-        base = []
+        base, states, letters = [], [], []
         for f in aut:
             base.append(Permutation(f[:S]))
-        G = PermutationGroup(base)
+            states.append(Permutation(list(map(lambda s: s - S, f[S:ST]))))
+            letters.append(Permutation(list(map(lambda s: s - ST, f[ST:SL]))))
 
-        return G
+        return PermutationGroup(base), PermutationGroup(states), PermutationGroup(letters)
+
 
 def product(m1, m2):
     """Renvoie le produit des automates m1 et m2"""
-    M = max(m1.nb_states, m2.nb_states)
+    M = m1.nb_letters
     nb_states = m1.nb_states * m2.nb_states
     delta = [[None for i in range(m1.nb_letters)]
              for i in range(nb_states)]
