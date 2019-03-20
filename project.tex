@@ -9,7 +9,7 @@
 \newtheorem{prop}{Proposition}
 \newtheorem{thm}{Théorème}
 
-\title{À propos du problème de finitude des (semi)groupes d'automates}
+\title{À propos du problème de finitude des (semi-)groupes d'automates}
 \author{Maxime Flin \& Tristan François}
 
 \begin{document}
@@ -37,7 +37,7 @@ Blablabla automate
   Considérons un état $(p, r)$ de ce produit. Alors $\rho_r\circ\rho'_p=\rho_{(p,r)}$, or puisque les automates $\mathcal{A}$ et $\mathcal{B}$ sont inversibles, $\rho_p$ et $\rho'_r$ sont des permutations du groupe de symétrie de $\Sigma$, on en déduit que $\rho_{(p, r)}$ en est une aussi.
 
 
-  On a bien que tous les $(\rho''_q)_{q\in Q\times Q'}$ sont des permutations sur les lettres, c'est à dire que l'automate est inversible.
+  On a bien que tous les ${(\rho''_q)}_{q\in Q\times Q'}$ sont des permutations sur les lettres, c'est à dire que l'automate est inversible.
 \end{proof}
 
 \begin{prop}[Cloture des réversibles par produit]
@@ -51,7 +51,7 @@ Blablabla automate
   On suppose $\mathcal{A}$ inversible.
 
 
-  Par définition $\delta''_x(pr)=(\delta_x(p), \delta'_{\rho_p(x)}(r))$. Or, puisque les automates sont réversibles, les $(\delta_x)_{x\in\Sigma}$ et $(\delta'_x)_{x\in\Sigma}$ sont des bijections. De plus, $\mathcal{A}$ esr inversible donc les $(\rho_p)_{p\in \mathcal{Q}}$ sont des bijections. On en conclut que les $(\delta''_{pr})_{pr\in\mathcal{Q}\times\mathcal{Q'}}$ sont aussi des bijections.
+  Par définition $\delta''_x(pr)=(\delta_x(p), \delta'_{\rho_p(x)}(r))$. Or, puisque les automates sont réversibles, les $(\delta_x)_{x\in\Sigma}$ et ${(\delta'_x)}_{x\in\Sigma}$ sont des bijections. De plus, $\mathcal{A}$ esr inversible donc les ${(\rho_p)}_{p\in \mathcal{Q}}$ sont des bijections. On en conclut que les ${(\delta''_{pr})}_{pr\in\mathcal{Q}\times\mathcal{Q'}}$ sont aussi des bijections.
 \end{proof}
 
 \begin{prop}[Clôture des biréversibles par produit]
@@ -88,9 +88,9 @@ Blablabla automate
 \begin{proof}
   Soient $\mathcal{A}=\left(\mathcal{Q\cdot Q'}, \Sigma, \delta, \rho\right)$ réversible, $\mathcal{A}_1=\left(\mathcal{Q}, \Sigma, \delta', \rho'\right)$ et $\mathcal{A}_2=\left(\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ tels que $\mathcal{A} = \mathcal{A}_1\cdot\mathcal{A}_2$.
 
-  Par définition, on a que $\delta_x(pr) = (\delta'_x(p), \delta''_{\rho'_p(x)}(r))$. Les $(\delta_x)_{x\in\Sigma}$ sont inversibles, alors il est clair les $(\delta'_x)_{x\in\Sigma}$ sont inversibles.
+  Par définition, on a que $\delta_x(pr) = (\delta'_x(p), \delta''_{\rho'_p(x)}(r))$. Les ${(\delta_x)}_{x\in\Sigma}$ sont inversibles, alors il est clair les ${(\delta'_x)}_{x\in\Sigma}$ sont inversibles.
 
-  De plus, chacun des $\delta''_{\rho_p(x)}$ est inversibles, donc si $\mathcal{A}_1$ est inversible, les $(\rho_p)_{p\in\Sigma}$ étant inversibles, alors tous les $(\delta''_x)_{x\in\Sigma}$ sont inversibles. D'où $\mathcal{A}_2$ est réversible.
+  De plus, chacun des $\delta''_{\rho_p(x)}$ est inversibles, donc si $\mathcal{A}_1$ est inversible, les ${(\rho_p)}_{p\in\Sigma}$ étant inversibles, alors tous les ${(\delta''_x)}_{x\in\Sigma}$ sont inversibles. D'où $\mathcal{A}_2$ est réversible.
 \end{proof}
 
 \begin{prop}[Clôture des biréversibles par facteurs]
