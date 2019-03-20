@@ -131,8 +131,10 @@ def helix_birev(nb_states, nb_letters):
                 previous_letter = letter
             C[i] = (state, letter)
 
-    # print(cycles)
+    return cycles_to_mealy_machines(cycles, nb_states, nb_letters)
 
+
+def cycles_to_mealy_machines(cycles, nb_states, nb_letters):
     delta = [[None for i in range(nb_letters)]
              for j in range(nb_states)]
     rho = [[None for i in range(nb_letters)]
