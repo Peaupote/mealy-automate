@@ -87,15 +87,18 @@ def random_cycles(size):
     c = 0
     while c < size:
         s = randint(0, size-c)
+        # s = size
         cycles.append([None for _ in range(s)])
         c += s
-    return cycles
+    return [[None for _ in range(size)]]
 
 
 def helix_birev(nb_states, nb_letters):
     cycles = random_cycles(nb_states*nb_letters)
-    check_letters = [random_permutation(nb_letters)
-                     for p in range(nb_states)]
+    check_curr_letters = [random_permutation(nb_letters)
+                          for p in range(nb_states)]
+    check_next_letters = [random_permutation(nb_letters)
+                          for p in range(nb_states)]
     check_states = [random_permutation(nb_states)
                     for p in range(nb_letters)]
     available_states = list(range(nb_states))
@@ -105,20 +108,33 @@ def helix_birev(nb_states, nb_letters):
             state = None
             letter = None
             previous_letter = None
+            previous_state = None
             while state is None or letter is None:
                 if previous_letter is not None:
-                    state = check_states[previous_letter][
-                        randint(0, len(check_states[previous_letter] - 1))]
+                    state = check_states[previous_letter][0]
+                    letter = check_next_letters[previous_state][0]
+                    check_curr_letters[state].remove(state)
+                    check_next_letters[previous_state].remove(letter)
+                    if not check_next_letters[previous_state]:
+                        available_states.remove(previous_state)
+                    if not check_curr_letters[state]:
+                        available_states.remove(state)
+                    check_states[previous_letter].remove(state)
                 else:
                     state = available_states[randint(
                         0, len(available_states) - 1)]
-                letter = check_letters[state][0]
-                check_letters[state].remove(letter)
-                if not check_letters[state]:
-                    available_states.remove(state)
-                check_states[letter].remove(state)
+                    letter = check_curr_letters[state][0]
+                    check_curr_letters[state].remove(letter)
+                    if not check_curr_letters[state]:
+                        available_states.remove(state)
+                previous_state = state
+                previous_letter = letter
             C[i] = (state, letter)
 
+    return cycles_to_mealy_machines(cycles, nb_states, nb_letters)
+
+
+def cycles_to_mealy_machines(cycles, nb_states, nb_letters):
     delta = [[None for i in range(nb_letters)]
              for j in range(nb_states)]
     rho = [[None for i in range(nb_letters)]
@@ -127,6 +143,7 @@ def helix_birev(nb_states, nb_letters):
         for i in range(0, len(C)):
             prev_state, prev_letter = C[i-1]
             state, letter = C[i]
+            # print(prev_state, prev_letter)
             delta[prev_state][prev_letter] = state
             rho[prev_state][prev_letter] = letter
     return MealyMachine(delta, rho)
