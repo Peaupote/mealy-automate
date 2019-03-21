@@ -89,7 +89,8 @@ def __valid_vertex(v, start, prev, delta, rho):
         if delta[i][x] == p:
             return False
     for i in range(len(delta[0])):
-        if rho[p][i] == x: return False
+        if rho[p][i] == x:
+            return False
 
     if start:
         r, y = prev
@@ -99,59 +100,79 @@ def __valid_vertex(v, start, prev, delta, rho):
         new_delta[r][y] = p
         new_rho[r][y] = x
         for i in range(len(delta)):
-            if new_delta[i][t] == q: return False
+            if new_delta[i][t] == q:
+                return False
         for i in range(len(delta[0])):
-            if new_rho[q][i] == t: return False
+            if new_rho[q][i] == t:
+                return False
     return True
 
+
 def __populate_cycles(cycles, start, prev, vertices, delta, rho):
+    print("---------")
     if not vertices:
         p, x = prev
         delta[p][x] = start[0]
         rho[p][x] = start[1]
         return delta, rho
-    print("populate ", cycles, prev, delta, rho)
+
+    print("populate ", cycles)
+
+    options = list(filter(lambda v: __valid_vertex(
+        v, None if cycles[0] != 0 else start, prev, delta, rho), vertices))
     if cycles[0] == 0:
+        print("IN IF")
         p, x = prev
         delta[p][x] = start[0]
         rho[p][x] = start[1]
         cycles.pop(0)
         if not cycles:
             return delta, rho
+        else:
+            new_start = vertices.pop()
+            prev = new_start
+            start = new_start
+            new_delta, new_rho = deepcopy(delta), deepcopy(rho)
+            res = __populate_cycles(list(cycles), new_start, new_start,
+                                    list(vertices), new_delta, new_rho)
+            if res:
+                return res
 
     cycles[0] -= 1
-    options = list(filter(lambda v:__valid_vertex(v, None if cycles[0] != 0 else start, prev, delta, rho), vertices))
     print(options)
-    if not options: return False
+    if not options:
+        return False
 
     for q, y in options:
-        #print("boucles", q, y)
+        # print("boucles", q, y)
         new_delta, new_rho = deepcopy(delta), deepcopy(rho)
         p, x = prev
         new_delta[p][x] = q
         new_rho[p][x] = y
         res = False
-        if cycles[0] == 0:
-            new_delta[q][y] = start[0]
-            new_rho[q][y] = start[1]
-            new_start = vertices.pop()
-            res = __populate_cycles(list(cycles), new_start, new_start,
-                                    list(filter(lambda v: v != (q, y), vertices)),
-                                    new_delta, new_rho)
-        else:
-            res = __populate_cycles(list(cycles), start, (q, y),
-                                    list(filter(lambda v: v != (q, y), vertices)),
-                                    new_delta, new_rho)
-        if res: return res
+        # if cycles[0] == 0:
+        #     # new_delta[q][y] = start[0]
+        #     # new_rho[q][y] = start[1]
+        #     new_start = vertices.pop()
+        #     res = __populate_cycles(list(cycles), new_start, new_start,
+        #                             list(filter(lambda v: v != (q, y), vertices)),
+        #                             new_delta, new_rho)
+        # else:
+        res = __populate_cycles(list(cycles), start, (q, y),
+                                list(filter(lambda v: v != (q, y), vertices)),
+                                new_delta, new_rho)
+        if res:
+            return res
     return False
 
+
 def helix_birev(nb_states, nb_letters):
-    cycles = [4]
-    # c, size = 0, nb_states * nb_letters
-    # while c < size:
-    #     s = randint(1, size - c)
-    #     cycles.append(s)
-    #     c += s
+    cycles = []
+    c, size = 0, nb_states * nb_letters
+    while c < size:
+        s = randint(1, size - c)
+        cycles.append(s)
+        c += s
 
     vertices = []
     for p in range(nb_states):
@@ -164,8 +185,10 @@ def helix_birev(nb_states, nb_letters):
         vertices = list(sample(vertices, len(vertices)))
         start = vertices.pop()
         print(start)
-        res = __populate_cycles(list(cycles), start, start, vertices, deepcopy(delta), deepcopy(rho))
-        if res: return MealyMachine(*res)
+        res = __populate_cycles(
+            list(cycles), start, start, vertices, deepcopy(delta), deepcopy(rho))
+        if res:
+            return MealyMachine(*res)
 
 
 def cycles_to_mealy_machines(cycles, nb_states, nb_letters):
@@ -184,6 +207,7 @@ def cycles_to_mealy_machines(cycles, nb_states, nb_letters):
 
 
 H = helix_birev(2, 2)
+
 
 def random_helix_birev(nb_states, nb_letters):
     compteur = 0
@@ -312,11 +336,13 @@ birev33 = [MealyMachine([[0, 0, 0], [1, 1, 2], [2, 2, 1]],
 for indice, machine in enumerate(birev33):
     machine.name = "birev33_" + str(indice)
 
+
 def count_cycle_size(H):
     cycles = {}
     done = set()
     for i in H:
-        if i in done: continue
+        if i in done:
+            continue
         done.add(i)
         j = H[i]
         length = 1
@@ -324,9 +350,11 @@ def count_cycle_size(H):
             done.add(j)
             j = H[j]
             length += 1
-        if length not in cycles: cycles[length] = 0
+        if length not in cycles:
+            cycles[length] = 0
         cycles[length] += 1
     return cycles
+
 
 def count_cycle_size_in_inverse():
     for i in range(len(birev33)):
@@ -335,6 +363,7 @@ def count_cycle_size_in_inverse():
         c1 = count_cycle_size(h1)
         c2 = count_cycle_size(h2)
         print(i, c1, c2)
+
 
 def count_cycle_size_in_product():
     for i in range(len(birev33)):
