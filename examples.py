@@ -85,11 +85,10 @@ def dumb_factorization(m):
 
 def __valid_vertex(v, start, prev, delta, rho):
     p, x = v
-    for i in range(len(delta[0])):
-        if delta[i][x] == p:
-            print(i,x,delta[i][x],p)
-            return False
     for i in range(len(delta)):
+        if delta[i][x] == p:
+            return False
+    for i in range(len(delta[0])):
         if rho[p][i] == x: return False
 
     if start:
@@ -99,32 +98,32 @@ def __valid_vertex(v, start, prev, delta, rho):
         new_rho = deepcopy(rho)
         new_delta[r][y] = p
         new_rho[r][y] = x
-        for i in range(len(delta[0])):
-            if new_delta[i][t] == q: return False
         for i in range(len(delta)):
+            if new_delta[i][t] == q: return False
+        for i in range(len(delta[0])):
             if new_rho[q][i] == t: return False
     return True
 
 def __populate_cycles(cycles, start, prev, vertices, delta, rho):
-    if not vertices: return delta, rho
-    print("populate ", cycles)
-    options = list(filter(lambda v: __valid_vertex(v, None if cycles[0] != 1 else start, prev, delta, rho), vertices))
-
+    if not vertices:
+        p, x = prev
+        delta[p][x] = start[0]
+        rho[p][x] = start[1]
+        return delta, rho
+    print("populate ", cycles, prev, delta, rho)
     if cycles[0] == 0:
-        print("in if")
+        p, x = prev
+        delta[p][x] = start[0]
+        rho[p][x] = start[1]
         cycles.pop(0)
         if not cycles:
-            p, x = prev
-            delta[p][x] = start[0]
-            rho[p][x] = start[1]
             return delta, rho
 
-    print("fin if")
-
-    if not options: return False
     cycles[0] -= 1
+    options = list(filter(lambda v:__valid_vertex(v, None if cycles[0] != 0 else start, prev, delta, rho), vertices))
+    print(options)
+    if not options: return False
 
-    print("populatebis ", cycles)
     for q, y in options:
         #print("boucles", q, y)
         new_delta, new_rho = deepcopy(delta), deepcopy(rho)
@@ -132,7 +131,6 @@ def __populate_cycles(cycles, start, prev, vertices, delta, rho):
         new_delta[p][x] = q
         new_rho[p][x] = y
         res = False
-        print("cycles 0", cycles[0])
         if cycles[0] == 0:
             new_delta[q][y] = start[0]
             new_rho[q][y] = start[1]
@@ -141,7 +139,6 @@ def __populate_cycles(cycles, start, prev, vertices, delta, rho):
                                     list(filter(lambda v: v != (q, y), vertices)),
                                     new_delta, new_rho)
         else:
-            print('cycles',list(cycles))
             res = __populate_cycles(list(cycles), start, (q, y),
                                     list(filter(lambda v: v != (q, y), vertices)),
                                     new_delta, new_rho)
@@ -149,12 +146,12 @@ def __populate_cycles(cycles, start, prev, vertices, delta, rho):
     return False
 
 def helix_birev(nb_states, nb_letters):
-    cycles = []
-    c, size = 0, nb_states * nb_letters
-    while c < size:
-        s = randint(1, size - c)
-        cycles.append(s)
-        c += s
+    cycles = [4]
+    # c, size = 0, nb_states * nb_letters
+    # while c < size:
+    #     s = randint(1, size - c)
+    #     cycles.append(s)
+    #     c += s
 
     vertices = []
     for p in range(nb_states):
