@@ -1,10 +1,11 @@
+from graphviz import Digraph
+from sympy.combinatorics.perm_groups import PermutationGroup
 """Mealy Machine : md-réduction, dualisation, inversion, produit, factorisation..."""
 
 import igraph
 from sympy.combinatorics import Permutation
 Permutation.print_cyclic = True
-from sympy.combinatorics.perm_groups import PermutationGroup
-from graphviz import Digraph
+
 
 class MealyMachine:
     """Machine de Mealy : dualisation, inversion, minimisation, md-réduction,
@@ -257,16 +258,17 @@ class MealyMachine:
         for f in aut:
             ps = Permutation(list(map(lambda s: s - S, f[S:ST])))
             pl = Permutation(list(map(lambda s: s - ST, f[ST:SL])))
-            p = Permutation(list(map(lambda s: s - S, f[S:ST])) + list(map(lambda s: s - ST + self.nb_states, f[ST:SL])))
+            p = Permutation(list(map(
+                lambda s: s - S, f[S:ST])) + list(map(lambda s: s - ST + self.nb_states, f[ST:SL])))
             print(ps, 'x', pl)
             base.append(p)
         return PermutationGroup(base)
 
     def pretty_print_perm(self, p):
         for cycle in p.cyclic_form:
-            print('(',
-                  ' '.join(map(lambda x: self.states[x] if x < self.nb_states else self.letters[x - self.nb_states], cycle)),
-                  ')', end='')
+            print('(', ' '.join(map(
+                lambda x: self.states[x] if x < self.nb_states else self.letters[x - self.nb_states], cycle)), ')', end='')
+
 
 def product(m1, m2):
     """Renvoie le produit des automates m1 et m2"""

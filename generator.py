@@ -1,4 +1,5 @@
 from mealy import MealyMachine
+from examples import count_cycle_size
 from random import randint, sample, shuffle
 from copy import deepcopy
 
@@ -42,7 +43,7 @@ def helix(nb_states, nb_letters):
     vertices, delta, rho = __init(nb_states, nb_letters)
     targets = sample(vertices, len(vertices))
     res = rec(list(vertices), list(targets),
-              list(delta), list(rho))
+              deepcopy(delta), deepcopy(rho))
     return MealyMachine(*res)
 
 
@@ -65,6 +66,50 @@ def rec(sources, targets, delta, rho):
             rho[p][x] = None
             targets.append((q, y))
         sources.append((p, x))
+    return False
+
+
+def helix_opti(nb_states, nb_letters):
+    vertices, delta, rho = __init(nb_states, nb_letters)
+    targets = sample(vertices, len(vertices))
+    res = rec_opti(None, None, list(vertices), list(targets),
+                   deepcopy(delta), deepcopy(rho))
+    return MealyMachine(*res)
+
+
+def rec_opti(start, prev, sources, targets, delta, rho):
+    if not sources and not targets:
+        return delta, rho
+
+    if not prev:
+        start = sources.pop()
+        prev = start
+
+    p_start, x_start = start
+    p_prev, x_prev = prev
+
+    for _ in range(len(targets)):
+        p_next, x_next = targets.pop(0)
+        delta[p_prev][x_prev] = p_next
+        rho[p_prev][x_prev] = x_next
+        if not p_next == p_start or not x_next == x_start:
+            sources.remove((p_next, x_next))
+            if __valid_delta(delta) and __valid_rho(rho):
+                res = rec_opti(start, (p_next, x_next), list(sources),
+                               list(targets), deepcopy(delta), deepcopy(rho))
+                if res:
+                    return res
+            sources.append((p_next, x_next))
+        else:
+            if __valid_delta(delta) and __valid_rho(rho):
+                res = rec_opti(None, None, list(sources),
+                               list(targets), deepcopy(delta), deepcopy(rho))
+                if res:
+                    return res
+        delta[p_prev][x_prev] = None
+        rho[p_prev][x_prev] = None
+        targets.append((p_next, x_next))
+
     return False
 
 
@@ -126,3 +171,12 @@ def rec_cycles(start, prev, cycles, vertices, delta, rho):
             delta[p_prev][x_prev] = None
             rho[p_prev][x_prev] = None
     return False
+
+
+def test():
+    for i in range(10000):
+        M = helix_opti(4, 4)
+        print(i, "->", M.bireversible(), count_cycle_size(M.helix_graph()))
+
+
+test()
