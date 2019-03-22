@@ -126,6 +126,10 @@ def helix(nb_states, nb_letters):
     if res:
         return MealyMachine(*res)
     return False
+    # return compteur
+
+
+# REC = 0
 
 
 def rec(sources, targets, delta, rho):
