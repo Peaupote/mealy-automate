@@ -143,7 +143,48 @@ def rec_cycles(start, prev, cycles, vertices, delta, rho):
     return False
 
 
-def test():
-    for i in range(10000):
-        M = helix(4, 4)
-        print(i, "->", M.bireversible(), count_cycle_size(M.helix_graph()))
+def helix_gen(nb_states, nb_letters):
+    vertices, delta, rho = __init(nb_states, nb_letters)
+    targets = sample(vertices, len(vertices))
+    enum = []
+    rec_gen(None, None, list(vertices), list(targets),
+            deepcopy(delta), deepcopy(rho), enum)
+    return enum
+
+
+REC = 0
+
+
+def rec_gen(start, prev, sources, targets, delta, rho, enum):
+    global REC
+
+    if not sources and not targets:
+        REC += 1
+        print(REC)
+        enum.append(MealyMachine(delta, rho))
+        return
+
+    if not prev:
+        start = sources.pop()
+        prev = start
+
+    p_start, x_start = start
+    p_prev, x_prev = prev
+
+    for _ in range(len(targets)):
+        p_next, x_next = targets.pop(0)
+        delta[p_prev][x_prev] = p_next
+        rho[p_prev][x_prev] = x_next
+        if not p_next == p_start or not x_next == x_start:
+            sources.remove((p_next, x_next))
+            if __valid_delta(delta) and __valid_rho(rho):
+                rec_gen(start, (p_next, x_next), list(sources),
+                        list(targets), deepcopy(delta), deepcopy(rho), enum)
+            sources.append((p_next, x_next))
+        else:
+            if __valid_delta(delta) and __valid_rho(rho):
+                rec_gen(None, None, list(sources),
+                        list(targets), deepcopy(delta), deepcopy(rho), enum)
+        delta[p_prev][x_prev] = None
+        rho[p_prev][x_prev] = None
+        targets.append((p_next, x_next))
