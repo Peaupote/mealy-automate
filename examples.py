@@ -1,3 +1,4 @@
+
 import math
 from mealy import MealyMachine, product
 from random import randint, sample
@@ -93,30 +94,28 @@ def __valid_vertex(v, start, prev, delta, rho):
             return False
 
     if start:
-        r, y = prev
-        q, t = start
+        p_prev, x_prev = prev
+        p_start, x_start = start
         new_delta = deepcopy(delta)
         new_rho = deepcopy(rho)
-        new_delta[r][y] = p
-        new_rho[r][y] = x
+        new_delta[p_prev][x_prev] = p
+        new_rho[p_prev][x_prev] = x
         for i in range(len(delta)):
-            if new_delta[i][t] == q:
+            if new_delta[p_start][x_start] == p_start:
                 return False
         for i in range(len(delta[0])):
-            if new_rho[q][i] == t:
+            if new_rho[p_start][i] == x_start:
                 return False
     return True
 
 
-def __populate_cycles(cycles, start, prev, vertices, delta, rho):
+def __populate_cycles(cycles, suites,  start, prev, vertices, delta, rho):
     print("---------")
     if not vertices:
         p, x = prev
         delta[p][x] = start[0]
         rho[p][x] = start[1]
         return delta, rho
-
-    print("populate ", cycles)
 
     options = list(filter(lambda v: __valid_vertex(
         v, None if cycles[0] != 0 else start, prev, delta, rho), vertices))
@@ -125,21 +124,30 @@ def __populate_cycles(cycles, start, prev, vertices, delta, rho):
         p, x = prev
         delta[p][x] = start[0]
         rho[p][x] = start[1]
+        print("populate ", cycles)
+        print("delta", delta)
+        print("rho", rho)
+        print("start", start)
+        print("prev", prev)
+        print("vertices", vertices)
+        print("options", options)
         cycles.pop(0)
         if not cycles:
             return delta, rho
         else:
             new_start = vertices.pop()
+            cycles[0] -= 1
             prev = new_start
             start = new_start
+
             new_delta, new_rho = deepcopy(delta), deepcopy(rho)
-            res = __populate_cycles(list(cycles), new_start, new_start,
+            res = __populate_cycles(list(cycles), list(suites), new_start, new_start,
                                     list(vertices), new_delta, new_rho)
             if res:
                 return res
 
     cycles[0] -= 1
-    print(options)
+    # print(options)
     if not options:
         return False
 
@@ -149,16 +157,14 @@ def __populate_cycles(cycles, start, prev, vertices, delta, rho):
         p, x = prev
         new_delta[p][x] = q
         new_rho[p][x] = y
-        res = False
-        # if cycles[0] == 0:
-        #     # new_delta[q][y] = start[0]
-        #     # new_rho[q][y] = start[1]
-        #     new_start = vertices.pop()
-        #     res = __populate_cycles(list(cycles), new_start, new_start,
-        #                             list(filter(lambda v: v != (q, y), vertices)),
-        #                             new_delta, new_rho)
-        # else:
-        res = __populate_cycles(list(cycles), start, (q, y),
+        print("populate ", cycles)
+        print("delta", delta)
+        print("rho", rho)
+        print("start", start)
+        print("prev", prev)
+        print("vertices", vertices)
+        print("options", options)
+        res = __populate_cycles(list(cycles), list(cycles), start, (q, y),
                                 list(filter(lambda v: v != (q, y), vertices)),
                                 new_delta, new_rho)
         if res:
@@ -184,6 +190,7 @@ def helix_birev(nb_states, nb_letters):
     while True:
         vertices = list(sample(vertices, len(vertices)))
         start = vertices.pop()
+        cycles[0] -= 1
         print(start)
         res = __populate_cycles(
             list(cycles), start, start, vertices, deepcopy(delta), deepcopy(rho))
