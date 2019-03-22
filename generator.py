@@ -42,42 +42,12 @@ def __init(nb_states, nb_letters):
 def helix(nb_states, nb_letters):
     vertices, delta, rho = __init(nb_states, nb_letters)
     targets = sample(vertices, len(vertices))
-    res = rec(list(vertices), list(targets),
+    res = rec(None, None, list(vertices), list(targets),
               deepcopy(delta), deepcopy(rho))
     return MealyMachine(*res)
 
 
-def rec(sources, targets, delta, rho):
-    if not sources and not targets:
-        return delta, rho
-
-    for _ in range(len(sources)):
-        (p, x) = sources.pop(0)
-        for _ in range(len(targets)):
-            (q, y) = targets.pop(0)
-            delta[p][x] = q
-            rho[p][x] = y
-            if __valid_delta(delta) and __valid_rho(rho):
-                res = rec(list(sources), list(targets),
-                          deepcopy(delta), deepcopy(rho))
-                if res:
-                    return res
-            delta[p][x] = None
-            rho[p][x] = None
-            targets.append((q, y))
-        sources.append((p, x))
-    return False
-
-
-def helix_opti(nb_states, nb_letters):
-    vertices, delta, rho = __init(nb_states, nb_letters)
-    targets = sample(vertices, len(vertices))
-    res = rec_opti(None, None, list(vertices), list(targets),
-                   deepcopy(delta), deepcopy(rho))
-    return MealyMachine(*res)
-
-
-def rec_opti(start, prev, sources, targets, delta, rho):
+def rec(start, prev, sources, targets, delta, rho):
     if not sources and not targets:
         return delta, rho
 
@@ -95,15 +65,15 @@ def rec_opti(start, prev, sources, targets, delta, rho):
         if not p_next == p_start or not x_next == x_start:
             sources.remove((p_next, x_next))
             if __valid_delta(delta) and __valid_rho(rho):
-                res = rec_opti(start, (p_next, x_next), list(sources),
-                               list(targets), deepcopy(delta), deepcopy(rho))
+                res = rec(start, (p_next, x_next), list(sources),
+                          list(targets), deepcopy(delta), deepcopy(rho))
                 if res:
                     return res
             sources.append((p_next, x_next))
         else:
             if __valid_delta(delta) and __valid_rho(rho):
-                res = rec_opti(None, None, list(sources),
-                               list(targets), deepcopy(delta), deepcopy(rho))
+                res = rec(None, None, list(sources),
+                          list(targets), deepcopy(delta), deepcopy(rho))
                 if res:
                     return res
         delta[p_prev][x_prev] = None
@@ -175,8 +145,5 @@ def rec_cycles(start, prev, cycles, vertices, delta, rho):
 
 def test():
     for i in range(10000):
-        M = helix_opti(4, 4)
+        M = helix(4, 4)
         print(i, "->", M.bireversible(), count_cycle_size(M.helix_graph()))
-
-
-test()
