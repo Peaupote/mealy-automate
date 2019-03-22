@@ -108,6 +108,78 @@ def __valid_rho(rho):
     return True
 
 
+def helix(nb_states, nb_letters):
+    # cycles = [nb_states*nb_letters]
+    vertices = []
+    suites = []
+    for p in range(nb_states):
+        for x in range(nb_letters):
+            vertices.append((p, x))
+    delta = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
+    rho = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
+    # print("vertices", vertices)
+    while True:
+        cycles = []
+        c, size = 0, nb_states * nb_letters
+        while c < size:
+            s = randint(1, size - c)
+            cycles.append(s)
+            c += s
+        sample(vertices, len(vertices))
+        res = rec(None, None, list(cycles), list(vertices),
+                  list(delta), list(rho), list(suites))
+        if res:
+            return MealyMachine(*res)
+    return False
+
+
+def rec(start, prev, cycles, vertices, delta, rho, suites):
+    # print("--------")
+    # print("cycles", cycles)
+    # print("suites", suites)
+    # print("vertices", vertices)
+    # print("delta", delta)
+    # print("rho", rho)
+    if cycles[0] == 0:
+        p_prev, x_prev = prev
+        p_start, x_start = start
+        delta[p_prev][x_prev] = p_start
+        rho[p_prev][x_prev] = x_start
+        if not __valid_delta(delta) or not __valid_rho(rho):
+            # print("INVALIDE")
+            # print("delta-invalide", delta)
+            # print("rho-invalide", rho)
+            return False
+        cycles.pop(0)
+        start = None
+        prev = None
+        if not cycles:
+            return delta, rho
+    size = len(vertices)
+    for _ in range(size):
+        v = vertices.pop(0)
+        p, x = v
+        if prev:
+            p_prev, x_prev = prev
+            delta[p_prev][x_prev] = p
+            rho[p_prev][x_prev] = x
+        suites.append(v)
+        cycles[0] -= 1
+        if __valid_delta(delta) and __valid_rho(rho):
+            res = rec(v if start is None else start, v, list(cycles), list(vertices), list(
+                delta), list(rho), list(suites))
+            if res:
+                return res
+        suites.pop()
+        cycles[0] += 1
+        vertices.append(v)
+        if prev:
+            p_prev, x_prev = prev
+            delta[p_prev][x_prev] = None
+            rho[p_prev][x_prev] = None
+    return False
+
+
 def __valid_vertex(v, start, prev, delta, rho):
     p, x = v
     for i in range(len(delta)):
@@ -136,6 +208,7 @@ def __valid_vertex(v, start, prev, delta, rho):
 
 def __populate_cycles(cycles, suites,  start, prev, vertices, delta, rho):
     print("---------")
+    print("populate", cycles)
     # if not vertices:
     #     p, x = prev
     #     delta[p][x] = start[0]
