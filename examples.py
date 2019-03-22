@@ -144,20 +144,10 @@ def __populate_cycles(cycles, start, prev, vertices, delta, rho):
         return False
 
     for q, y in options:
-        # print("boucles", q, y)
         new_delta, new_rho = deepcopy(delta), deepcopy(rho)
         p, x = prev
         new_delta[p][x] = q
         new_rho[p][x] = y
-        res = False
-        # if cycles[0] == 0:
-        #     # new_delta[q][y] = start[0]
-        #     # new_rho[q][y] = start[1]
-        #     new_start = vertices.pop()
-        #     res = __populate_cycles(list(cycles), new_start, new_start,
-        #                             list(filter(lambda v: v != (q, y), vertices)),
-        #                             new_delta, new_rho)
-        # else:
         res = __populate_cycles(list(cycles), start, (q, y),
                                 list(filter(lambda v: v != (q, y), vertices)),
                                 new_delta, new_rho)
@@ -167,12 +157,7 @@ def __populate_cycles(cycles, start, prev, vertices, delta, rho):
 
 
 def helix_birev(nb_states, nb_letters):
-    cycles = []
-    c, size = 0, nb_states * nb_letters
-    while c < size:
-        s = randint(1, size - c)
-        cycles.append(s)
-        c += s
+    cycles = [nb_states * nb_letters]
 
     vertices = []
     for p in range(nb_states):

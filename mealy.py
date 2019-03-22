@@ -253,14 +253,20 @@ class MealyMachine:
         #igraph.plot(H, layout=H.layout())
 
         aut = H.get_automorphisms_vf2()
-        base, states, letters = [], [], []
+        base = []
         for f in aut:
-            base.append(Permutation(f[:S]))
-            states.append(Permutation(list(map(lambda s: s - S, f[S:ST]))))
-            letters.append(Permutation(list(map(lambda s: s - ST, f[ST:SL]))))
+            ps = Permutation(list(map(lambda s: s - S, f[S:ST])))
+            pl = Permutation(list(map(lambda s: s - ST, f[ST:SL])))
+            p = Permutation(list(map(lambda s: s - S, f[S:ST])) + list(map(lambda s: s - ST + self.nb_states, f[ST:SL])))
+            print(ps, 'x', pl)
+            base.append(p)
+        return base
 
-        return PermutationGroup(base), PermutationGroup(states), PermutationGroup(letters)
-
+    def pretty_print_perm(self, p):
+        for cycle in p.cyclic_form:
+            print('(',
+                  ' '.join(map(lambda x: self.states[x] if x < self.nb_states else self.letters[x - self.nb_states], cycle)),
+                  ')', end='')
 
 def product(m1, m2):
     """Renvoie le produit des automates m1 et m2"""
