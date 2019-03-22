@@ -83,6 +83,102 @@ def dumb_factorization(m):
     return None
 
 
+def __valid_delta(delta):
+    for x in range(len(delta[0])):
+        out = [False] * len(delta)
+        for p in range(len(delta)):
+            if delta[p][x] is None:
+                continue
+            elif out[delta[p][x]]:
+                return False
+            out[delta[p][x]] = True
+    return True
+
+
+def __valid_rho(rho):
+    for p in range(len(rho)):
+        out = [False] * len(rho[p])
+        for x in range(len(rho[p])):
+            if rho[p][x] is None:
+                continue
+            elif out[rho[p][x]]:
+                return False
+            out[rho[p][x]] = True
+    return True
+
+
+def helix(nb_states, nb_letters):
+    # cycles = [nb_states*nb_letters]
+    vertices = []
+    suites = []
+    for p in range(nb_states):
+        for x in range(nb_letters):
+            vertices.append((p, x))
+    delta = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
+    rho = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
+    # print("vertices", vertices)
+    while True:
+        cycles = []
+        c, size = 0, nb_states * nb_letters
+        while c < size:
+            s = randint(1, size - c)
+            cycles.append(s)
+            c += s
+        sample(vertices, len(vertices))
+        res = rec(None, None, list(cycles), list(vertices),
+                  list(delta), list(rho), list(suites))
+        if res:
+            return MealyMachine(*res)
+    return False
+
+
+def rec(start, prev, cycles, vertices, delta, rho, suites):
+    # print("--------")
+    # print("cycles", cycles)
+    # print("suites", suites)
+    # print("vertices", vertices)
+    # print("delta", delta)
+    # print("rho", rho)
+    if cycles[0] == 0:
+        p_prev, x_prev = prev
+        p_start, x_start = start
+        delta[p_prev][x_prev] = p_start
+        rho[p_prev][x_prev] = x_start
+        if not __valid_delta(delta) or not __valid_rho(rho):
+            # print("INVALIDE")
+            # print("delta-invalide", delta)
+            # print("rho-invalide", rho)
+            return False
+        cycles.pop(0)
+        start = None
+        prev = None
+        if not cycles:
+            return delta, rho
+    size = len(vertices)
+    for _ in range(size):
+        v = vertices.pop(0)
+        p, x = v
+        if prev:
+            p_prev, x_prev = prev
+            delta[p_prev][x_prev] = p
+            rho[p_prev][x_prev] = x
+        suites.append(v)
+        cycles[0] -= 1
+        if __valid_delta(delta) and __valid_rho(rho):
+            res = rec(v if start is None else start, v, list(cycles), list(vertices), list(
+                delta), list(rho), list(suites))
+            if res:
+                return res
+        suites.pop()
+        cycles[0] += 1
+        vertices.append(v)
+        if prev:
+            p_prev, x_prev = prev
+            delta[p_prev][x_prev] = None
+            rho[p_prev][x_prev] = None
+    return False
+
+
 def __valid_vertex(v, start, prev, delta, rho):
     p, x = v
     for i in range(len(delta)):
@@ -93,54 +189,72 @@ def __valid_vertex(v, start, prev, delta, rho):
             return False
 
     if start:
-        r, y = prev
-        q, t = start
+        print("COMPLEXE")
+        p_prev, x_prev = prev
+        p_start, x_start = start
         new_delta = deepcopy(delta)
         new_rho = deepcopy(rho)
-        new_delta[r][y] = p
-        new_rho[r][y] = x
+        new_delta[p_prev][x_prev] = p
+        new_rho[p_prev][x_prev] = x
         for i in range(len(delta)):
-            if new_delta[i][t] == q:
+            if new_delta[p_start][x_start] == p_start:
                 return False
         for i in range(len(delta[0])):
-            if new_rho[q][i] == t:
+            if new_rho[p_start][i] == x_start:
                 return False
     return True
 
 
-def __populate_cycles(cycles, start, prev, vertices, delta, rho):
+def __populate_cycles(cycles, suites,  start, prev, vertices, delta, rho):
     print("---------")
-    if not vertices:
-        p, x = prev
-        delta[p][x] = start[0]
-        rho[p][x] = start[1]
-        return delta, rho
-
-    print("populate ", cycles)
+    print("populate", cycles)
+    # if not vertices:
+    #     p, x = prev
+    #     delta[p][x] = start[0]
+    #     rho[p][x] = start[1]
+    #     return delta, rho
 
     options = list(filter(lambda v: __valid_vertex(
-        v, None if cycles[0] != 0 else start, prev, delta, rho), vertices))
+        v, start if cycles[0] == 1 else None, prev, delta, rho), vertices))
     if cycles[0] == 0:
-        print("IN IF")
+        print("CYCLES FIN")
         p, x = prev
         delta[p][x] = start[0]
         rho[p][x] = start[1]
+        print("populate ", cycles)
+        print("suites", suites)
+        print("delta", delta)
+        print("rho", rho)
+        print("start", start)
+        print("prev", prev)
+        print("vertices", vertices)
+        print("options", options)
         cycles.pop(0)
-        if not cycles:
+        if not __valid_delta(delta) or not __valid_rho(rho):
+            print("INVALIDE")
+            return False
+        elif not cycles:
             return delta, rho
         else:
+            print("NOUVEAU CYCLES")
             new_start = vertices.pop()
             prev = new_start
             start = new_start
+            suites.append(new_start)
+            cycles[0] -= 1
+
             new_delta, new_rho = deepcopy(delta), deepcopy(rho)
-            res = __populate_cycles(list(cycles), new_start, new_start,
+            res = __populate_cycles(list(cycles), list(suites), new_start, new_start,
                                     list(vertices), new_delta, new_rho)
             if res:
                 return res
+            suites.pop()
+            cycles[0] += 1
+            return False
 
-    cycles[0] -= 1
-    print(options)
+    # print(options)
     if not options:
+        print("Pas d'options")
         return False
 
     for q, y in options:
@@ -148,32 +262,56 @@ def __populate_cycles(cycles, start, prev, vertices, delta, rho):
         p, x = prev
         new_delta[p][x] = q
         new_rho[p][x] = y
-        res = __populate_cycles(list(cycles), start, (q, y),
+        print("populate ", cycles)
+        print("suites", suites)
+        print("delta", delta)
+        print("rho", rho)
+        print("start", start)
+        print("prev", prev)
+        print("vertices", vertices)
+        print("options", options)
+        suites.append((q, y))
+        cycles[0] -= 1
+        res = __populate_cycles(list(cycles), list(suites), start, (q, y),
                                 list(filter(lambda v: v != (q, y), vertices)),
                                 new_delta, new_rho)
         if res:
             return res
+        suites.pop()
+        cycles[0] += 1
     return False
 
 
 def helix_birev(nb_states, nb_letters):
-    cycles = [nb_states * nb_letters]
+    cycles = []
+    c, size = 0, nb_states * nb_letters
+    while c < size:
+        s = randint(1, size - c)
+        cycles.append(s)
+        c += s
+    # cycles = [4]
 
+    print("CYCLES :", cycles)
     vertices = []
+    suites = []
     for p in range(nb_states):
         for x in range(nb_letters):
             vertices.append((p, x))
     delta = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
     rho = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
-    print(vertices)
-    while True:
-        vertices = list(sample(vertices, len(vertices)))
-        start = vertices.pop()
-        print(start)
+    sample(vertices, len(vertices))
+    print("vertices", vertices)
+    for _ in range(len(vertices)):
+        start = vertices.pop(0)
+        suites.append(start)
+        cycles[0] -= 1
+        # print(start)
         res = __populate_cycles(
-            list(cycles), start, start, vertices, deepcopy(delta), deepcopy(rho))
+            list(cycles), list(suites), start, start, list(vertices), deepcopy(delta), deepcopy(rho))
         if res:
             return MealyMachine(*res)
+        vertices.append(start)
+    return False
 
 
 def cycles_to_mealy_machines(cycles, nb_states, nb_letters):
