@@ -118,7 +118,10 @@ def helix(nb_states, nb_letters):
     delta = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
     rho = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
     # print("vertices", vertices)
+    # compteur = 0
     while True:
+        # compteur += 1
+        # print("compteur -> ", compteur)
         cycles = []
         c, size = 0, nb_states * nb_letters
         while c < size:
@@ -127,13 +130,21 @@ def helix(nb_states, nb_letters):
             c += s
         sample(vertices, len(vertices))
         res = rec(None, None, list(cycles), list(vertices),
-                  list(delta), list(rho), list(suites))
+                  deepcopy(delta), deepcopy(rho), list(suites))
         if res:
+            # return compteur
             return MealyMachine(*res)
     return False
+    # return compteur
+
+
+# REC = 0
 
 
 def rec(start, prev, cycles, vertices, delta, rho, suites):
+    # global REC
+    # REC += 1
+    # print(REC)
     # print("--------")
     # print("cycles", cycles)
     # print("suites", suites)
@@ -156,6 +167,7 @@ def rec(start, prev, cycles, vertices, delta, rho, suites):
         if not cycles:
             return delta, rho
     size = len(vertices)
+
     for _ in range(size):
         v = vertices.pop(0)
         p, x = v
@@ -166,8 +178,8 @@ def rec(start, prev, cycles, vertices, delta, rho, suites):
         suites.append(v)
         cycles[0] -= 1
         if __valid_delta(delta) and __valid_rho(rho):
-            res = rec(v if start is None else start, v, list(cycles), list(vertices), list(
-                delta), list(rho), list(suites))
+            res = rec(v if start is None else start, v, list(cycles), list(vertices), deepcopy(
+                delta), deepcopy(rho), list(suites))
             if res:
                 return res
         suites.pop()
