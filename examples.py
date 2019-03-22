@@ -1,7 +1,6 @@
 import math
 from mealy import MealyMachine, product
-from random import randint, sample
-from copy import deepcopy
+from random import randint
 
 basilica = MealyMachine(
     [[1, 2], [0, 2], [2, 2], [4, 2], [2, 3], [6, 2], [2, 5]],
@@ -81,107 +80,6 @@ def dumb_factorization(m):
                 if product(a, b) == m:
                     return a, b
     return None
-
-
-def __valid_delta(delta):
-    for x in range(len(delta[0])):
-        out = [False] * len(delta)
-        for p in range(len(delta)):
-            if delta[p][x] is None:
-                continue
-            elif out[delta[p][x]]:
-                return False
-            out[delta[p][x]] = True
-    return True
-
-
-def __valid_rho(rho):
-    for p in range(len(rho)):
-        out = [False] * len(rho[p])
-        for x in range(len(rho[p])):
-            if rho[p][x] is None:
-                continue
-            elif out[rho[p][x]]:
-                return False
-            out[rho[p][x]] = True
-    return True
-
-
-def helix(nb_states, nb_letters):
-    # cycles = [nb_states*nb_letters]
-    vertices = []
-    suites = []
-    for p in range(nb_states):
-        for x in range(nb_letters):
-            vertices.append((p, x))
-    delta = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
-    rho = [[None for _ in range(nb_letters)] for _ in range(nb_states)]
-    # print("vertices", vertices)
-
-    vertices = sample(vertices, len(vertices))
-    targets = sample(vertices, len(vertices))
-    print(vertices, targets)
-    res = rec(list(vertices), list(targets),
-              list(delta), list(rho))
-    if res:
-        return MealyMachine(*res)
-    return False
-    # return compteur
-
-
-# REC = 0
-
-
-def rec(sources, targets, delta, rho):
-    # print("--------")
-    # print("targets", targets)
-    # print("sources", sources)
-    # print("delta", delta)
-    # print("rho", rho)
-
-    if not sources and not targets:
-        return delta, rho
-
-    for _ in range(len(sources)):
-        (p, x) = sources.pop(0)
-        for _ in range(len(targets)):
-            (q, y) = targets.pop(0)
-            delta[p][x] = q
-            rho[p][x] = y
-            if __valid_delta(delta) and __valid_rho(rho):
-                res = rec(list(sources), list(targets), deepcopy(delta), deepcopy(rho))
-                if res: return res
-            delta[p][x] = None
-            rho[p][x] = None
-            targets.append((q, y))
-        sources.append((p,x))
-    return False
-
-
-def cycles_to_mealy_machines(cycles, nb_states, nb_letters):
-    delta = [[None for i in range(nb_letters)]
-             for j in range(nb_states)]
-    rho = [[None for i in range(nb_letters)]
-           for j in range(nb_states)]
-    for C in cycles:
-        for i in range(0, len(C)):
-            prev_state, prev_letter = C[i-1]
-            state, letter = C[i]
-            # print(prev_state, prev_letter)
-            delta[prev_state][prev_letter] = state
-            rho[prev_state][prev_letter] = letter
-    return MealyMachine(delta, rho)
-
-
-def random_helix_birev(nb_states, nb_letters):
-    compteur = 0
-    while True:
-        compteur += 1
-        if compteur % 1000 == 0:
-            print(compteur)
-        m = helix_birev(nb_states, nb_letters)
-        if m.bireversible():
-            return m
 
 
 birev33 = [MealyMachine([[0, 0, 0], [1, 1, 2], [2, 2, 1]],
