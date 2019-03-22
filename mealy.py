@@ -260,7 +260,7 @@ class MealyMachine:
             p = Permutation(list(map(lambda s: s - S, f[S:ST])) + list(map(lambda s: s - ST + self.nb_states, f[ST:SL])))
             print(ps, 'x', pl)
             base.append(p)
-        return base
+        return PermutationGroup(base)
 
     def pretty_print_perm(self, p):
         for cycle in p.cyclic_form:
