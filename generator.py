@@ -1,5 +1,5 @@
 from mealy import MealyMachine
-from random import sample, shuffle
+from random import randint, sample, shuffle
 from copy import deepcopy
 
 
@@ -65,4 +65,64 @@ def rec(sources, targets, delta, rho):
             rho[p][x] = None
             targets.append((q, y))
         sources.append((p, x))
+    return False
+
+
+def __random_cycles(size):
+    cycles = []
+    c = 0
+    while c < size:
+        s = randint(1, size - c)
+        cycles.append(s)
+        c += s
+    return cycles
+
+
+def helix_cycles(nb_states, nb_letters):
+    vertices, delta, rho = __init(nb_states, nb_letters)
+    size = nb_states*nb_letters
+    while True:
+        cycles = __random_cycles(size)
+        shuffle(vertices)
+        res = rec_cycles(None, None, list(cycles), list(vertices),
+                         deepcopy(delta), deepcopy(rho))
+        if res:
+            return MealyMachine(*res)
+    return False
+
+
+def rec_cycles(start, prev, cycles, vertices, delta, rho):
+    if cycles[0] == 0:
+        p_prev, x_prev = prev
+        p_start, x_start = start
+        delta[p_prev][x_prev] = p_start
+        rho[p_prev][x_prev] = x_start
+        if not __valid_delta(delta) or not __valid_rho(rho):
+            return False
+        cycles.pop(0)
+        start = None
+        prev = None
+        if not cycles:
+            return delta, rho
+    size = len(vertices)
+
+    for _ in range(size):
+        v = vertices.pop(0)
+        p, x = v
+        if prev:
+            p_prev, x_prev = prev
+            delta[p_prev][x_prev] = p
+            rho[p_prev][x_prev] = x
+        cycles[0] -= 1
+        if __valid_delta(delta) and __valid_rho(rho):
+            res = rec_cycles(v if start is None else start, v, list(cycles), list(vertices), deepcopy(
+                delta), deepcopy(rho))
+            if res:
+                return res
+        cycles[0] += 1
+        vertices.append(v)
+        if prev:
+            p_prev, x_prev = prev
+            delta[p_prev][x_prev] = None
+            rho[p_prev][x_prev] = None
     return False
