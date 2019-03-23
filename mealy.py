@@ -4,6 +4,7 @@ from sympy.combinatorics.perm_groups import PermutationGroup
 
 import igraph
 from sympy.combinatorics import Permutation
+from copy import deepcopy
 Permutation.print_cyclic = True
 
 
@@ -12,8 +13,8 @@ class MealyMachine:
     test d'inversibilité, test de réversibilité"""
 
     def __init__(self, delta, rho, states=None, letters=None, name=None):
-        self.delta = delta
-        self.rho = rho
+        self.delta = deepcopy(delta)
+        self.rho = deepcopy(rho)
         self.states = states if states is not None else [
             str(i) for i in range(len(delta))]
         self.letters = letters if letters is not None else [
