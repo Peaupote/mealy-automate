@@ -189,6 +189,3 @@ def rec_gen(start, prev, sources, targets, delta, rho, enum):
 
     if add:
         sources.append(start)
-
-
-helix_gen(4, 3)
