@@ -42,8 +42,7 @@ def __init(nb_states, nb_letters):
 def helix(nb_states, nb_letters):
     vertices, delta, rho = __init(nb_states, nb_letters)
     targets = sample(vertices, len(vertices))
-    res = rec(None, None, list(vertices), list(targets),
-              deepcopy(delta), deepcopy(rho))
+    res = rec(None, None, vertices, targets, delta, rho)
     return MealyMachine(*res)
 
 
@@ -51,7 +50,10 @@ def rec(start, prev, sources, targets, delta, rho):
     if not sources and not targets:
         return delta, rho
 
+    add = False
+
     if not prev:
+        add = True
         start = sources.pop()
         prev = start
 
@@ -65,20 +67,23 @@ def rec(start, prev, sources, targets, delta, rho):
         if not p_next == p_start or not x_next == x_start:
             sources.remove((p_next, x_next))
             if __valid_delta(delta) and __valid_rho(rho):
-                res = rec(start, (p_next, x_next), list(sources),
-                          list(targets), deepcopy(delta), deepcopy(rho))
+                res = rec(start, (p_next, x_next), sources,
+                          targets, delta, rho)
                 if res:
                     return res
             sources.append((p_next, x_next))
         else:
             if __valid_delta(delta) and __valid_rho(rho):
-                res = rec(None, None, list(sources),
-                          list(targets), deepcopy(delta), deepcopy(rho))
+                res = rec(None, None, sources,
+                          targets, delta, rho)
                 if res:
                     return res
         delta[p_prev][x_prev] = None
         rho[p_prev][x_prev] = None
         targets.append((p_next, x_next))
+
+    if add:
+        sources.append(start)
 
     return False
 
@@ -147,24 +152,18 @@ def helix_gen(nb_states, nb_letters):
     vertices, delta, rho = __init(nb_states, nb_letters)
     targets = sample(vertices, len(vertices))
     enum = []
-    rec_gen(None, None, list(vertices), list(targets),
-            deepcopy(delta), deepcopy(rho), enum)
+    rec_gen(None, None, vertices, targets, delta, rho, enum)
     return enum
 
 
-REC = 0
-
-
 def rec_gen(start, prev, sources, targets, delta, rho, enum):
-    global REC
-
     if not sources and not targets:
-        REC += 1
-        print(REC)
         enum.append(MealyMachine(delta, rho))
         return
 
+    add = False
     if not prev:
+        add = True
         start = sources.pop()
         prev = start
 
@@ -178,13 +177,18 @@ def rec_gen(start, prev, sources, targets, delta, rho, enum):
         if not p_next == p_start or not x_next == x_start:
             sources.remove((p_next, x_next))
             if __valid_delta(delta) and __valid_rho(rho):
-                rec_gen(start, (p_next, x_next), list(sources),
-                        list(targets), deepcopy(delta), deepcopy(rho), enum)
+                rec_gen(start, (p_next, x_next), sources,
+                        targets, delta, rho, enum)
             sources.append((p_next, x_next))
         else:
             if __valid_delta(delta) and __valid_rho(rho):
-                rec_gen(None, None, list(sources),
-                        list(targets), deepcopy(delta), deepcopy(rho), enum)
+                rec_gen(None, None, sources, targets, delta, rho, enum)
         delta[p_prev][x_prev] = None
         rho[p_prev][x_prev] = None
         targets.append((p_next, x_next))
+
+    if add:
+        sources.append(start)
+
+
+helix_gen(4, 3)
