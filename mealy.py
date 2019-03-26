@@ -303,21 +303,24 @@ class MealyMachine:
 
 def product(m1, m2):
     """Renvoie le produit des automates m1 et m2"""
-    M = m1.nb_letters
+    if m1.nb_letters != m2.nb_letters:
+        return None
+    nb_letters = m1.nb_letters
     nb_states = m1.nb_states * m2.nb_states
-    delta = [[None for i in range(m1.nb_letters)]
+    delta = [[None for i in range(nb_letters)]
              for i in range(nb_states)]
-    rho = [[None for i in range(m1.nb_letters)]
+    rho = [[None for i in range(nb_letters)]
            for i in range(nb_states)]
     states = [None for i in range(nb_states)]
 
     for p in range(m1.nb_states):
-        for x in range(m1.nb_letters):
+        for x in range(nb_letters):
             q, y = m1.delta[p][x], m1.rho[p][x]
             for r in range(m2.nb_states):
-                delta[p * M + r][x] = q * M + m2.delta[r][y]
-                rho[p * M + r][x] = m2.rho[r][y]
-                states[p * M + r] = m1.states[p] + m2.states[r]
+                delta[p * m2.nb_states + r][x] = q * \
+                    m2.nb_states + m2.delta[r][y]
+                rho[p * m2.nb_states + r][x] = m2.rho[r][y]
+                states[p * m2.nb_states + r] = m1.states[p] + m2.states[r]
     return MealyMachine(delta, rho, states, list(m1.letters))
 
 
