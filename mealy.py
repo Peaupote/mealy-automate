@@ -24,8 +24,19 @@ class MealyMachine:
         self.nb_letters = len(self.letters)
 
     def __eq__(self, other):
-        return other and\
-            self.delta == other.delta and self.rho == other.rho
+        if other is None:
+            return False
+        if other.nb_states != self.nb_states or other.nb_letters != self.nb_letters:
+            return False
+        for p in range(self.nb_states):
+            for x in range(self.nb_letters):
+                if other.delta[p][x] != self.delta[p][x]:
+                    return False
+        return True
+        # return other and self.delta == other.delta and self.rho == other.rho
+
+    def __hash__(self):
+        return hash(str(self.states).join(str(self.rho)))
 
     def execute(self, entry, state):
         out = []
@@ -135,7 +146,7 @@ class MealyMachine:
 
         for p in range(len(new_delta)):
             for x in range(len(new_delta[0])):
-                new_delta[p][x] = new_id[cl[self.delta[p][x]]]
+                new_delta[p][x] = new_id[cl[new_delta[p][x]]]
 
         return MealyMachine(new_delta, new_rho, states, self.letters)
 
@@ -223,6 +234,25 @@ class MealyMachine:
             graph.render('outputs/' + self.name + "_helix", view=view)
         else:
             graph.render('outputs/default', view=view)
+
+    def cycles(self):
+        H = self.helix_graph()
+        cycles = {}
+        done = set()
+        for i in H:
+            if i in done:
+                continue
+            done.add(i)
+            j = H[i]
+            length = 1
+            while j != i:
+                done.add(j)
+                j = H[j]
+                length += 1
+            if length not in cycles:
+                cycles[length] = 0
+            cycles[length] += 1
+        return cycles
 
     def automorphisms(self):
         # construction of helix graph using igraph

@@ -1,5 +1,4 @@
 from mealy import MealyMachine
-from examples import count_cycle_size
 from random import randint, sample, shuffle
 from copy import deepcopy
 
