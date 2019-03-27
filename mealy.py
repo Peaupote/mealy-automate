@@ -258,34 +258,28 @@ class MealyMachine:
         return cycles
 
     def augmented_helix_graph(self):
+        """Renvoie le graphe en hélice augmenté avec igraph, 
+        utilisé pour le calcul des automorphismes"""
         # construction of helix graph using igraph
         H = igraph.Graph(directed=True)
         M = self.nb_letters
         S = self.nb_states * self.nb_letters
         ST = S + self.nb_states
         SL = ST + self.nb_letters
+
         H.add_vertices(SL + 3)
-
-        #labels = [None] * (SL + 3)
-        #labels[SL + 2] = "Idle"
-        #labels[SL + 1] = "Sigma"
-        #labels[SL] = "Q"
-
         H.add_edge(SL + 1, SL + 2)
+
         for x in range(self.nb_letters):
             H.add_edge(ST + x, SL + 1)
-            #labels[ST + x] = self.letters[x]
+
         for p in range(self.nb_states):
             H.add_edge(S + p, SL)
-            #labels[S + p] = self.states[p]
             for x in range(self.nb_letters):
                 st = p * M + x
-                #labels[st] = self.states[p] + ", " + self.letters[x]
                 H.add_edge(st, self.delta[p][x] * M + self.rho[p][x])
                 H.add_edge(st, S + p)
                 H.add_edge(st, ST + x)
-        #H.vs["label"] = labels
-        #igraph.plot(H, layout=H.layout())
         return H
 
     def automorphisms(self):
