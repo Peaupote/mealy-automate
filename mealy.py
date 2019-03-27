@@ -252,7 +252,7 @@ class MealyMachine:
             cycles.append(length)
         return cycles
 
-    def automorphisms(self):
+    def __augmented_helix_graph(self):
         # construction of helix graph using igraph
         H = igraph.Graph(directed=True)
         M = self.nb_letters
@@ -281,7 +281,10 @@ class MealyMachine:
                 H.add_edge(st, ST + x)
         #H.vs["label"] = labels
         #igraph.plot(H, layout=H.layout())
+        return H
 
+    def automorphisms(self):
+        H = self.__augmented_helix_graph()
         aut = H.get_automorphisms_vf2()
         base = []
         for f in aut:
@@ -292,6 +295,11 @@ class MealyMachine:
             print(ps, 'x', pl)
             base.append(p)
         return PermutationGroup(base)
+
+    def isomorphic(self, m2):
+        H1 = self.__augmented_helix_graph()
+        H2 = m2.__augmented_helix_graph()
+        return H1.isomorphic(H2)
 
     def pretty_print_perm(self, p):
         for cycle in p.cyclic_form:

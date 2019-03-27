@@ -188,3 +188,20 @@ def rec_gen(start, prev, sources, targets, delta, rho, enum):
 
     if add:
         sources.append(start)
+
+# count 8 classes for 2,2
+# count 28 classes for 3,2
+# count 335 classes for 3,3
+def isomorphism_class(nbs, nbl):
+    CL = []
+    c = 0
+    for a in helix_gen(nbs, nbl):
+         iso = False
+         c += 1
+         print(c)
+         for b in CL:
+             if a.isomorphic(b):
+                 iso = True
+                 break
+         if not iso: CL.append(a)
+    return CL
