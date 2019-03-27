@@ -1,10 +1,10 @@
-from graphviz import Digraph
-from sympy.combinatorics.perm_groups import PermutationGroup
 """Mealy Machine : md-réduction, dualisation, inversion, produit, factorisation..."""
 
-import igraph
-from sympy.combinatorics import Permutation
 from copy import deepcopy
+from graphviz import Digraph
+from sympy.combinatorics.perm_groups import PermutationGroup
+from sympy.combinatorics import Permutation
+import igraph
 Permutation.print_cyclic = True
 
 
@@ -215,6 +215,7 @@ class MealyMachine:
         return adj
 
     def show_helix_graph(self, view=True, destfile=None):
+        """Affiche le graphe en hélice de l'automate"""
         graph = Digraph(comment="Helix Graph")
         graph.attr(rankdir='LR')
         graph.attr('node', shape='circle')
@@ -236,6 +237,8 @@ class MealyMachine:
             graph.render('outputs/default', view=view)
 
     def cycles(self):
+        """Renvoie un tableau contenant la longueur de chaque
+        cycle du graphe en hélix de l'automate"""
         H = self.helix_graph()
         cycles = []
         done = set()
@@ -250,9 +253,11 @@ class MealyMachine:
                 j = H[j]
                 length += 1
             cycles.append(length)
+        sorted(cycles)
+        cycles.sort()
         return cycles
 
-    def __augmented_helix_graph(self):
+    def augmented_helix_graph(self):
         # construction of helix graph using igraph
         H = igraph.Graph(directed=True)
         M = self.nb_letters
@@ -284,7 +289,11 @@ class MealyMachine:
         return H
 
     def automorphisms(self):
-        H = self.__augmented_helix_graph()
+        """Renvoie le groupe d'automorphisme de l'automate"""
+        H = self.augmented_helix_graph()
+        S = self.nb_states * self.nb_letters
+        ST = S + self.nb_states
+        SL = ST + self.nb_letters
         aut = H.get_automorphisms_vf2()
         base = []
         for f in aut:
@@ -297,14 +306,15 @@ class MealyMachine:
         return PermutationGroup(base)
 
     def isomorphic(self, m2):
-        H1 = self.__augmented_helix_graph()
-        H2 = m2.__augmented_helix_graph()
+        H1 = self.augmented_helix_graph()
+        H2 = m2.augmented_helix_graph()
         return H1.isomorphic(H2)
 
     def pretty_print_perm(self, p):
         for cycle in p.cyclic_form:
             print('(', ' '.join(map(
-                lambda x: self.states[x] if x < self.nb_states else self.letters[x - self.nb_states], cycle)), ')', end='')
+                lambda x: self.states[x] if x < self.nb_states
+                else self.letters[x - self.nb_states], cycle)), ')', end='')
 
 
 def product(m1, m2):

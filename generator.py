@@ -1,6 +1,8 @@
-from mealy import MealyMachine
-from random import randint, sample, shuffle
+"""Génération d'automates bireversibles"""
+
 from copy import deepcopy
+from random import sample, shuffle, randint
+from mealy import MealyMachine
 
 
 def __valid_delta(delta):
@@ -192,16 +194,21 @@ def rec_gen(start, prev, sources, targets, delta, rho, enum):
 # count 8 classes for 2,2
 # count 28 classes for 3,2
 # count 335 classes for 3,3
-def isomorphism_class(nbs, nbl):
+
+
+def isomorphism_class(nb_states, nb_letters):
+    """Renvoie la liste des automates à nb_states états
+    et nb_letters lettres à isomorphisme près"""
     CL = []
     c = 0
-    for a in helix_gen(nbs, nbl):
-         iso = False
-         c += 1
-         print(c)
-         for b in CL:
-             if a.isomorphic(b):
-                 iso = True
-                 break
-         if not iso: CL.append(a)
+    for a in helix_gen(nb_states, nb_letters):
+        iso = False
+        c += 1
+        print(c)
+        for b in CL:
+            if a.isomorphic(b):
+                iso = True
+                break
+        if not iso:
+            CL.append(a)
     return CL
