@@ -237,7 +237,7 @@ class MealyMachine:
 
     def cycles(self):
         H = self.helix_graph()
-        cycles = {}
+        cycles = []
         done = set()
         for i in H:
             if i in done:
@@ -249,9 +249,7 @@ class MealyMachine:
                 done.add(j)
                 j = H[j]
                 length += 1
-            if length not in cycles:
-                cycles[length] = 0
-            cycles[length] += 1
+            cycles.append(length)
         return cycles
 
     def automorphisms(self):
