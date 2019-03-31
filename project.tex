@@ -26,8 +26,8 @@ Blablabla automate
 
 \section{Automates de Mealy}
 
-\subsection{Cloture de classes d'automates}
-\begin{prop}[Cloture des inversibles par produit]
+\subsection{Clôture de classes d'automates}
+\begin{prop}[Clôture des inversibles par produit]
   Soient $\mathcal{A}$ et $\mathcal{B}$ des automates de Mealy \textbf{inversibles}. Alors $\mathcal{A}\cdot\mathcal{B}$ est inversible
 \end{prop}
 
@@ -41,7 +41,7 @@ Blablabla automate
   On a bien que tous les ${(\rho''_q)}_{q\in Q\times Q'}$ sont des permutations sur les lettres, c'est à dire que l'automate est inversible.
 \end{proof}
 
-\begin{prop}[Cloture des réversibles par produit]
+\begin{prop}[Clôture des réversibles par produit]
   Soient $\mathcal{A}$ et $\mathcal{B}$ des automates de Mealy \textbf{réversibles}. Si $\mathcal{A}$ est \textbf{inversible}, alors $\mathcal{A}\cdot\mathcal{B}$ est réversible.
 \end{prop}
 
@@ -59,7 +59,7 @@ Blablabla automate
   Soient $\mathcal{A}$ et $\mathcal{B}$ des automates \textbf{biréversibles}, alors $\mathcal{A}\cdot\mathcal{B}$ est \textbf{biréversible}.
 \end{prop}
 
-\begin{prop}[Cloture des inversibles par facteurs]\label{prop_cloture_inv_facteurs}
+\begin{prop}[Clôture des inversibles par facteurs]\label{prop_cloture_inv_facteurs}
   Soit $\mathcal{A}$ un automate de Mealy \textbf{inversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$. Alors ces deux automates sont aussi inversibles.
 \end{prop}
 
@@ -78,7 +78,7 @@ Blablabla automate
 
 \end{proof}
 
-\begin{prop}[Cloture des réversibles par facteurs]\label{prop_cloture_rev_facteurs}
+\begin{prop}[Clôture des réversibles par facteurs]\label{prop_cloture_rev_facteurs}
   Soit $\mathcal{A}$ un automate de Mealy \textbf{réversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$. Alors
   \begin{itemize}
   \item $\mathcal{A}_1$ est réversible.
@@ -107,5 +107,51 @@ Blablabla automate
 \end{proof}
 
 \subsection{Graphes en hélices}
+
+\newpage
+
+\subsection{Action sur les mots et groupes engendrés}
+
+\textit{\textbf{TODO : Définition de l'action et du groupe engendré.}}
+
+\begin{lemma} \label{lemme_fini_nilpotent}
+	Si $G$ est un groupe fini, alors tout élément de $G$ est nilpotent.
+\end{lemma}
+
+\begin{proof}
+	TODO
+\end{proof}
+
+\begin{lemma} \label{lemme_générateur_nilpotent}
+	Soient $G$ un groupe et $E \in G$ un ensemble fini dont tout les éléments sont nilpotents. Alors $\langle E \rangle$ est fini.
+\end{lemma}
+
+\begin{proof}
+	TODO
+\end{proof}
+
+\begin{prop}
+	Soit $\mathcal{A}$ et $\mathcal{B}$ deux automates de Mealy. Alors $\langle \mathcal{A} \cdot \mathcal{B} \rangle$ est fini si et seulement si $\langle \mathcal{B} \cdot \mathcal{A} \rangle$ est fini.
+\end{prop}
+
+\begin{proof}
+	Soientt $\mathcal{A}$ et $\mathcal{B}$ deux automates de Mealy, $p$ un état de $\mathcal{A}$ et $q$ un état de $\mathcal{B}$. Supposons que $\langle \mathcal{A} \cdot \mathcal{B} \rangle$ est fini et montrons que $\rho^*_q \circ \rho^*_p$ est nilpotent. 
+	
+	Puisque $\langle \mathcal{A} \cdot \mathcal{B} \rangle$ est fini, $\rho^*_p \circ \rho^*_q$ est nilpotent. Soit $k$ son indice de nilpotence. On a alors :
+	
+	\begin{equation*} \label{eq1}
+	\begin{split}
+		& (\rho^*_p \circ \rho^*_q)^k = e \\
+	 \Longleftrightarrow {}&\rho^*_p \circ (\rho^*_q \circ \rho^*_p)^{k-1} \circ \rho^*_q  = e \\
+	 \Longleftrightarrow {}& {\rho^*_p}^{-1} \circ \rho^*_p \circ (\rho^*_q \circ \rho^*_p)^{k-1} \circ \rho^*_q \circ {\rho^*_q}^{-1} = {\rho^*_p}^{-1} \circ e \circ {\rho^*_q}^{-1} \\
+	 \Longleftrightarrow {}& (\rho^*_q \circ \rho^*_p)^{k-1} = {\rho^*_p}^{-1} \circ {\rho^*_q}^{-1}
+	\end{split}
+	\end{equation*}
+	Or ${\rho^*_p}^{-1} \circ {\rho^*_q}^{-1}$ est un élément de $\langle \mathcal{A} \cdot \mathcal{B} \rangle$ donc est nilpotent. Ainsi, il existe un entier $l$ tel que $({\rho^*_p}^{-1} \circ {\rho^*_q}^{-1})^l = e$. Ainsi $(\rho^*_q \circ \rho^*_p)^{(k-1) \cdot l} = e$ et $(\rho^*_q \circ \rho^*_p)$ est nilpotent.
+	
+	Ainsi, tout élément de $\mathcal{B} \cdot \mathcal{A}$ est nilpotent. Donc, puisque $\mathcal{B} \cdot \mathcal{A}$ est fini et que tout ses éléments sont nilpotents, $\langle \mathcal{B} \cdot \mathcal{A} \rangle$ est fini.
+	
+	Nous avons montré que si $\langle \mathcal{A} \cdot \mathcal{B} \rangle$ est fini alors $\langle \mathcal{B} \cdot \mathcal{A} \rangle$ est fini. La réciproque se montre de manière parfaitement analogue.
+\end{proof}
 
 \end{document}

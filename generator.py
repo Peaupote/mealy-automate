@@ -202,13 +202,14 @@ def isomorphism_class(nb_states, nb_letters):
     CL = []
     c = 0
     for a in helix_gen(nb_states, nb_letters):
-        iso = False
         c += 1
         print(c)
-        for b in CL:
-            if a.isomorphic(b):
-                iso = True
+        can = a.canonical_graph()
+        in_cl = False
+        for M in CL:
+            if can.isomorphic(M):
+                in_cl = True
                 break
-        if not iso:
-            CL.append(a)
+        if not in_cl:
+            CL.append(can)
     return CL
