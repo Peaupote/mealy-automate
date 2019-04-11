@@ -299,6 +299,10 @@ class MealyMachine:
             base.append(p)
         return PermutationGroup(base)
 
+    def canonical_graph(self):
+        H = self.augmented_helix_graph()
+        return H.permute_vertices(H.canonical_permutation())
+
     def isomorphic(self, m2):
         H1 = self.augmented_helix_graph()
         H2 = m2.augmented_helix_graph()
