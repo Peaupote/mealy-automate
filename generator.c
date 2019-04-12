@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
 
-int nb_states, nb_letters, size;
+int fd = -1, nb_states, nb_letters, size;
 u_int32_t sup, count;
 u_int8_t *delta, *rho;
+int buffersize, bufferp;
+unsigned char *buffer;
 char debug = 0;
 
 void pb(u_int32_t t, int indent) {
@@ -84,11 +90,26 @@ void rec(u_int8_t start_p, u_int8_t start_x,
 
     if (sup - 1 == sources && sup - 1 == targets) {
         count++;
+        if (count % 100000 == 0) {
+            printf("%u\n", count);
+        }
+
         if (debug) {
             pt(delta);
             pt(rho);
+            printf("find one %u\n", count);
         }
-        printf("find one %u\n", count);
+
+        if (fd) {
+            if (bufferp < buffersize) {
+                memcpy(buffer + bufferp, delta, size);
+                memcpy(buffer + bufferp + size, rho, size);
+                bufferp += size * 2;
+            } else {
+                write(fd, buffer, bufferp);
+                bufferp = 0;
+            }
+        }
         return;
     }
 
@@ -149,14 +170,28 @@ void rec(u_int8_t start_p, u_int8_t start_x,
 
 int main (int argc, char *argv[]) {
     if (argc < 3) {
-        fprintf(stderr, "usage: %s nb_states nb_letters\n", argv[0]);
+        fprintf(stderr, "usage: %s <nb_states> <nb_letters>\n", argv[0]);
         return 1;
     }
 
     nb_states = atoi(argv[1]);
     nb_letters = atoi(argv[2]);
 
-    debug = (argc == 4);
+    if (argc > 3) {
+        fd = open(argv[3], O_WRONLY|O_CREAT, 0644);
+        if (fd < 0) {
+            perror("open");
+            return 1;
+        }
+    }
+
+    unsigned char nbl = nb_letters,
+        nbs = nb_states;
+
+    write(fd, &nbs, 1);
+    write(fd, &nbl, 1);
+
+    debug = (argc == 5);
 
     size = nb_letters * nb_states;
     sup = (1UL << size);
@@ -173,10 +208,19 @@ int main (int argc, char *argv[]) {
         }
     }
 
+    buffersize = nb_letters * nb_states * 2 * 10000000;
+    buffer = malloc(buffersize);
+    bufferp = 0;
 
     printf("alloc done.\n");
 
     rec(0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0);
 
+    if (fd > 0 && bufferp > 0) {
+        write(fd, buffer, bufferp);
+    }
+
     printf("%u\n", count);
+    close(fd);
+    return 0;
 }
