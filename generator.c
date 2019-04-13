@@ -4,13 +4,25 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include <math.h>
 
-int fd = -1, nb_states, nb_letters, size;
-u_int32_t sup, count;
+#include "nauty.h"
+
+int fd = -1, nb_states, nb_letters, size, sl, st, n, m;
+u_int32_t sup, count = 0, can_count = 0;
 u_int8_t *delta, *rho;
 int buffersize, bufferp;
 unsigned char *buffer;
 char debug = 0;
+
+DYNALLSTAT(graph, g, g_sz);
+DYNALLSTAT(graph, can, can_sz);
+DYNALLSTAT(int, lab, lab_sz);
+DYNALLSTAT(int, ptn, ptn_sz);
+DYNALLSTAT(int, orbits, orbits_sz);
+static DEFAULTOPTIONS_GRAPH(options);
+statsblk stats;
+
 
 void pb(u_int32_t t, int indent) {
     for (int i = 0; i <= indent; i++) printf(" ");
@@ -79,6 +91,36 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
     return i;
 }
 
+int canonical() {
+    unsigned int x, p, index, k;
+
+    EMPTYGRAPH(g, m, n);
+    ADDONEEDGE(g, sl + 1, sl + 2, m);
+
+    for (x = 0; x < nb_letters; x++) {
+        ADDONEEDGE(g, st + x, sl + 1, m);
+    }
+
+    for (p = 0; p < nb_states; p++) {
+        ADDONEEDGE(g, size + p, sl, m);
+        for (x = 0; x < nb_letters; x++) {
+            index = p * nb_letters + x;
+            ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m);
+            ADDONEEDGE(g, index, size + p, m);
+            ADDONEEDGE(g, index, st + x, m);
+        }
+    }
+
+    ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m);
+    densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
+
+    for (k = 0; k < m*(size_t)n; k++) {
+        if (g[k] != can[k]) return 0;
+    }
+
+    return 1;
+}
+
 void rec(u_int8_t start_p, u_int8_t start_x,
          u_int8_t prev_p, u_int8_t prev_x,
          u_int32_t sources, u_int32_t targets, int ident) {
@@ -94,20 +136,22 @@ void rec(u_int8_t start_p, u_int8_t start_x,
             printf("%u\n", count);
         }
 
-        if (debug) {
-            pt(delta);
-            pt(rho);
-            printf("find one %u\n", count);
-        }
+        if (1) {
+            if (debug) {
+                pt(delta);
+                pt(rho);
+                printf("find one %u\n", count);
+            }
 
-        if (fd) {
-            if (bufferp < buffersize) {
-                memcpy(buffer + bufferp, delta, size);
-                memcpy(buffer + bufferp + size, rho, size);
-                bufferp += size * 2;
-            } else {
-                write(fd, buffer, bufferp);
-                bufferp = 0;
+            if (fd) {
+                if (bufferp < buffersize) {
+                    memcpy(buffer + bufferp, delta, size);
+                    memcpy(buffer + bufferp + size, rho, size);
+                    bufferp += size * 2;
+                } else {
+                    write(fd, buffer, bufferp);
+                    bufferp = 0;
+                }
             }
         }
         return;
@@ -212,6 +256,20 @@ int main (int argc, char *argv[]) {
     buffer = malloc(buffersize);
     bufferp = 0;
 
+    sl = size + nb_states;
+    st = st + nb_letters;
+    n = size + nb_letters + nb_states + 3;
+    m = ceil(n / WORDSIZE);
+    m = SETWORDSNEEDED(n);
+
+    nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
+
+    DYNALLOC2(graph, g, g_sz, m, n, "malloc");
+    DYNALLOC2(graph, can, can_sz, m, n, "malloc");
+    DYNALLOC1(int, lab, lab_sz, n, "malloc");
+    DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
+    DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
+
     printf("alloc done.\n");
 
     rec(0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0);
@@ -220,7 +278,8 @@ int main (int argc, char *argv[]) {
         write(fd, buffer, bufferp);
     }
 
-    printf("%u\n", count);
+    printf("Total count %u.\n", count);
+    printf("Canonical count %u.\n", can_count);
     close(fd);
     return 0;
 }
