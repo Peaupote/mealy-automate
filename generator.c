@@ -111,7 +111,6 @@ int canonical() {
         }
     }
 
-    ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m);
     densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
 
     for (k = 0; k < m*(size_t)n; k++) {
@@ -136,13 +135,14 @@ void rec(u_int8_t start_p, u_int8_t start_x,
             printf("%u\n", count);
         }
 
-        if (1) {
+        if (canonical()) {
             if (debug) {
                 pt(delta);
                 pt(rho);
                 printf("find one %u\n", count);
             }
 
+            can_count++;
             if (fd) {
                 if (bufferp < buffersize) {
                     memcpy(buffer + bufferp, delta, size);
@@ -252,13 +252,13 @@ int main (int argc, char *argv[]) {
         }
     }
 
-    buffersize = nb_letters * nb_states * 2 * 10000000;
+    buffersize = size * 2 * 10000000;
     buffer = malloc(buffersize);
     bufferp = 0;
 
-    sl = size + nb_states;
-    st = st + nb_letters;
-    n = size + nb_letters + nb_states + 3;
+    st = size + nb_states;
+    sl = sl + nb_letters;
+    n = sl + 3;
     m = ceil(n / WORDSIZE);
     m = SETWORDSNEEDED(n);
 
