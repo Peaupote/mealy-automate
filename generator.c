@@ -8,12 +8,14 @@
 
 #include "nauty.h"
 
-int fd = -1, nb_states, nb_letters, size, sl, st, n, m;
+char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f nb_forks] [-d] [-n]\n";
+
+int fd = -1, nb_states = 2, nb_letters = 2, size, sl, st, n, m, nb_forks;
 u_int32_t sup, count = 0, can_count = 0;
 u_int8_t *delta, *rho;
 int buffersize, bufferp;
 unsigned char *buffer;
-char debug = 0;
+char debug = 0, use_nauty = 0;
 
 DYNALLSTAT(graph, g, g_sz);
 DYNALLSTAT(graph, can, can_sz);
@@ -84,8 +86,8 @@ unsigned int pop(u_int32_t *tab, unsigned int i) {
 }
 
 unsigned int iter(u_int32_t *tab, unsigned int i) {
-    if (i>=0) (*tab) ^= 1UL << i++;
-    if (i<0) i = 0;
+    if (i >= 0) (*tab) ^= 1UL << i++;
+    if (i < 0) i = 0;
     while (i < size && ((*tab) >> i) & 1) i++;
     if (i < size) (*tab) ^= 1UL << i;
     return i;
@@ -98,7 +100,7 @@ int canonical() {
     ADDONEEDGE(g, sl + 1, sl + 2, m);
 
     for (x = 0; x < nb_letters; x++) {
-        ADDONEEDGE(g, st + x, sl + 1, m);
+        ADDONEEDGE(g, sl + x, sl + 1, m);
     }
 
     for (p = 0; p < nb_states; p++) {
@@ -135,7 +137,7 @@ void rec(u_int8_t start_p, u_int8_t start_x,
             printf("%u\n", count);
         }
 
-        if (canonical()) {
+        if (!use_nauty || (use_nauty && canonical())) {
             if (debug) {
                 pt(delta);
                 pt(rho);
@@ -213,18 +215,34 @@ void rec(u_int8_t start_p, u_int8_t start_x,
 }
 
 int main (int argc, char *argv[]) {
-    if (argc < 3) {
-        fprintf(stderr, "usage: %s <nb_states> <nb_letters>\n", argv[0]);
-        return 1;
-    }
+    int opt;
 
-    nb_states = atoi(argv[1]);
-    nb_letters = atoi(argv[2]);
-
-    if (argc > 3) {
-        fd = open(argv[3], O_WRONLY|O_CREAT, 0644);
-        if (fd < 0) {
-            perror("open");
+    while((opt = getopt(argc, argv, "s:l:f:o:dn")) != -1) {
+        switch(opt) {
+        case 's':
+            nb_states = atoi(optarg);
+            break;
+        case 'l':
+            nb_letters = atoi(optarg);
+            break;
+        case 'f':
+            nb_forks = atoi(optarg);
+            break;
+        case 'o':
+            fd = open(optarg, O_WRONLY|O_CREAT, 0644);
+            if (fd < 0) {
+                perror("open");
+                return 1;
+            }
+            break;
+        case 'd':
+            debug = 1;
+            break;
+        case 'n':
+            use_nauty = 1;
+            break;
+        default:
+            fprintf(stderr, usage, argv[0]);
             return 1;
         }
     }
@@ -234,8 +252,6 @@ int main (int argc, char *argv[]) {
 
     write(fd, &nbs, 1);
     write(fd, &nbl, 1);
-
-    debug = (argc == 5);
 
     size = nb_letters * nb_states;
     sup = (1UL << size);
@@ -256,19 +272,23 @@ int main (int argc, char *argv[]) {
     buffer = malloc(buffersize);
     bufferp = 0;
 
-    st = size + nb_states;
-    sl = sl + nb_letters;
-    n = sl + 3;
-    m = ceil(n / WORDSIZE);
-    m = SETWORDSNEEDED(n);
+    if (use_nauty) {
+        st = size + nb_states;
+        sl = st + nb_letters;
+        n = sl + 3;
+        m = ceil(n / WORDSIZE);
+        m = SETWORDSNEEDED(n);
 
-    nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
+        nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
 
-    DYNALLOC2(graph, g, g_sz, m, n, "malloc");
-    DYNALLOC2(graph, can, can_sz, m, n, "malloc");
-    DYNALLOC1(int, lab, lab_sz, n, "malloc");
-    DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
-    DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
+        DYNALLOC2(graph, g, g_sz, m, n, "malloc");
+        DYNALLOC2(graph, can, can_sz, m, n, "malloc");
+        DYNALLOC1(int, lab, lab_sz, n, "malloc");
+        DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
+        DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
+
+        // options.writeautoms = TRUE;
+    }
 
     printf("alloc done.\n");
 
@@ -279,7 +299,11 @@ int main (int argc, char *argv[]) {
     }
 
     printf("Total count %u.\n", count);
-    printf("Canonical count %u.\n", can_count);
+
+    if (use_nauty) {
+        printf("Canonical count %u.\n", can_count);
+    }
+
     close(fd);
     return 0;
 }
