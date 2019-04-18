@@ -5,12 +5,15 @@
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
+#include <sys/wait.h>
 
 #include "nauty.h"
 
 char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f nb_forks] [-d] [-n]\n";
 
-int fd = -1, nb_states = 2, nb_letters = 2, size, sl, st, n, m, nb_forks, id = 0;
+int fd = -1, nb_states = 2, nb_letters = 2, size,
+    sl, st, n, m,
+    nb_forks = 1, depth = 0;
 u_int32_t sup, count = 0, can_count = 0;
 u_int8_t *delta, *rho;
 int buffersize, bufferp;
@@ -192,12 +195,31 @@ void rec(u_int8_t start_p, u_int8_t start_x,
             if (valid_delta(delta) && valid_rho(rho)) {
                 index = 1UL << (next_p * nb_letters + next_x);
                 sources ^= index;
-                rec(start_p, start_x, next_p, next_x, sources, targets, ident + 4);
+                if (depth < nb_forks) {
+                    //printf("fork %d %d,%d %d,%d\n", depth, next_p, next_x, prev_p, prev_x);
+                    if (fork() == 0) {
+                        depth++;
+                        rec(start_p, start_x, next_p, next_x, sources, targets, ident + 4);
+                        return;
+                    }
+                } else {
+                    rec(start_p, start_x, next_p, next_x, sources, targets, ident + 4);
+                }
                 sources ^= index;
             }
         } else {
             if (valid_delta(delta) && valid_rho(rho)) {
-                rec(0xFF, 0xFF, 0xFF, 0xFF, sources, targets, ident + 4);
+                if (depth < nb_forks) {
+                    //printf("fork %d %d,%d %d,%d\n", depth, next_p, next_x, prev_p, prev_x);
+                    if (fork() == 0) {
+                        depth++;
+                        rec(0xFF, 0xFF, 0xFF, 0xFF, sources, targets, ident + 4);
+                        return;
+                    }
+                } else {
+                    rec(0xFF, 0xFF, 0xFF, 0xFF, sources, targets, ident + 4);
+                }
+
             }
         }
 
@@ -305,5 +327,6 @@ int main (int argc, char *argv[]) {
     }
 
     close(fd);
+    while (depth < nb_forks && wait(0) > 0);
     return 0;
 }

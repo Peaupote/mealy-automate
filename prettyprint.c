@@ -77,14 +77,14 @@ int main (int argc, char *argv[]) {
         }
 
         printf("Machine %lu\ndelta:\n", ++count);
-        memcpy(&delta, &buffer, size);
+        //memcpy(&delta, &buffer, size);
 
-        for (int p = 0; p < nb_states; p++) {
-            for (int x = 0; x < nb_letters; x++) {
-                printf("%u ", buffer[p * nb_states + x]);
-            }
-            printf("\n");
-        }
+        /* for (int p = 0; p < nb_states; p++) { */
+        /*     for (int x = 0; x < nb_letters; x++) { */
+        /*         printf("%u ", buffer[p * nb_states + x]); */
+        /*     } */
+        /*     printf("\n"); */
+        /* } */
 
         rc = read(fd, buffer, size);
         if (rc < size) {
@@ -92,41 +92,41 @@ int main (int argc, char *argv[]) {
             return 1;
         }
 
-        printf("rho:\n");
-        memcpy(&rho, &buffer, size);
+        //printf("rho:\n");
+        //memcpy(&rho, &buffer, size);
 
-        for (int p = 0; p < nb_states; p++) {
-            for (int x = 0; x < nb_letters; x++) {
-                printf("%u ", buffer[p * nb_states + x]);
-            }
-            printf("\n");
-        }
+        /* for (int p = 0; p < nb_states; p++) { */
+        /*     for (int x = 0; x < nb_letters; x++) { */
+        /*         printf("%u ", buffer[p * nb_states + x]); */
+        /*     } */
+        /*     printf("\n"); */
+        /* } */
 
-        //
-        EMPTYGRAPH(g, m, n);
-        ADDONEEDGE(g, sl + 1, sl + 2, m);
+        /* // */
+        /* EMPTYGRAPH(g, m, n); */
+        /* ADDONEEDGE(g, sl + 1, sl + 2, m); */
 
-        for (x = 0; x < nb_letters; x++) {
-            ADDONEEDGE(g, st + x, sl + 1, m);
-        }
+        /* for (x = 0; x < nb_letters; x++) { */
+        /*     ADDONEEDGE(g, st + x, sl + 1, m); */
+        /* } */
 
-        for (p = 0; p < nb_states; p++) {
-            ADDONEEDGE(g, size + p, sl, m);
-            for (x = 0; x < nb_letters; x++) {
-                index = p * nb_letters + x;
-                ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m);
-                ADDONEEDGE(g, index, size + p, m);
-                ADDONEEDGE(g, index, st + x, m);
-            }
-        }
+        /* for (p = 0; p < nb_states; p++) { */
+        /*     ADDONEEDGE(g, size + p, sl, m); */
+        /*     for (x = 0; x < nb_letters; x++) { */
+        /*         index = p * nb_letters + x; */
+        /*         ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m); */
+        /*         ADDONEEDGE(g, index, size + p, m); */
+        /*         ADDONEEDGE(g, index, st + x, m); */
+        /*     } */
+        /* } */
 
-        ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m);
+        /* ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m); */
 
-        densenauty(g, lab, ptn, orbits, &options, &stats, m, n, 0);
+        /* densenauty(g, lab, ptn, orbits, &options, &stats, m, n, 0); */
 
-        printf("Automorphism group size = ");
-        writegroupsize(stdout, stats.grpsize1, stats.grpsize2);
-        printf("\n");
+        /* printf("Automorphism group size = "); */
+        /* writegroupsize(stdout, stats.grpsize1, stats.grpsize2); */
+        /* printf("\n"); */
     }
 
     close(fd);
