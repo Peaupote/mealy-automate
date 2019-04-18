@@ -1,6 +1,7 @@
 outputs/
 *.o
 .vscode/
+nauty26r11
 
 # Show Graphviz
 *.pdf
