@@ -76,7 +76,8 @@ int main (int argc, char *argv[]) {
             return 1;
         }
 
-        printf("Machine %lu\ndelta:\n", ++count);
+        count++;
+        //printf("Machine %lu\ndelta:\n", ++count);
         //memcpy(&delta, &buffer, size);
 
         /* for (int p = 0; p < nb_states; p++) { */
@@ -128,6 +129,8 @@ int main (int argc, char *argv[]) {
         /* writegroupsize(stdout, stats.grpsize1, stats.grpsize2); */
         /* printf("\n"); */
     }
+
+    printf("%lu\n", count);
 
     close(fd);
     return 0;
