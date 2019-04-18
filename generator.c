@@ -10,7 +10,7 @@
 
 char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f nb_forks] [-d] [-n]\n";
 
-int fd = -1, nb_states = 2, nb_letters = 2, size, sl, st, n, m, nb_forks;
+int fd = -1, nb_states = 2, nb_letters = 2, size, sl, st, n, m, nb_forks, id = 0;
 u_int32_t sup, count = 0, can_count = 0;
 u_int8_t *delta, *rho;
 int buffersize, bufferp;
@@ -145,12 +145,12 @@ void rec(u_int8_t start_p, u_int8_t start_x,
             }
 
             can_count++;
-            if (fd) {
-                if (bufferp < buffersize) {
-                    memcpy(buffer + bufferp, delta, size);
-                    memcpy(buffer + bufferp + size, rho, size);
-                    bufferp += size * 2;
-                } else {
+            if (fd > 0) {
+                memcpy(buffer + bufferp, delta, size);
+                memcpy(buffer + bufferp + size, rho, size);
+                bufferp += size * 2;
+
+                if (bufferp == buffersize) {
                     write(fd, buffer, bufferp);
                     bufferp = 0;
                 }
