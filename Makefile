@@ -1,27 +1,20 @@
-FILES = generator.c
-OBJ = $(FILES:%.c=%.o)
-
 CC = gcc
 FLAGS = -O3
 LIBS = -I nauty26r11 -L nauty26r11
 DEPS = nauty26r11/nauty.c nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/schreier.c nauty26r11/naurng.c
 
-%.o: %.c
-	@echo "Compiling $?"
-	@$(CC) $(FLAGS) -c $? -o $@ $(LIBS)
+all: prettyprint generator
 
-generator: $(OBJ)
+generator: generator.c
 	@echo "Generate executable generator"
-	@$(CC) $(FLAGS) $(LIBS) $(OBJ) $(DEPS) -o generator
+	@$(CC) $(FLAGS) $(LIBS) generator.c $(DEPS) -o generator
 
-all: generator
-
-clean:
-	@echo "Clean object files"
-	@rm -rf $(OBJ)
-
-fclean: clean
+prettyprint: prettyprint.c
+	@echo "Generate executable prettyprint"
+	@$(CC) $(FLAGS) $(LIBS) prettyprint.c $(DEPS) -o prettyprint
+	
+clean: 
 	@echo "Clean executable"
-	@rm -rf generator
+	@rm -rf generator prettyprint
 
-re: fclean all
+re: clean all
