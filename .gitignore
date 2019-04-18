@@ -1,4 +1,6 @@
 outputs/
+*.o
+.vscode/
 
 # Show Graphviz
 *.pdf
