@@ -3,6 +3,10 @@ outputs/
 .vscode/
 nauty26r11
 
+# executable
+prettyprint
+generator
+
 # Show Graphviz
 *.pdf
 *.gv
