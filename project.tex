@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{mathtools}
 \usepackage{enumerate}
 \usepackage[T1]{fontenc}
 \usepackage[hidelinks]{hyperref}
@@ -66,9 +67,25 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
 \end{definition}
 
 
-\subsection{Action sur les mots et groupes engendrés}
+\subsection{Action sur les mots et (semi)groupes engendrés}
 
-\textit{\textbf{TODO : Définition de l'action et du groupe engendré.}}
+\begin{definition}
+  Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy. On peut étendre l'ensemble de définition de $\rho$ à sur $\Sigma^*$ par induction comme suit.
+
+  Soient $p\in\mathcal{Q}$, $x\in\Sigma$ et $\textbf{u}\in\Sigma^*$
+  \begin{align*}
+    &\rho_p(\epsilon)=\epsilon \\
+    &\rho_p(x\textbf{u})=\rho_p(x)\rho_{\delta_x(p)}(\textbf{u})
+  \end{align*}
+
+  On définit le semigroupe d'automate engendré par $\mathcal{A}$ comme
+  \begin{equation}
+    \left<\mathcal{A}\right>_+=\left<\rho_p, \forall p\in\mathcal{Q}\right>
+  \end{equation}
+
+  Si l'automate $\mathcal{A}$ est inversible, alors on peut aussi considérer l'inverse des $\rho_p$. Dans ce cas, l'automate engendre un groupe noté $\left<\mathcal{A}\right>$.
+
+\end{definition}
 
 \begin{prop}
   \label{prop:finitude-d}
@@ -126,11 +143,30 @@ Cette conjecture est l'objet des recherches ménées au cours de ce projet.
 \begin{prop}
   \label{prop:finitude-c}
   Soient $\mathcal{A}, \mathcal{B}$ des automates de Mealy.
-  $\mathcal{A}\mathcal{B}$ engendre un groupe fini si et seulement si $\mathcal{B}\mathca{A}$ engendre un groupe fini.
+  $\mathcal{A}\mathcal{B}$ engendre un groupe fini si et seulement si $\mathcal{B}\mathcal{A}$ engendre un groupe fini.
 \end{prop}
 
 \begin{proof}
-  TODO
+  Soient $\mathcal{A}=\left(\mathcal{Q}_1, \Sigma, \delta, \rho\right)$ et $\mathcal{B}=\left(\mathcal{Q}_2, \Sigma, \delta, \rho\right)$ des automates de Mealy sur un même alphabet.
+
+  On suppose sans perte de généralité $\mathcal{Q}_1$ et $\mathcal{Q}_2$ disjoints. On écrit donc $\rho$ pour les deux automates sans ambiguïté.
+
+  On suppose $\left<\mathcal{A}\mathcal{B}\right>$ fini.
+
+  Tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ est de la forme
+  \[
+    \rho_{p_1q_1}\circ\rho_{p_2q_2}\circ\cdots\circ\rho_{p_nq_n}
+  \]
+  où les $p_i$ sont des éléments de $\mathcal{Q}_2$ et les $q_i$ des éléments de $\mathcal{Q}_1$. Or
+  \begin{align*}
+    \rho_{p_1q_1}\circ\rho_{p_2q_2}\circ\cdots\circ\rho_{p_nq_n} &= \rho_{q_1}\circ\rho_{p_1}\circ\rho_{q_2}\circ\rho_{p_2}\circ\cdots\circ\rho_{q_n}\circ\rho_{p_n} \\
+    &=\rho_{q_1}\circ\left(\rho_{p_1}\circ\rho_{q_2}\circ\rho_{p_2}\circ\cdots\circ\rho_{q_n}\right)\circ\rho_{p_n} \\
+    &=\rho_{q_1}\circ\underbrace{\left(\rho_{q_2p_1}\circ\rho_{q_3p_2}\circ\cdots\circ\rho_{q_np_{n-1}}\right)}_{\in\left<\mathcal{A}\mathcal{B}\right>}\circ\rho_{p_n}
+  \end{align*}
+
+  On en déduit que tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ s'écrit comme la composition d'un $\rho_{q},~q\in\mathcal{Q}_1$, d'un $\rho_\bullet\in\left<\mathcal{A}\mathcal{B}\right>$ et d'un $\rho_{p},~p\in\mathcal{Q}_2$. Or $\mathcal{Q}_1$ et $\mathcal{Q}_2$ sont finis, donc le nombre de choix de $p$ et de $q$ sont fini. De plus, on a supposé le nombre d'éléments $\rho_\bullet\in\left<\mathcal{A}\mathcal{B}\right>$ est fini. Donc le nombre d'élements qui s'écrivent \[ \rho_q\circ\rho_\bullet\circ\rho_p \] est fini. On a montré plus haut que tout éléments de $\left<\mathcal{B}\mathcal{A}\right>$ sont de cette forme, on en conclut qu'il y en a un nombre fini.
+
+  $\mathcal{A}$ et $\mathcal{B}$ jouant des rôles complètement symétriques, la même démonstration marche pour montrer la réciproque.
 \end{proof}
 
 On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref{prop:finitude-c} une des implications de la conjecture \ref{conj:birev-mdc}.
