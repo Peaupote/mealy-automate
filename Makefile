@@ -1,3 +1,5 @@
+LATEX = pdflatex
+BIB = bibtex
 CC = gcc
 FLAGS = -O3
 LIBS = -I nauty26r11 -L nauty26r11
@@ -12,8 +14,14 @@ generator: generator.c
 prettyprint: prettyprint.c
 	@echo "Generate executable prettyprint"
 	@$(CC) $(FLAGS) $(LIBS) prettyprint.c $(DEPS) -o prettyprint
-	
-clean: 
+
+article:
+	@echo "Compiling article to latex"
+	@$(LATEX) project
+	@$(BIB) project
+	@$(LATEX) project
+
+clean:
 	@echo "Clean executable"
 	@rm -rf generator prettyprint
 

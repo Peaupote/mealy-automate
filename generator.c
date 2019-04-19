@@ -13,7 +13,7 @@ char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f nb_f
 
 int fd = -1, nb_states = 2, nb_letters = 2, size,
     sl, st, n, m,
-    nb_forks = 1, depth = 0;
+    nb_forks = 0, depth = 0;
 u_int32_t sup, count = 0, can_count = 0;
 u_int8_t *delta, *rho;
 int buffersize, bufferp;
@@ -103,7 +103,7 @@ int canonical() {
     ADDONEEDGE(g, sl + 1, sl + 2, m);
 
     for (x = 0; x < nb_letters; x++) {
-        ADDONEEDGE(g, sl + x, sl + 1, m);
+        ADDONEEDGE(g, st + x, sl + 1, m);
     }
 
     for (p = 0; p < nb_states; p++) {
@@ -196,7 +196,6 @@ void rec(u_int8_t start_p, u_int8_t start_x,
                 index = 1UL << (next_p * nb_letters + next_x);
                 sources ^= index;
                 if (depth < nb_forks) {
-                    //printf("fork %d %d,%d %d,%d\n", depth, next_p, next_x, prev_p, prev_x);
                     if (fork() == 0) {
                         depth++;
                         rec(start_p, start_x, next_p, next_x, sources, targets, ident + 4);
@@ -210,7 +209,6 @@ void rec(u_int8_t start_p, u_int8_t start_x,
         } else {
             if (valid_delta(delta) && valid_rho(rho)) {
                 if (depth < nb_forks) {
-                    //printf("fork %d %d,%d %d,%d\n", depth, next_p, next_x, prev_p, prev_x);
                     if (fork() == 0) {
                         depth++;
                         rec(0xFF, 0xFF, 0xFF, 0xFF, sources, targets, ident + 4);
@@ -295,16 +293,18 @@ int main (int argc, char *argv[]) {
     bufferp = 0;
 
     if (use_nauty) {
+        options.getcanon = TRUE;
+
         st = size + nb_states;
         sl = st + nb_letters;
-        n = sl + 3;
-        m = ceil(n / WORDSIZE);
+        n = size;
+        //m = ceil(n / WORDSIZE);
         m = SETWORDSNEEDED(n);
 
         nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
 
-        DYNALLOC2(graph, g, g_sz, m, n, "malloc");
-        DYNALLOC2(graph, can, can_sz, m, n, "malloc");
+        DYNALLOC2(graph, g, g_sz, n, m, "malloc");
+        DYNALLOC2(graph, can, can_sz, n, m, "malloc");
         DYNALLOC1(int, lab, lab_sz, n, "malloc");
         DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
         DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
