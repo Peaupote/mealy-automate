@@ -104,7 +104,7 @@ int canonical() {
     int g_n = n+nb_states+nb_letters+3;
     int g_m = SETWORDSNEEDED(g_n);
     EMPTYGRAPH(g, g_m, g_n);
-
+    
     // sl : fixateur des états
     // sl+1 : fixateur des lettres
     // sl+2 : fixateur du fixateur des lettres
@@ -124,13 +124,19 @@ int canonical() {
         }
     }
 
-    densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
+    densenauty(g, lab, ptn, orbits, &options, &stats, g_m, g_n, can);
 
-    for (k = 0; k < m*(size_t)n; k++) {
-        if (g[k] != can[k]) return 0;
+    if(!is_in_list(canlist, can, can_sz)){
+        add_can(canlist, can, can_sz);
+        return 1;
     }
 
-    return 1;
+    return 0;
+    // for (k = 0; k < m*(size_t)n; k++) {
+    //     if (g[k] != can[k]) return 0;
+    // }
+
+    // return 1;
 }
 
 void rec(u_int8_t start_p, u_int8_t start_x,
@@ -311,12 +317,14 @@ int main (int argc, char *argv[]) {
 
         nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
 
-        DYNALLOC2(graph, g, g_sz, n, m, "malloc");
-        DYNALLOC2(graph, can, can_sz, n, m, "malloc");
-        DYNALLOC1(int, lab, lab_sz, n, "malloc");
-        DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
-        DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
+        int g_n = n+nb_states+nb_letters+3;
+        int g_m = SETWORDSNEEDED(g_n);
 
+        DYNALLOC2(graph, g, g_sz, g_m, g_n, "malloc");
+        DYNALLOC2(graph, can, can_sz, g_m, g_n, "malloc");  
+        DYNALLOC1(int, lab, lab_sz, g_n, "malloc"); 
+        DYNALLOC1(int, ptn, ptn_sz, g_n, "malloc");   
+        DYNALLOC1(int, orbits, orbits_sz, g_n, "malloc");
         // options.writeautoms = TRUE;
     }
 
@@ -332,7 +340,7 @@ int main (int argc, char *argv[]) {
 
     if (use_nauty) {
         printf("Canonical count %u.\n", can_count);
-        printf("Canlist size %d\n", size_of_list(canlist));
+        // printf("Canlist size %d\n", size_of_list(canlist));
     }
 
     close(fd);
