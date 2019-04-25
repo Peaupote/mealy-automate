@@ -26,7 +26,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-  Les automates de Mealy sont une extention des automates qui écrivent des mots en même temps qu'ils en lisent. En étudiant leur action sur un ensemble de mot, on peut dégager une structure de (semi)groupe engendré par l'automate.
+  Les automates de Mealy sont une extension des automates qui écrivent des mots en même temps qu'ils en lisent. En étudiant leur action sur un ensemble de mot, on peut dégager une structure de (semi-)groupe engendré par l'automate.
 
   Le problème qui nous intéresse ici est de pouvoir décider si un automate de Mealy engendre une structure finie ou infinie. Ce problème, qui est indécidable en général, semble abordable pour des classes d'automates plus réduites. En suivant la voie ouverte par \citeauthor{Klimann13}, nous avons essayé de généraliser son résultat en ajoutant la conjugaison à la $\mathfrak{md}$-réduction.
 \end{abstract}
@@ -44,7 +44,7 @@ Blablabla automate
 La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant une sortie en écriture.
 
 \begin{definition}
-  Un automate de Mealy est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexé par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexé par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
+  Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexé par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexé par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
 \end{definition}
 
 % exemple avec figure
@@ -59,7 +59,7 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
 \end{definition}
 
 \begin{definition}
-  Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy. \textit{L'équivalence de Nérode} $\equiv$ sur $\mathcal{Q}$ est la limite de la suite de relations d'équivalences ($\equiv_k$) de plus en plus fines définies récursivement par
+  Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy. \textbf{L'équivalence de Nérode} $\equiv$ sur $\mathcal{Q}$ est la limite de la suite de relations d'équivalences ($\equiv_k$) de plus en plus fines définies récursivement par
 
   \begin{align*}
     \forall p, q \in Q,\\
@@ -70,7 +70,7 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
   Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x(\bar{p}) = \bar{\delta_x(p)}$ et $\bar{\rho}_{\bar{p}} =  \rho_p$.
 \end{definition}
 
-\subsection{Action sur les mots et (semi)groupes engendrés}
+\subsection{Action sur les mots et (semi-)groupes engendrés}
 
 \begin{definition}
   Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy. On peut étendre l'ensemble de définition de $\rho$ à sur $\Sigma^*$ par induction comme suit.
@@ -81,10 +81,10 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
     &\rho_p(x\textbf{u})=\rho_p(x)\rho_{\delta_x(p)}(\textbf{u})
   \end{align*}
 
-  On définit le semigroupe d'automate engendré par $\mathcal{A}$ comme
-  \begin{equation}
+  On définit le \textbf{semi-groupe d'automate engendré par $\mathcal{A}$} comme
+  \begin{equation*}
     \left<\mathcal{A}\right>_+=\left<\rho_p, \forall p\in\mathcal{Q}\right>
-  \end{equation}
+  \end{equation*}
 
   Si l'automate $\mathcal{A}$ est inversible, alors on peut aussi considérer l'inverse des $\rho_p$. Dans ce cas, l'automate engendre un groupe noté $\left<\mathcal{A}\right>$.
 
