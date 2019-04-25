@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[11pt,a4paper,sans]{article}
 
 \usepackage[francais]{babel}
 \usepackage[utf8]{inputenc}
@@ -22,11 +22,10 @@
 
 \begin{document}
 \maketitle
-
 \begin{abstract}
-  Les automates de Mealy sont une extention des automates qui écrivent des mots en même temps qu'ils en lisent. En étudiant leur action sur un ensemble de mot, on peu dégager une structure de (semi)groupe engendré par l'automate.
+  Les automates de Mealy sont une extention des automates qui écrivent des mots en même temps qu'ils en lisent. En étudiant leur action sur un ensemble de mot, on peut dégager une structure de (semi)groupe engendré par l'automate.
 
-  Le problème qui nous intéresse ici est de pouvoir décider si un automate de Mealy engendre une structure finie ou infinie. Ce problème, qui est indécidable en général, semble abordable pour des classes d'automates plus réduites. En suivant la voie ouverte par \citeauthor{Klimann13}, nous avons essayé de généraliser son résultat en ajoutant la conjugaison à la md-réduction.
+  Le problème qui nous intéresse ici est de pouvoir décider si un automate de Mealy engendre une structure finie ou infinie. Ce problème, qui est indécidable en général, semble abordable pour des classes d'automates plus réduites. En suivant la voie ouverte par \citeauthor{Klimann13}, nous avons essayé de généraliser son résultat en ajoutant la conjugaison à la $\mathfrak{md}$-réduction.
 \end{abstract}
 
 
@@ -50,9 +49,9 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
 \begin{definition}
   Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy.
   \begin{enumerate}[i)]
-  \item On dit que $\mathcal{A}$ est inversible si $\rho_q$ est une permutation de $\Sigma$ pour tout état $q$.
-  \item On dit que $\mathcal{A}$ est réversible si $\delta_x$ est une permuration de $\mathcal{Q}$ pour toute lettre $x$.
-  \item On dit que $\mathcal{A}$ est biréversible s'il est inversible, réversible et que son inverse est réversible.
+  \item On dit que $\mathcal{A}$ est \textbf{inversible} si $\rho_q$ est une permutation de $\Sigma$ pour tout état $q$.
+  \item On dit que $\mathcal{A}$ est \textbf{réversible} si $\delta_x$ est une permuration de $\mathcal{Q}$ pour toute lettre $x$.
+  \item On dit que $\mathcal{A}$ est \textbf{biréversible} s'il est inversible, réversible et que son inverse est réversible.
   \end{enumerate}
 \end{definition}
 
@@ -64,8 +63,9 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
     p \equiv_0 q &\iff \rho_p = \rho_q \\
     \forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right)
   \end{align*}
-\end{definition}
 
+  Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\mathcal{Q}/\equiv, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x(\bar{p}) = \bar{\delta_x(p)}$ et $\bar{\rho}_{\bar{p}} =  \rho_p$.
+\end{definition}
 
 \subsection{Action sur les mots et (semi)groupes engendrés}
 
@@ -87,55 +87,47 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
 
 \end{definition}
 
-\begin{prop}
+\begin{prop}{\cite{DBLP:journals/corr/abs-1105-4725}}
   \label{prop:finitude-d}
-  Soit $\mathcal{A}$ un automate de Mealy. $\left<\mathcal{A}\right>$ est fini si et seulement si $\left<d\mathcal{A}\right>$ est fini.
+  Soit $\mathcal{A}$ un automate de Mealy. $\left<\mathcal{A}\right>$ est fini si et seulement si $\left<\mathfrak{d}\mathcal{A}\right>$ est fini.
 \end{prop}
 
-\begin{proof}
-  TODO
-\end{proof}
-
-\begin{prop}
+\begin{prop}{\cite{DBLP:journals/corr/abs-1105-4725}}
   \label{prop:finitude-m}
-  Soit $\mathcal{A}$ un automate de Mealy. Si $m(A)$ engendre un groupe fini, alors $\mathcal{A}$ engendre un groupe fini.
+  Soit $\mathcal{A}$ un automate de Mealy. Si $\mathfrak{m}A$ engendre un groupe fini, alors $\mathcal{A}$ engendre un groupe fini.
 \end{prop}
-
-\begin{proof}
-  TODO
-\end{proof}
 
 Des proposition \ref{prop:finitude-d} et \ref{prop:finitude-m} on déduit la proposition suivante.
 
 \begin{prop}
   \label{prop:md-trivial}
-  Tout automate de Mealy dont le md-réduit engendre un groupe fini engendre un groupe fini.
+  Tout automate de Mealy dont le $\mathfrak{md}$-réduit engendre un groupe fini engendre un groupe fini.
 \end{prop}
 
 \begin{conj}
-  Un automate de Mealy engendre un groupe fini si et seulement si son md-réduit engendre un groupe fini.
+  Un automate de Mealy engendre un groupe fini si et seulement si son $\mathfrak{md}$-réduit engendre un groupe fini.
 \end{conj}
 
-Cette conjecture est fausse en général. Il semble pourtant que dans la classe particulière des automates biréversibles, la md-réduction est efficace.
+Cette conjecture est fausse en général. Il semble pourtant que dans la classe particulière des automates biréversibles, la $\mathfrak{md}$-réduction est efficace.
 
 \begin{conj}
   \label{conj:birev-md}
-  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son md-réduit engendre un groupe fini.
+  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son $\mathfrak{md}$-réduit engendre un groupe fini.
 \end{conj}
 
 \begin{thm}(\citeauthor{Klimann13})
-  Tout automate fini à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est md-trivial.
+  Tout automate fini à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
 \end{thm}
 
 Malheureusement, la conjecture \ref{conj:birev-md} n'est pas vraie en général.
 
 % TODO: include fantastique figures
 
-Ces contres exemples sont pourtant factorisables, et en conjugant leur factorisation, on trouve un automate md-trivial. Ce qui nous conduit à la conjecture suivante.
+Ces contres exemples sont pourtant factorisables, et en conjugant leur factorisation, on trouve un automate $\mathfrak{md}$-trivial. Ce qui nous conduit à la conjecture suivante.
 
 \begin{conj}
   \label{conj:birev-mdc}
-  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son mdc-réduit engendre un groupe fini.
+  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un groupe fini.
 \end{conj}
 
 Cette conjecture est l'objet des recherches ménées au cours de ce projet.
@@ -172,7 +164,7 @@ Cette conjecture est l'objet des recherches ménées au cours de ce projet.
 On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref{prop:finitude-c} une des implications de la conjecture \ref{conj:birev-mdc}.
 
 \begin{prop}
-  Tout automate de Mealy dont le mdc-réduit engendre un groupe fini engendre un groupe fini.
+  Tout automate de Mealy dont le $\mathfrak{mdc}$-réduit engendre un groupe fini engendre un groupe fini.
 \end{prop}
 
 \section{Génération et Factorisation d'automates de Mealy}
