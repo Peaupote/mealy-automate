@@ -138,7 +138,7 @@ int main (int argc, char *argv[]) {
 
         red = md_reduce(machine);
         if (is_trivial(red)) trivial_count++;
-        else if (mexp(red, 1000) < 1000) finite_not_trivial++;
+        else if (mexp(red, 1000) < 100) finite_not_trivial++;
 
         free_mealy(red);
     }

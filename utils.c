@@ -184,10 +184,12 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
     return prod;
 }
 
+// bug here
 unsigned int mexp(mealy_t *m, unsigned int bound) {
     unsigned int i;
     mealy_t *tmp, *prev;
 
+    if (!m) return -1;
     tmp = m;
     m = min(m);
     free_mealy(m);
