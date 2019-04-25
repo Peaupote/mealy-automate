@@ -7,7 +7,7 @@ DEPS = nauty26r11/nauty.c nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/s
 
 all: prettyprint generator
 
-generator: generator.c
+generator: generator.c 
 	@echo "Generate executable generator"
 	@$(CC) $(FLAGS) $(LIBS) generator.c $(DEPS) -o generator
 
