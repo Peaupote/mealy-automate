@@ -10,6 +10,9 @@
 \usepackage[T1]{fontenc}
 \usepackage[hidelinks]{hyperref}
 \usepackage{natbib}
+\usepackage{xfrac}
+\usepackage{caption}
+\usepackage{threeparttable}
 
 \newtheorem{prop}{Proposition}
 \newtheorem{lemma}{Lemme}
@@ -64,7 +67,7 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
     \forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right)
   \end{align*}
 
-  Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\mathcal{Q}/\equiv, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x(\bar{p}) = \bar{\delta_x(p)}$ et $\bar{\rho}_{\bar{p}} =  \rho_p$.
+  Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x(\bar{p}) = \bar{\delta_x(p)}$ et $\bar{\rho}_{\bar{p}} =  \rho_p$.
 \end{definition}
 
 \subsection{Action sur les mots et (semi-)groupes engendrés}
@@ -94,32 +97,28 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
 
 \begin{prop}{\cite{DBLP:journals/corr/abs-1105-4725}}
   \label{prop:finitude-m}
-  Soit $\mathcal{A}$ un automate de Mealy. Si $\mathfrak{m}A$ engendre un groupe fini, alors $\mathcal{A}$ engendre un groupe fini.
+  Soit $\mathcal{A}$ un automate de Mealy, alors
+  \[ \left<\mathfrak{m}\mathcal{A}\right> = \left<\mathcal{A}\right>. \]
 \end{prop}
 
 Des proposition \ref{prop:finitude-d} et \ref{prop:finitude-m} on déduit la proposition suivante.
 
 \begin{prop}
   \label{prop:md-trivial}
-  Tout automate de Mealy dont le $\mathfrak{md}$-réduit engendre un groupe fini engendre un groupe fini.
+  Un automate de Mealy engendre un groupe fini si et seulement si son $\mathfrak{md}$-réduit engendre un groupe fini.
 \end{prop}
 
-\begin{conj}
-  Un automate de Mealy engendre un groupe fini si et seulement si son $\mathfrak{md}$-réduit engendre un groupe fini.
-\end{conj}
+\begin{prop}
+  Tout automate $\mathfrak{md}$-trivial engendre un groupe fini.
+\end{prop}
 
-Cette conjecture est fausse en général. Il semble pourtant que dans la classe particulière des automates biréversibles, la $\mathfrak{md}$-réduction est efficace.
-
-\begin{conj}
-  \label{conj:birev-md}
-  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son $\mathfrak{md}$-réduit engendre un groupe fini.
-\end{conj}
+La réciproque est fausse en général. Il semble pourtant que dans la classe particulière des automates biréversibles, la $\mathfrak{md}$-réduction est efficace.
 
 \begin{thm}(\citeauthor{Klimann13})
   Tout automate fini à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
 \end{thm}
 
-Malheureusement, la conjecture \ref{conj:birev-md} n'est pas vraie en général.
+Ce théorème ne se généralise pas aux biréversibles en général.
 
 % TODO: include fantastique figures
 
@@ -127,7 +126,7 @@ Ces contres exemples sont pourtant factorisables, et en conjugant leur factorisa
 
 \begin{conj}
   \label{conj:birev-mdc}
-  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un groupe fini.
+  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son $\mathfrak{mdc}$-réduit est trivial.
 \end{conj}
 
 Cette conjecture est l'objet des recherches ménées au cours de ce projet.
@@ -164,7 +163,7 @@ Cette conjecture est l'objet des recherches ménées au cours de ce projet.
 On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref{prop:finitude-c} une des implications de la conjecture \ref{conj:birev-mdc}.
 
 \begin{prop}
-  Tout automate de Mealy dont le $\mathfrak{mdc}$-réduit engendre un groupe fini engendre un groupe fini.
+  Tout automate de Mealy engendre un (semi)groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un (semi)groupe fini.
 \end{prop}
 
 \section{Génération et Factorisation d'automates de Mealy}
@@ -254,6 +253,37 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
     Ainsi, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont bien biréversibles.
 \end{proof}
 
+
+\subsection{Bencmark}
+
+\begin{center}
+  \begin{table}[h!]
+    \begin{threeparttable}
+    \begin{tabular}{|rrrrrr|}
+      \hline
+      \#états & \#lettres & 1 & 2 & 3 & \#biréversibles \\ [0.5ex]
+      \hline\hline
+      2 & 2 & 0.002s & 0.003s & 0.004s & 12 \\
+      \hline
+      3 & 2 & 0.003s & 0.003s & 0.002s & 144 \\
+      \hline
+      3 & 3 & 0.011s & 0.086s & 0.005s & 8 784 \\
+      \hline
+      4 & 3 & 0.830s & 28.018s & 0.368s & 1 092 096 \\
+      \hline
+      4 & 4 & 24:06.15s & trop long & 11:16.96s & 1 031 000 000 \\
+      \hline
+    \end{tabular}
+
+    \caption{Benchmark génération d'automates biréversibles}
+    \begin{tablenotes}
+    \item[1] Temps sans nauty sans fork
+    \item[2] Temps avec nauty sans fork
+    \item[3] Temps sans nauty avec fork
+    \end{tablenotes}
+\end{threeparttable}
+  \end{table}
+\end{center}
 
 \newpage
 \bibliography{project}{

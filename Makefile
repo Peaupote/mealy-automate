@@ -1,19 +1,23 @@
 LATEX = pdflatex
 BIB = bibtex
 CC = gcc
-FLAGS = -O3
+FLAGS = -O3 -g
 LIBS = -I nauty26r11 -L nauty26r11
 DEPS = nauty26r11/nauty.c nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/schreier.c nauty26r11/naurng.c
 
 all: prettyprint generator
 
-generator: generator.c 
-	@echo "Generate executable generator"
-	@$(CC) $(FLAGS) $(LIBS) generator.c $(DEPS) -o generator
+%.o: %.c
+	@echo "Compiling $?"
+	@$(CC) $(FLAGS) -c $? -o $@ $(LIBS)
 
-prettyprint: prettyprint.c
+generator: utils.o generator.c
+	@echo "Generate executable generator"
+	@$(CC) $(FLAGS) utils.o $(DEPS) generator.c -o generator $(LIBS)
+
+prettyprint: utils.o prettyprint.c
 	@echo "Generate executable prettyprint"
-	@$(CC) $(FLAGS) $(LIBS) prettyprint.c $(DEPS) -o prettyprint
+	@$(CC) $(FLAGS) $? $(DEPS) -o prettyprint $(LIBS)
 
 article:
 	@echo "Compiling article to latex"
@@ -23,6 +27,6 @@ article:
 
 clean:
 	@echo "Clean executable"
-	@rm -rf generator prettyprint
+	@rm -rf generator prettyprint *.o
 
 re: clean all

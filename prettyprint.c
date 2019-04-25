@@ -7,6 +7,7 @@
 #include <math.h>
 
 #include "nauty.h"
+#include "utils.h"
 
 int fd;
 unsigned char nb_states, nb_letters, size;
@@ -51,23 +52,21 @@ int main (int argc, char *argv[]) {
     nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
 
     unsigned int x, p, index;
+    mealy_t *machine, *red;
 
-    delta = malloc(size);
-    rho = malloc(size);
+    /* DYNALLSTAT(graph, g, g_sz); */
+    /* DYNALLSTAT(int, lab, lab_sz); */
+    /* DYNALLSTAT(int, ptn, ptn_sz); */
+    /* DYNALLSTAT(int, orbits, orbits_sz); */
+    /* static DEFAULTOPTIONS_GRAPH(options); */
+    /* statsblk stats; */
 
-    DYNALLSTAT(graph, g, g_sz);
-    DYNALLSTAT(int, lab, lab_sz);
-    DYNALLSTAT(int, ptn, ptn_sz);
-    DYNALLSTAT(int, orbits, orbits_sz);
-    static DEFAULTOPTIONS_GRAPH(options);
-    statsblk stats;
+    /* DYNALLOC2(graph, g, g_sz, m, n, "malloc"); */
+    /* DYNALLOC1(int, lab, lab_sz, n, "malloc"); */
+    /* DYNALLOC1(int, ptn, ptn_sz, n, "malloc"); */
+    /* DYNALLOC1(int, orbits, orbits_sz, n, "malloc"); */
 
-    DYNALLOC2(graph, g, g_sz, m, n, "malloc");
-    DYNALLOC1(int, lab, lab_sz, n, "malloc");
-    DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
-    DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
-
-    options.writeautoms = TRUE;
+    /* options.writeautoms = TRUE; */
 
     buffer = malloc(size);
     while ((rc = read(fd, buffer, size)) > 0) {
@@ -76,16 +75,25 @@ int main (int argc, char *argv[]) {
             return 1;
         }
 
-        count++;
-        //printf("Machine %lu\ndelta:\n", ++count);
-        //memcpy(&delta, &buffer, size);
+        delta = malloc(size);
+        rho = malloc(size);
 
-        /* for (int p = 0; p < nb_states; p++) { */
-        /*     for (int x = 0; x < nb_letters; x++) { */
-        /*         printf("%u ", buffer[p * nb_states + x]); */
-        /*     } */
-        /*     printf("\n"); */
-        /* } */
+        machine = malloc(sizeof(mealy_t));
+        machine->nb_states = nb_states;
+        machine->nb_letters = nb_letters;
+        machine->delta = delta;
+        machine->rho = rho;
+
+        printf("Machine %lu\n", ++count);
+        printf("delta:\n");
+        memcpy(delta, buffer, size);
+
+        for (int p = 0; p < nb_states; p++) {
+            for (int x = 0; x < nb_letters; x++) {
+                printf("%u ", buffer[p * nb_states + x]);
+            }
+            printf("\n");
+        }
 
         rc = read(fd, buffer, size);
         if (rc < size) {
@@ -93,17 +101,17 @@ int main (int argc, char *argv[]) {
             return 1;
         }
 
-        //printf("rho:\n");
-        //memcpy(&rho, &buffer, size);
+        printf("rho:\n");
+        memcpy(rho, buffer, size);
 
-        /* for (int p = 0; p < nb_states; p++) { */
-        /*     for (int x = 0; x < nb_letters; x++) { */
-        /*         printf("%u ", buffer[p * nb_states + x]); */
-        /*     } */
-        /*     printf("\n"); */
-        /* } */
+        for (int p = 0; p < nb_states; p++) {
+            for (int x = 0; x < nb_letters; x++) {
+                printf("%u ", buffer[p * nb_states + x]);
+            }
+            printf("\n");
+        }
 
-        /* // */
+        //
         /* EMPTYGRAPH(g, m, n); */
         /* ADDONEEDGE(g, sl + 1, sl + 2, m); */
 
@@ -127,7 +135,12 @@ int main (int argc, char *argv[]) {
 
         /* printf("Automorphism group size = "); */
         /* writegroupsize(stdout, stats.grpsize1, stats.grpsize2); */
-        /* printf("\n"); */
+
+        printf("md_red\n");
+        red = md_reduce(machine);
+        free_mealy(red);
+
+        printf("\n");
     }
 
     printf("%lu\n", count);
