@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 
 #include "nauty.h"
+#include "generator_struct.h"
 
 char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f nb_forks] [-d] [-n]\n";
 
@@ -19,6 +20,7 @@ u_int8_t *delta, *rho;
 int buffersize, bufferp;
 unsigned char *buffer;
 char debug = 0, use_nauty = 0;
+LinkedList canlist = NULL;
 
 DYNALLSTAT(graph, g, g_sz);
 DYNALLSTAT(graph, can, can_sz);
@@ -99,30 +101,42 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
 int canonical() {
     unsigned int x, p, index, k;
 
-    EMPTYGRAPH(g, m, n);
-    ADDONEEDGE(g, sl + 1, sl + 2, m);
+    int g_n = n+nb_states+nb_letters+3;
+    int g_m = SETWORDSNEEDED(g_n);
+    EMPTYGRAPH(g, g_m, g_n);
+    
+    // sl : fixateur des états
+    // sl+1 : fixateur des lettres
+    // sl+2 : fixateur du fixateur des lettres
+    ADDONEEDGE(g, sl+1, sl+2, g_m);
 
     for (x = 0; x < nb_letters; x++) {
-        ADDONEEDGE(g, st + x, sl + 1, m);
+        ADDONEEDGE(g, st + x, sl + 1, g_m);
     }
 
     for (p = 0; p < nb_states; p++) {
-        ADDONEEDGE(g, size + p, sl, m);
+        ADDONEEDGE(g, n + p, sl, g_m);
         for (x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
-            ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m);
-            ADDONEEDGE(g, index, size + p, m);
-            ADDONEEDGE(g, index, st + x, m);
+            ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], g_m);
+            ADDONEEDGE(g, index, n + p, g_m);
+            ADDONEEDGE(g, index, st + x, g_m);
         }
     }
 
-    densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
+    densenauty(g, lab, ptn, orbits, &options, &stats, g_m, g_n, can);
 
-    for (k = 0; k < m*(size_t)n; k++) {
-        if (g[k] != can[k]) return 0;
+    if(!is_in_list(canlist, can, can_sz)){
+        add_can(canlist, can, can_sz);
+        return 1;
     }
 
-    return 1;
+    return 0;
+    // for (k = 0; k < m*(size_t)n; k++) {
+    //     if (g[k] != can[k]) return 0;
+    // }
+
+    // return 1;
 }
 
 void rec(u_int8_t start_p, u_int8_t start_x,
@@ -303,12 +317,14 @@ int main (int argc, char *argv[]) {
 
         nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
 
-        DYNALLOC2(graph, g, g_sz, n, m, "malloc");
-        DYNALLOC2(graph, can, can_sz, n, m, "malloc");
-        DYNALLOC1(int, lab, lab_sz, n, "malloc");
-        DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
-        DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
+        int g_n = n+nb_states+nb_letters+3;
+        int g_m = SETWORDSNEEDED(g_n);
 
+        DYNALLOC2(graph, g, g_sz, g_m, g_n, "malloc");
+        DYNALLOC2(graph, can, can_sz, g_m, g_n, "malloc");  
+        DYNALLOC1(int, lab, lab_sz, g_n, "malloc"); 
+        DYNALLOC1(int, ptn, ptn_sz, g_n, "malloc");   
+        DYNALLOC1(int, orbits, orbits_sz, g_n, "malloc");
         // options.writeautoms = TRUE;
     }
 
@@ -324,6 +340,7 @@ int main (int argc, char *argv[]) {
 
     if (use_nauty) {
         printf("Canonical count %u.\n", can_count);
+        // printf("Canlist size %d\n", size_of_list(canlist));
     }
 
     close(fd);
