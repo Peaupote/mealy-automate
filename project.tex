@@ -11,6 +11,8 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{natbib}
 \usepackage{xfrac}
+\usepackage{caption}
+\usepackage{threeparttable}
 
 \newtheorem{prop}{Proposition}
 \newtheorem{lemma}{Lemme}
@@ -251,6 +253,37 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
     Ainsi, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont bien biréversibles.
 \end{proof}
 
+
+\subsection{Bencmark}
+
+\begin{center}
+  \begin{table}[h!]
+    \begin{threeparttable}
+    \begin{tabular}{|rrrrrr|}
+      \hline
+      \#états & \#lettres & 1 & 2 & 3 & \#biréversibles \\ [0.5ex]
+      \hline\hline
+      2 & 2 & 0.002s & 0.003s & 0.004s & 12 \\
+      \hline
+      3 & 2 & 0.003s & 0.003s & 0.002s & 144 \\
+      \hline
+      3 & 3 & 0.011s & 0.086s & 0.005s & 8 784 \\
+      \hline
+      4 & 3 & 0.830s & 28.018s & 0.368s & 1 092 096 \\
+      \hline
+      4 & 4 & 24:06.15s & trop long & 11:16.96s & 1 031 000 000 \\
+      \hline
+    \end{tabular}
+
+    \caption{Benchmark génération d'automates biréversibles}
+    \begin{tablenotes}
+    \item[1] Temps sans nauty sans fork
+    \item[2] Temps avec nauty sans fork
+    \item[3] Temps sans nauty avec fork
+    \end{tablenotes}
+\end{threeparttable}
+  \end{table}
+\end{center}
 
 \newpage
 \bibliography{project}{
