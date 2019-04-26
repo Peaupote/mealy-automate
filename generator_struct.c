@@ -1,18 +1,25 @@
 #include "generator_struct.h"
+#include "nauty.h"
 
-LinkedList add_can(LinkedList list, graph *can, size_t can_sz){
+LinkedList new_node(int m, int n){
     LinkedList new = malloc(sizeof(LinkedList));
-    new->can = malloc(can_sz);
-    memcpy(new->can, can, can_sz);
-    new->next = list;
+    DYNALLOC2(graph, new->can, new->can_sz, n, m, "malloc");
+    new->next = NULL;
     return new;
 }
 
-short is_in_list(LinkedList list, graph *can, size_t can_sz) {
+short is_in_list(LinkedList list, graph *can, int m, int n) {
+    int k;
+    short in;
     while(list != NULL) {
-        if(!memcmp(can, list->can, can_sz)) {
-            return 1;
+        in = 1;
+        for (k = 0; k < m*(size_t)n; k++) {
+           if (list->can[k] != can[k]) { 
+               in = 0;
+               break;
+           }
         }
+        if(in) return 1;
         list = list->next;
     }
     return 0;

@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
+#include <stdint.h>
 #include <sys/wait.h>
 
 #include "nauty.h"
@@ -13,7 +14,7 @@
 char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f nb_forks] [-d] [-n]\n";
 
 int fd = -1, nb_states = 2, nb_letters = 2, size,
-    sl, st, n, m,
+    sl, st, n, m, 
     nb_forks = 0, depth = 0;
 u_int32_t sup, count = 0, can_count = 0;
 u_int8_t *delta, *rho;
@@ -101,37 +102,73 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
 int canonical() {
     unsigned int x, p, index, k;
 
-    int g_n = n+nb_states+nb_letters+3;
-    int g_m = SETWORDSNEEDED(g_n);
-    EMPTYGRAPH(g, g_m, g_n);
+    m = SETWORDSNEEDED(n);
+    nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
+
+    LinkedList new = new_node(m, n);
+
+    DYNALLOC2(graph, g, g_sz, n, m, "malloc");
+    // DYNALLOC2(graph, can, can_sz, n, m, "malloc"); 
+ 
+    DYNALLOC1(int, lab, lab_sz, n, "malloc"); 
+    DYNALLOC1(int, ptn, ptn_sz, n, "malloc");   
+    DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
+
+    EMPTYGRAPH(g, m, n);
+
+    // printf("wordsize %d", WORDSIZE);
+    // printf("g_m %d * g_n %d: can_sz %d\n", m, n, can_sz);
+    // char *print = malloc(11*can_sz+1);
+    // print[can_sz] = '\0';
+    // memcpy(print, g, 11*can_sz);
+    // printf("g ");
+    // for(int i = 0; i < 11*can_sz; i++) {
+    //     printf("-%d", (uint8_t)print[i]);
+    // }
+    // printf("\n");
     
     // sl : fixateur des états
     // sl+1 : fixateur des lettres
     // sl+2 : fixateur du fixateur des lettres
-    ADDONEEDGE(g, sl+1, sl+2, g_m);
+    ADDONEEDGE(g, sl+1, sl+2, m);
 
     for (x = 0; x < nb_letters; x++) {
-        ADDONEEDGE(g, st + x, sl + 1, g_m);
+        ADDONEEDGE(g, st + x, sl + 1, m);
     }
 
     for (p = 0; p < nb_states; p++) {
-        ADDONEEDGE(g, n + p, sl, g_m);
+        ADDONEEDGE(g, size + p, sl, m);
         for (x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
-            ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], g_m);
-            ADDONEEDGE(g, index, n + p, g_m);
-            ADDONEEDGE(g, index, st + x, g_m);
+            ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m);
+            ADDONEEDGE(g, index, size + p, m);
+            ADDONEEDGE(g, index, st + x, m);
         }
     }
 
-    densenauty(g, lab, ptn, orbits, &options, &stats, g_m, g_n, can);
+    densenauty(g, lab, ptn, orbits, &options, &stats, m, n, new->can);
 
-    if(!is_in_list(canlist, can, can_sz)){
-        add_can(canlist, can, can_sz);
+    // memcpy(print, g, 11*can_sz);
+    // printf("g ");
+    // for(int i = 0; i < 11*can_sz; i++) {
+    //     printf("-%d", (u_int8_t)print[i]);
+    // }
+    // printf("\n");
+    // memcpy(print, can, 11*can_sz);
+    // printf("can ");
+    // for(int i = 0; i < 11*can_sz; i++) {
+    //     printf("-%d", (u_int8_t)print[i]);
+    // }
+    // printf("\n");
+
+    if(!is_in_list(canlist, new->can, m, n)){
+        new->next = canlist;
+        canlist = new;
         return 1;
     }
 
     return 0;
+
     // for (k = 0; k < m*(size_t)n; k++) {
     //     if (g[k] != can[k]) return 0;
     // }
@@ -290,6 +327,7 @@ int main (int argc, char *argv[]) {
     size = nb_letters * nb_states;
     sup = (1UL << size);
 
+
     delta = malloc(size);
     if (*delta) return -1;
     rho = malloc(size);
@@ -311,20 +349,9 @@ int main (int argc, char *argv[]) {
 
         st = size + nb_states;
         sl = st + nb_letters;
-        n = size;
+        n = st+3;
         //m = ceil(n / WORDSIZE);
-        m = SETWORDSNEEDED(n);
 
-        nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
-
-        int g_n = n+nb_states+nb_letters+3;
-        int g_m = SETWORDSNEEDED(g_n);
-
-        DYNALLOC2(graph, g, g_sz, g_m, g_n, "malloc");
-        DYNALLOC2(graph, can, can_sz, g_m, g_n, "malloc");  
-        DYNALLOC1(int, lab, lab_sz, g_n, "malloc"); 
-        DYNALLOC1(int, ptn, ptn_sz, g_n, "malloc");   
-        DYNALLOC1(int, orbits, orbits_sz, g_n, "malloc");
         // options.writeautoms = TRUE;
     }
 

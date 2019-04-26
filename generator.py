@@ -200,6 +200,7 @@ def isomorphism_class(nb_states, nb_letters):
     """Renvoie la liste des automates à nb_states états
     et nb_letters lettres à isomorphisme près"""
     CL = []
+    res = []
     c = 0
     for a in helix_gen(nb_states, nb_letters):
         c += 1
@@ -212,4 +213,5 @@ def isomorphism_class(nb_states, nb_letters):
                 break
         if not in_cl:
             CL.append(can)
-    return CL
+            res.append(a)
+    return res
