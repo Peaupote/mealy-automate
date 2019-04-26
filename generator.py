@@ -214,4 +214,5 @@ def isomorphism_class(nb_states, nb_letters):
         if not in_cl:
             CL.append(can)
             res.append(a)
+            print("found", len(res))
     return res

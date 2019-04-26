@@ -115,17 +115,6 @@ int canonical() {
     DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
 
     EMPTYGRAPH(g, m, n);
-
-    // printf("wordsize %d", WORDSIZE);
-    // printf("g_m %d * g_n %d: can_sz %d\n", m, n, can_sz);
-    // char *print = malloc(11*can_sz+1);
-    // print[can_sz] = '\0';
-    // memcpy(print, g, 11*can_sz);
-    // printf("g ");
-    // for(int i = 0; i < 11*can_sz; i++) {
-    //     printf("-%d", (uint8_t)print[i]);
-    // }
-    // printf("\n");
     
     // sl : fixateur des états
     // sl+1 : fixateur des lettres
@@ -148,22 +137,10 @@ int canonical() {
 
     densenauty(g, lab, ptn, orbits, &options, &stats, m, n, new->can);
 
-    // memcpy(print, g, 11*can_sz);
-    // printf("g ");
-    // for(int i = 0; i < 11*can_sz; i++) {
-    //     printf("-%d", (u_int8_t)print[i]);
-    // }
-    // printf("\n");
-    // memcpy(print, can, 11*can_sz);
-    // printf("can ");
-    // for(int i = 0; i < 11*can_sz; i++) {
-    //     printf("-%d", (u_int8_t)print[i]);
-    // }
-    // printf("\n");
-
     if(!is_in_list(canlist, new->can, m, n)){
         new->next = canlist;
         canlist = new;
+        printf("size of list %d\n", size_of_list(canlist));
         return 1;
     }
 
