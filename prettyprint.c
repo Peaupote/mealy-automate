@@ -11,7 +11,7 @@
 
 int fd;
 unsigned char nb_states, nb_letters, size;
-unsigned long count = 0;
+unsigned long count = 0, trivial_count = 0, finite_not_trivial = 0;
 unsigned char *buffer, *delta, *rho;
 
 int main (int argc, char *argv[]) {
@@ -136,14 +136,16 @@ int main (int argc, char *argv[]) {
         /* printf("Automorphism group size = "); */
         /* writegroupsize(stdout, stats.grpsize1, stats.grpsize2); */
 
-        printf("md_red\n");
         red = md_reduce(machine);
-        free_mealy(red);
+        if (is_trivial(red)) trivial_count++;
+        else if (mexp(red, 1000) < 100) finite_not_trivial++;
 
-        printf("\n");
+        free_mealy(red);
     }
 
-    printf("%lu\n", count);
+    printf("Total count %lu.\n", count);
+    printf("Md-trivial count %lu.\n", trivial_count);
+    printf("Finite not trivial %lu.\n", finite_not_trivial);
 
     close(fd);
     return 0;

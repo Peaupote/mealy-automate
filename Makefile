@@ -11,16 +11,16 @@ all: prettyprint generator
 	@echo "Compiling $?"
 	@$(CC) $(FLAGS) -c $? -o $@ $(LIBS)
 
-generator: generator_struct.o utils.o generator.c
+generator: generator_struct.o utils.o generator.o
 	@echo "Generate executable generator"
-	@$(CC) $(FLAGS) generator_struct.o utils.o $(DEPS) generator.c -o generator $(LIBS)
+	@$(CC) $(FLAGS) generator_struct.o utils.o $(DEPS) generator.o -o generator $(LIBS)
 
-prettyprint: utils.o prettyprint.c
+prettyprint: utils.o prettyprint.o
 	@echo "Generate executable prettyprint"
-	@$(CC) $(FLAGS) $? $(DEPS) -o prettyprint $(LIBS)
+	@$(CC) $(FLAGS) utils.o $(DEPS) prettyprint.o -o prettyprint $(LIBS)
 
-article:
-	@echo "Compiling article to latex"
+report: project.tex project.bib
+	@echo "Compiling latex report"
 	@$(LATEX) project
 	@$(BIB) project
 	@$(LATEX) project

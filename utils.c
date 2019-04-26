@@ -4,18 +4,18 @@
 
 #include "utils.h"
 
-mealy_t *mealy(uint nb_states, uint nb_letters) {
+mealy_t *mealy(u_int8_t nb_states, u_int8_t nb_letters) {
     mealy_t *machine = malloc(sizeof(mealy_t*));
     if (machine) {
         machine->nb_states = nb_states;
         machine->nb_letters = nb_letters;
-        machine->delta = calloc(nb_states * nb_letters, 1);
+        machine->delta = malloc(nb_states * nb_letters);
         if (!machine->delta) {
             free(machine);
             return 0;
         }
 
-        machine->rho = calloc(nb_states * nb_letters, 1);
+        machine->rho = malloc(nb_states * nb_letters);
         if (!machine->rho) {
             free(machine->delta);
             free(machine);
@@ -42,7 +42,7 @@ void free_mealy(mealy_t *m) {
     free(m);
 }
 
-mealy_t *dual(mealy_t *m) {
+mealy_t *dual(const mealy_t *m) {
     unsigned int x, p, i1, i2;
     mealy_t *d = mealy(m->nb_letters, m->nb_states);
     if (!d) return 0;
@@ -59,10 +59,10 @@ mealy_t *dual(mealy_t *m) {
     return d;
 }
 
-mealy_t *min(mealy_t *m) {
+mealy_t *min(const mealy_t *m) {
     u_int8_t i, j, k, count;
-    u_int8_t *part = malloc(m->nb_states),
-        *part2 = malloc(m->nb_states);
+    u_int8_t *part = calloc(m->nb_states, 1),
+        *part2 = calloc(m->nb_states, 1);
 
     if (!part || !part2) return 0;
 
@@ -86,7 +86,8 @@ mealy_t *min(mealy_t *m) {
         for (i = 0; i < m->nb_states; i++) {
             for (j = 0; j < i; j++) {
                 for (k = 0; part[i] == part[j] && k < m->nb_letters; k++) {
-                    if (m->delta[i * m->nb_letters + k] != m->delta[j * m->nb_letters + k])
+                    if (part[m->delta[i * m->nb_letters + k]]
+                        != part[m->delta[j * m->nb_letters + k]])
                         break;
                 }
 
@@ -107,23 +108,23 @@ mealy_t *min(mealy_t *m) {
         memset(part2, 0, m->nb_states); //useless
     }
 
-    mealy_t *min = mealy(count, m->nb_letters);
-    if (!min) return 0;
+    mealy_t *mm = mealy(count, m->nb_letters);
+    if (!mm) return 0;
 
     for (i = 0; i < count; i++) {
         for (j = 0; j < m->nb_states; j++)
             if (part[j] == i) break;
 
         for (k = 0; k < m->nb_letters; k++) {
-            min->delta[i * m->nb_letters + k] = part[m->delta[j] * m->nb_letters + k];
-            min->rho[i * m->nb_letters + k] = m->rho[j * m->nb_letters + k];
+            mm->delta[i * m->nb_letters + k] = part[m->delta[j] * m->nb_letters + k];
+            mm->rho[i * m->nb_letters + k] = m->rho[j * m->nb_letters + k];
         }
     }
 
     free(part);
     free(part2);
 
-    return min;
+    return mm;
 }
 
 // can be improved
@@ -131,6 +132,8 @@ mealy_t *md_reduce(mealy_t *a) {
     mealy_t *b = 0, *c;
 
     while (!mealy_eq(a, b)) {
+        if (b)
+            free_mealy(b);
         b = a;
         a = min(a);
         if (mealy_eq(a, b)) {
@@ -139,11 +142,21 @@ mealy_t *md_reduce(mealy_t *a) {
             free_mealy(c);
             c = a;
             a = min(b);
-            free_mealy(a);
+            free_mealy(c);
         }
     }
 
+    free_mealy(a);
+    free_mealy(b);
+
     return a;
+}
+
+char is_trivial (mealy_t *m) {
+    if (m == 0 || m->nb_states != 1) return 0;
+    for (unsigned int i = 0; i < m->nb_letters; i++)
+        if (m->rho[i] != i) return 0;
+    return 1;
 }
 
 mealy_t *product(mealy_t *m1, mealy_t *m2) {
@@ -171,10 +184,12 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
     return prod;
 }
 
+// bug here
 unsigned int mexp(mealy_t *m, unsigned int bound) {
     unsigned int i;
     mealy_t *tmp, *prev;
 
+    if (!m) return -1;
     tmp = m;
     m = min(m);
     free_mealy(m);
