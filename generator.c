@@ -108,7 +108,7 @@ int canonical() {
     LinkedList new = new_node(m, n);
 
     DYNALLOC2(graph, g, g_sz, n, m, "malloc");
-    // DYNALLOC2(graph, can, can_sz, n, m, "malloc"); 
+    DYNALLOC2(graph, can, can_sz, n, m, "malloc"); 
  
     DYNALLOC1(int, lab, lab_sz, n, "malloc"); 
     DYNALLOC1(int, ptn, ptn_sz, n, "malloc");   
@@ -116,6 +116,7 @@ int canonical() {
 
     EMPTYGRAPH(g, m, n);
     
+    // printf("n : %d - m : %d\n", n,m);
     // sl : fixateur des états
     // sl+1 : fixateur des lettres
     // sl+2 : fixateur du fixateur des lettres
@@ -136,6 +137,7 @@ int canonical() {
     }
 
     densenauty(g, lab, ptn, orbits, &options, &stats, m, n, new->can);
+    // densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
 
     if(!is_in_list(canlist, new->can, m, n)){
         new->next = canlist;
@@ -326,7 +328,12 @@ int main (int argc, char *argv[]) {
 
         st = size + nb_states;
         sl = st + nb_letters;
-        n = st+3;
+        n = sl+3;
+
+        printf("Size = %d\n", size);
+        printf("Nb_states = %d\n", nb_states);
+        printf("Nb_letters = %d\n", nb_letters);
+        printf("N = %d\n", n);
         //m = ceil(n / WORDSIZE);
 
         // options.writeautoms = TRUE;

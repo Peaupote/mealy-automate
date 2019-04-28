@@ -2,7 +2,8 @@
 #include "nauty.h"
 
 LinkedList new_node(int m, int n){
-    LinkedList new = malloc(sizeof(LinkedList));
+    LinkedList new = malloc(sizeof(struct LinkedList));
+    memset(new, 0, sizeof(struct LinkedList));
     DYNALLOC2(graph, new->can, new->can_sz, n, m, "malloc");
     new->next = NULL;
     return new;
@@ -19,7 +20,19 @@ short is_in_list(LinkedList list, graph *can, int m, int n) {
                break;
            }
         }
-        if(in) return 1;
+        // for (k = 0; k < m*(size_t)n; k++) {
+        //     printf("%c-%c|", can[k], list->can[k]);
+        // }
+        // printf("\n");   
+        // if(!memcmp(list->can, can, m*(size_t)n*(WORDSIZE/8))) {
+        //     printf("memcheck ok\n");
+        //     return 1;
+        // }
+        if(in) {
+            // printf("For check ok\n");
+            
+            return 1;
+        }
         list = list->next;
     }
     return 0;
