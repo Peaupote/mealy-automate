@@ -146,11 +146,11 @@ int canonical() {
   // sl+2 : fixateur du fixateur des lettres
 
   for (i = 0; i < nb_states + nb_letters; ++i) {
-    sg1.v[i] = 3 * n + i;
-    sg1.d[i] = 1;
+    sg1.v[size + i] = 3 * n + i;
+    sg1.d[size + i] = 1;
   }
 
-  sg1.v[sl + 2] = 3 * n;
+  sg1.v[sl + 2] = 3 * n + nb_letters + nb_states;
   sg1.d[sl + 2] = 1;
 
   // Liaison fixateur des lettres - fixateur du fixateur
