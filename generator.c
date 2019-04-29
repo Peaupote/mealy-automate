@@ -108,8 +108,8 @@ int canonical() {
     LinkedList new = new_node(m, n);
 
     DYNALLOC2(graph, g, g_sz, n, m, "malloc");
-    DYNALLOC2(graph, can, can_sz, n, m, "malloc"); 
- 
+    DYNALLOC2(graph, can, can_sz, n, m, "malloc");
+         
     DYNALLOC1(int, lab, lab_sz, n, "malloc"); 
     DYNALLOC1(int, ptn, ptn_sz, n, "malloc");   
     DYNALLOC1(int, orbits, orbits_sz, n, "malloc");

@@ -1,3 +1,5 @@
+// gcc -W -g utils.o nauty26r11/nausparse.o nauty26r11/nauty.c nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/schreier.c nauty26r11/naurng.c generator_sparse.c -o generator_sparse -I nauty26r11 -L nauty26r11
+
 #include <fcntl.h>
 #include <math.h>
 #include <stdint.h>
@@ -18,10 +20,10 @@ int fd = -1;
 int buffersize, bufferp;
 unsigned char *buffer;
 
-int nb_states = 2, nb_letters = 2;
+unsigned int nb_states = 2, nb_letters = 2;
 
 // Variable pour nauty
-int size, sl, st = 0;
+unsigned int size, sl, st = 0;
 int n, m = 0;
 
 // Pour fork
@@ -111,10 +113,8 @@ unsigned int pop(u_int32_t *tab, unsigned int i) {
 }
 
 unsigned int iter(u_int32_t *tab, unsigned int i) {
-  if (i >= 0)
-    (*tab) ^= 1UL << i++;
-  if (i < 0)
-    i = 0;
+
+  (*tab) ^= 1UL << i++;
   while (i < size && ((*tab) >> i) & 1)
     i++;
   if (i < size)
@@ -135,7 +135,8 @@ int canonical() {
   sg1.nv = n;                                   /* Number of vertices */
   sg1.nde = 3 * n + nb_letters + nb_states + 1; /* Number of directed edges */
 
-  for (int i = 0; i < size; ++i) {
+  unsigned int i;
+  for (i = 0; i < size; ++i) {
     sg1.v[i] = 3 * i; /* Position of vertex i in v array */
     sg1.d[i] = 3;     /* Degree of vertex i */
   }
@@ -144,7 +145,7 @@ int canonical() {
   // sl+1 : fixateur des lettres
   // sl+2 : fixateur du fixateur des lettres
 
-  for (int i = size; i < sl; ++i) {
+  for (i = 0; i < nb_states + nb_letters; ++i) {
     sg1.v[i] = 3 * n + i;
     sg1.d[i] = 1;
   }
@@ -156,19 +157,19 @@ int canonical() {
   sg1.e[sg1.v[sl + 2]] = sl + 1;
 
   // Liaisons entre les lettres et le fixateur des lettres
-  for (int i = st; i < sl; ++i) {
+  for (i = st; i < sl; ++i) {
     sg1.e[sg1.v[i]] = sl + 1;
   }
 
   // Liaisons entre les états et le fixateur des états
-  for (int i = size; i < st; ++i) {
+  for (i = size; i < st; ++i) {
     sg1.e[sg1.v[i]] = sl;
   }
 
   // Liaisons entre les états du graphe en hélice et leurs fixateurs
   int index;
-  for (int p = 0; p < nb_states; p++) {
-    for (int x = 0; x < nb_letters; x++) {
+  for (unsigned int p = 0; p < nb_states; p++) {
+    for (unsigned int x = 0; x < nb_letters; x++) {
       index = p * nb_letters + x;
       sg1.e[sg1.v[index]] = delta[index] * nb_letters + rho[index];
       sg1.e[sg1.v[index] + 1] = size + p; // Liaison avec le fixateur des états
