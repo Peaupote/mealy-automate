@@ -133,9 +133,7 @@ int canonical() {
         for (x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
             ADDONEARC(g, offset + index, offset + delta[index] * nb_letters + rho[index], m);
-
             ADDONEARC(g, offset + index, 3 + p, m);
-
             ADDONEARC(g, offset + index, 3 + nb_states + x, m);
         }
     }
@@ -191,13 +189,11 @@ int canonical() {
     fclose(dot);
 
     // compare only vertices from helix graph
-    for (k = 0; k < m*(size_t)n; k++) {
+    for (k = offset; k < m*(size_t)n; k++) {
         uint64_t mask = ((1UL << size) - 1) << ((sizeof(can[k]) * 8) - n); // seems ok to me
-
-        // why g[k] and can[k] are 0 ?
-        printf("%016lx\n", g[k]);
-        printf("%016lx\n", can[k]);
-        printf("%016lx\n\n", mask);
+        //printf("%016lx\n", g[k]);
+        //printf("%016lx\n", can[k]);
+        //printf("%016lx\n\n", mask);
         if (!(can[k] & g[k] & mask))
             return 0;
     }
