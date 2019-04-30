@@ -14,7 +14,7 @@
 char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f nb_forks] [-d] [-n]\n";
 
 int fd = -1, nb_states = 2, nb_letters = 2, size,
-    sl, st, n, m, 
+    sl, st, n, m,
     nb_forks = 0, depth = 0;
 u_int32_t sup, count = 0, can_count = 0;
 u_int8_t *delta, *rho;
@@ -102,57 +102,107 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
 int canonical() {
     unsigned int x, p, index, k;
 
-    m = SETWORDSNEEDED(n);
-    nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
+    char name[255] = { 0 };
+    sprintf(name, "helix/%d/%d/helix_dot_%d", nb_states, nb_letters, count);
+    FILE *dot = fopen(name, "w");
+    if (dot == 0) {
+        perror("fopen");
+        return 0;
+    }
 
-    LinkedList new = new_node(m, n);
+    fprintf(dot, "digraph G {\n");
 
-    DYNALLOC2(graph, g, g_sz, n, m, "malloc");
-    DYNALLOC2(graph, can, can_sz, n, m, "malloc");
-         
-    DYNALLOC1(int, lab, lab_sz, n, "malloc"); 
-    DYNALLOC1(int, ptn, ptn_sz, n, "malloc");   
-    DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
-
+    // LinkedList new = new_node(m, n);
     EMPTYGRAPH(g, m, n);
-    
-    // printf("n : %d - m : %d\n", n,m);
-    // sl : fixateur des états
-    // sl+1 : fixateur des lettres
-    // sl+2 : fixateur du fixateur des lettres
-    ADDONEEDGE(g, sl+1, sl+2, m);
+    int offset = 3 + nb_states + nb_letters;
 
+    // printf("n : %d - m : %d\n", n,m);
+    // 0 : fixateur du fixateur
+    // 1 : fixateur des etats
+    // 2 : fixateur des lettres
+    ADDONEARC(g, 2, 0, m);
+
+    // lettres -> fixateur des lettres
     for (x = 0; x < nb_letters; x++) {
-        ADDONEEDGE(g, st + x, sl + 1, m);
+        ADDONEARC(g, 3 + nb_states + x, 2, m);
     }
 
     for (p = 0; p < nb_states; p++) {
-        ADDONEEDGE(g, size + p, sl, m);
+        ADDONEARC(g, 3 + p, 1, m);
+
         for (x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
-            ADDONEEDGE(g, index, delta[index] * nb_letters + rho[index], m);
-            ADDONEEDGE(g, index, size + p, m);
-            ADDONEEDGE(g, index, st + x, m);
+            ADDONEARC(g, offset + index, offset + delta[index] * nb_letters + rho[index], m);
+
+            ADDONEARC(g, offset + index, 3 + p, m);
+
+            ADDONEARC(g, offset + index, 3 + nb_states + x, m);
         }
     }
 
-    densenauty(g, lab, ptn, orbits, &options, &stats, m, n, new->can);
-    // densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
+    fprintf(dot, "\n}\n");
+    fclose(dot);
 
-    if(!is_in_list(canlist, new->can, m, n)){
-        new->next = canlist;
-        canlist = new;
-        printf("size of list %d\n", size_of_list(canlist));
-        return 1;
+    // densenauty(g, lab, ptn, orbits, &options, &stats, m, n, new->can);
+    densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
+
+    /* if(!is_in_list(canlist, new->can, m, n)){ */
+    /*     new->next = canlist; */
+    /*     canlist = new; */
+    /*     printf("size of list %d\n", size_of_list(canlist)); */
+    /*     return 1; */
+    /* } */
+
+    sprintf(name, "helix/%d/%d/helix_bis_dot_%d", nb_states, nb_letters, count);
+    dot = fopen(name, "w");
+    if (!dot) {
+        perror("fopen");
+        return 0;
     }
 
-    return 0;
+    fprintf(dot, "digraph G {\n");
+    for (k = 0; k < m*(size_t)n; k++) {
+        for (unsigned int i = 0; i < sizeof(g[k]) * 8; i++) {
+            if (g[k] & (1UL << i)) {
+                fprintf(dot, "%d -> %d\n", k, sizeof(g[k]) * 8 - i - 1);
+            }
+        }
+    }
+    fprintf(dot, "\n}\n");
+    fclose(dot);
 
-    // for (k = 0; k < m*(size_t)n; k++) {
-    //     if (g[k] != can[k]) return 0;
-    // }
+    sprintf(name, "helix/%d/%d/helix_can_dot_%d", nb_states, nb_letters, count);
+    dot = fopen(name, "w");
+    if (!dot) {
+        perror("fopen");
+        return 0;
+    }
 
-    // return 1;
+    fprintf(dot, "digraph G {\n");
+    for (k = 0; k < m*(size_t)n; k++) {
+        for (unsigned int i = 0; i < sizeof(can[k]) * 8; i++) {
+            if (can[k] & (1UL << i)) {
+                fprintf(dot, "%d -> %d\n", k, sizeof(can[k]) * 8 - i - 1);
+            }
+        }
+    }
+
+    fprintf(dot, "\n}\n");
+    fclose(dot);
+
+    // compare only vertices from helix graph
+    for (k = 0; k < m*(size_t)n; k++) {
+        uint64_t mask = ((1UL << size) - 1) << ((sizeof(can[k]) * 8) - n); // seems ok to me
+
+        // why g[k] and can[k] are 0 ?
+        printf("%016lx\n", g[k]);
+        printf("%016lx\n", can[k]);
+        printf("%016lx\n\n", mask);
+        if (!(can[k] & g[k] & mask))
+            return 0;
+    }
+
+    return 1;
 }
 
 void rec(u_int8_t start_p, u_int8_t start_x,
@@ -308,9 +358,9 @@ int main (int argc, char *argv[]) {
 
 
     delta = malloc(size);
-    if (*delta) return -1;
+    if (!delta) return -1;
     rho = malloc(size);
-    if (*rho) return -1;
+    if (!rho) return -1;
 
     for(unsigned int p = 0; p < nb_states; p++) {
         for(unsigned int x = 0; x < nb_letters; x++) {
@@ -326,9 +376,16 @@ int main (int argc, char *argv[]) {
     if (use_nauty) {
         options.getcanon = TRUE;
 
-        st = size + nb_states;
-        sl = st + nb_letters;
-        n = sl+3;
+        n = size + nb_letters + nb_states + 3;
+        m = SETWORDSNEEDED(n);
+        nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
+
+        DYNALLOC2(graph, g, g_sz, n, m, "malloc");
+        DYNALLOC2(graph, can, can_sz, n, m, "malloc");
+
+        DYNALLOC1(int, lab, lab_sz, n, "malloc");
+        DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
+        DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
 
         printf("Size = %d\n", size);
         printf("Nb_states = %d\n", nb_states);
