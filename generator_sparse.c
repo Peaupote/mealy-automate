@@ -124,6 +124,8 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
 
 int canonical() {
     unsigned int i;
+
+    int compteur = 0;
     for (i = 0; i < size; ++i) {
         sg1.v[i] = 3 * i; /* Position of vertex i in v array */
         sg1.d[i] = 3;     /* out-Degree of vertex i */
@@ -135,24 +137,27 @@ int canonical() {
     // sl+2 : fixateur du fixateur des lettres
 
     for (i = 0; i < nb_states + nb_letters; ++i) {
-        sg1.v[size + i] = 3 * n + i;
+        sg1.v[size + i] = 3 * size + i;
         sg1.d[size + i] = 1;
     }
 
-    sg1.v[sl + 2] = 3 * n + nb_letters + nb_states;
+    sg1.v[sl + 2] = 3 * size + nb_letters + nb_states;
     sg1.d[sl + 2] = 1;
 
     // Liaison fixateur des lettres <- fixateur du fixateur
     sg1.e[sg1.v[sl + 2]] = sl + 1;
+    compteur++;
 
     // Liaisons entre les lettres -> le fixateur des lettres
     for (i = st; i < sl; ++i) {
         sg1.e[sg1.v[i]] = sl + 1;
+        compteur++;
     }
 
     // Liaisons entre les états -> le fixateur des états
     for (i = size; i < st; ++i) {
         sg1.e[sg1.v[i]] = sl;
+        compteur++;
     }
 
     // Liaisons entre les états du graphe en hélice et leurs fixateurs
@@ -163,9 +168,11 @@ int canonical() {
             sg1.e[sg1.v[index]] = delta[index] * nb_letters + rho[index];
             sg1.e[sg1.v[index] + 1] = size + p; // Liaison avec le fixateur des états
             sg1.e[sg1.v[index] + 2] = st + x; // Liaison avec le fixateur des lettres
+            compteur += 3;
         }
     }
 
+    printf("compteur = %d\n", compteur);
     sparsenauty(&sg1, lab1, ptn, orbits, &options, &stats, &cg1);
 
     if (aresame_sg(&sg1, &cg1)) {
@@ -355,11 +362,13 @@ int main(int argc, char *argv[]) {
         DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
         DYNALLOC1(int, map, map_sz, n, "malloc");
 
-        SG_ALLOC(sg1, n, 3 * n + nb_letters + nb_states + 1, "malloc");
+        SG_ALLOC(sg1, n, 3 * size + nb_letters + nb_states + 1, "malloc");
 
         sg1.nv = n;                                   /* Number of vertices */
-        sg1.nde = 3 * n + nb_letters + nb_states + 1; /* Number of directed edges */
+        sg1.nde = 3 * size + nb_letters + nb_states + 1; /* Number of directed edges */
 
+
+        printf("Nb_edges = %d\n", sg1.nde);
         printf("Size = %d\n", size);
         printf("Nb_states = %d\n", nb_states);
         printf("Nb_letters = %d\n", nb_letters);
