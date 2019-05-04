@@ -1,4 +1,7 @@
+import generator
 from mealy import *
+
+NB_PRODUCT = 0
 
 def __valid_delta(delta):
     for x in range(len(delta[0])):
@@ -24,6 +27,14 @@ def __valid_rho(rho):
     return True
 
 
+def is_there_none(tab_of_tab):
+    for i in range(len(tab_of_tab)):
+        for j in range(len(tab_of_tab[i])):
+            if tab_of_tab[i][j] is None:
+                return True
+    return False
+
+
 def __init(nb_states, nb_letters):
     sources = [(i, j) for i in range(nb_states) for j in range(nb_letters)]
     targets = [(i, j) for i in range(nb_states) for j in range(nb_letters)]
@@ -33,10 +44,15 @@ def __init(nb_states, nb_letters):
 
 
 def factor(m):
-    for i in range(1, m.nb_states // 2):
+    for i in range(2, m.nb_states // 2 + 1):
         if m.nb_states % i == 0:
             print("Choose size", i)
-            factor_step1(m, i)
+            if factor_step1(m, i):
+                print("NB_PRODUCT =", NB_PRODUCT)
+                return True
+    print("NB_PRODUCT =", NB_PRODUCT)
+    return False
+
 
 def find(tab, i, state, letter):
     for j in range(i, len(tab)):
@@ -50,37 +66,47 @@ def find(tab, i, state, letter):
 
 
 def factor_step1(m, i):
-    vertices = [(i, j) for i in range(m.nb_states) for j in range(m.nb_letters)]
+    vertices = [(i, j) for i in range(m.nb_states)
+                for j in range(m.nb_letters)]
     labels = [(None, None)] * m.nb_states
     deltaA, rhoA, sourcesA, targetsA = __init(i, m.nb_letters)
     deltaB, rhoB, sourcesB, targetsB = __init(m.nb_states // i, m.nb_letters)
     p, x = vertices.pop()
-    factor_step2(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x)
+    if factor_step2(m, vertices, deltaA, rhoA, sourcesA, targetsA,
+                    deltaB, rhoB, sourcesB, targetsB, labels, p, x, 0):
+        return True
 
-def factor_step2(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x):
+
+def factor_step2(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, indent):
     q, y = m.delta[p][x], m.rho[p][x]
     i = 0
     while True:
         i = find(targetsB, i, labels[q][1], y)
         if i != None:
-            res = factor_step3(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i)
-            if res: return res
+            res = factor_step3(m, vertices, deltaA, rhoA, sourcesA, targetsA,
+                               deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i, indent)
+            if res:
+                return res
         if i == None:
             return False
         i += 1
 
-def factor_step3(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2):
+
+def factor_step3(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, indent):
     i = 0
     while True:
         i = find(sourcesB, i, labels[p][1], None)
         if i != None:
-            res = factor_step4(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i)
-            if res: return res
+            res = factor_step4(m, vertices, deltaA, rhoA, sourcesA, targetsA,
+                               deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i, indent)
+            if res:
+                return res
         if i == None:
             return False
         i += 1
 
-def factor_step4(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3):
+
+def factor_step4(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, indent):
     i = 0
     while True:
         i = find(targetsA, i, labels[q][0], sourcesB[i3][1])
@@ -90,21 +116,38 @@ def factor_step4(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
                 if tmp in labels:
                     break
                 labels[q] = tmp
-                res = factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, i)
-                if res: return res
+                res = factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA,
+                                   deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, i, indent)
+                if res:
+                    return res
                 labels[q] = (None, None)
             else:
-                res = factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, i)
-                if res: return res
+                res = factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA,
+                                   deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, i, indent)
+                if res:
+                    return res
         if i == None:
             return False
         i += 1
 
-def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, i4):
+
+def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, i4, indent):
+    global NB_PRODUCT
+    print(indent, indent*"  ", "p", p, "x", x, "q", q, "y", y)
+    print(indent, indent*"  ", "Reste :", len(vertices))
+    print(indent, indent*"  ", "Label :", labels)
     i = 0
     while True:
+        print(indent, indent*"  ", "i", i)
+        print(indent, indent*"  ", "sourcesA", sourcesA, "targetsA", targetsA)
+        print(indent, indent*"  ", "sourcesB", sourcesB, "targetsB", targetsB)
         i = find(sourcesA, i, labels[p][0], x)
         if i != None:
+            dA = deltaA[sourcesA[i][0]][sourcesA[i][1]]
+            rA = rhoA[sourcesA[i][0]][sourcesA[i][1]]
+
+            dB = deltaB[sourcesB[i3][0]][sourcesB[i3][1]]
+            rB = rhoB[sourcesB[i3][0]][sourcesB[i3][1]]
             if labels[p] == (None, None):
                 tmp = (sourcesA[i][0], targetsB[i3][0])
                 if tmp in labels:
@@ -115,66 +158,109 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
 
                 deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = targetsB[i2][0]
                 rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = targetsB[i2][1]
-                print(deltaA, rhoA)
-                print(deltaB, rhoB)
+                print(indent, indent*"  ", "A1", deltaA, rhoA)
+                print(indent, indent*"  ", "B1", deltaB, rhoB)
 
                 if __valid_rho(rhoA) and __valid_delta(deltaA) and __valid_rho(rhoB) and __valid_delta(deltaB):
-                    if not vertices:
+                    print(indent, indent*"  ", "Valide 1")
+                    if len(sourcesA) == 1 and len(sourcesB) == 1:
                         mA = MealyMachine(deltaA, rhoA)
                         mB = MealyMachine(deltaB, rhoB)
-                        if product(mA, mB) == m:
+                        NB_PRODUCT += 1
+                        prod = product(mA, mB)
+                        print(indent, indent*"  ", "produit",
+                              prod.delta, prod.rho)
+                        print(indent, indent*"  ", "m      ", m.delta, m.rho)
+                        if prod == m:
                             return True
                         else:
-                            i += 1
-                            deltaA[sourcesA[i][0]][sourcesA[i][1]] = None
-                            rhoA[sourcesA[i][0]][sourcesA[i][1]] = None
+                            deltaA[sourcesA[i][0]][sourcesA[i][1]] = dA
+                            rhoA[sourcesA[i][0]][sourcesA[i][1]] = rA
 
-                            deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = None
-                            rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = None
+                            deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = dB
+                            rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = rB
+                            i += 1
                             continue
+
                     p, x = vertices.pop()
-                    res = factor_step2(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x)
-                    if res: return res
+                    sA = sourcesA.pop(i)
+                    tA = targetsA.pop(i4)
+                    sB = sourcesB.pop(i3)
+                    tB = targetsB.pop(i2)
+                    res = factor_step2(m, vertices, deltaA, rhoA, sourcesA,
+                                       targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, indent+1)
+                    if res:
+                        return res
                     vertices.append((p, x))
+                    sourcesA.insert(i, sA)
+                    targetsA.insert(i4, tA)
+
+                    sourcesB.insert(i3, sB)
+                    targetsB.insert(i2, tB)
                 labels[p] = (None, None)
             else:
+                # print(indent, "sourcesA[i][0]", sourcesA[i][0], "sourcesA[i][1]", sourcesA[i][1], "targetsA[i4][0]", targetsA[i4][0])
+
+                print(indent, indent*"  ", "i", i, "i4", i4)
+                print(indent, indent*"  ", "A avant :", deltaA, rhoA)
+                print(indent, indent*"  ", "B avant :", deltaB, rhoB)
+
                 deltaA[sourcesA[i][0]][sourcesA[i][1]] = targetsA[i4][0]
                 rhoA[sourcesA[i][0]][sourcesA[i][1]] = targetsA[i4][1]
 
                 deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = targetsB[i2][0]
                 rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = targetsB[i2][1]
-                print("A :", deltaA, rhoA)
-                print("B :", deltaB, rhoB)
+
+                print(indent, indent*"  ", "A après :", deltaA, rhoA)
+                print(indent, indent*"  ", "B après :", deltaB, rhoB)
 
                 if __valid_rho(rhoA) and __valid_delta(deltaA) and __valid_rho(rhoB) and __valid_delta(deltaB):
-                    if not vertices:
+                    print(indent, indent*"  ", "Valide 2")
+                    if len(sourcesA) == 1 and len(sourcesB) == 1:
                         mA = MealyMachine(deltaA, rhoA)
                         mB = MealyMachine(deltaB, rhoB)
-                        if product(mA, mB) == m:
+                        NB_PRODUCT += 1
+                        prod = product(mA, mB)
+                        print(indent, indent*"  ", "produit",
+                              prod.delta, prod.rho)
+                        print(indent, indent*"  ", "m      ", m.delta, m.rho)
+                        if prod == m:
                             return True
                         else:
-                            i += 1
-                            deltaA[sourcesA[i][0]][sourcesA[i][1]] = None
-                            rhoA[sourcesA[i][0]][sourcesA[i][1]] = None
+                            deltaA[sourcesA[i][0]][sourcesA[i][1]] = dA
+                            rhoA[sourcesA[i][0]][sourcesA[i][1]] = rA
 
-                            deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = None
-                            rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = None
+                            deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = dB
+                            rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = rB
+                            i += 1
                             continue
                     p, x = vertices.pop()
-                    res = factor_step2(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x)
-                    if res: return res
+                    sA = sourcesA.pop(i)
+                    tA = targetsA.pop(i4)
+                    sB = sourcesB.pop(i3)
+                    tB = targetsB.pop(i2)
+                    res = factor_step2(m, vertices, deltaA, rhoA, sourcesA,
+                                       targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, indent+1)
+                    if res:
+                        return res
                     vertices.append((p, x))
-            deltaA[sourcesA[i][0]][sourcesA[i][1]] = None
-            rhoA[sourcesA[i][0]][sourcesA[i][1]] = None
+                    sourcesA.insert(i, sA)
+                    targetsA.insert(i4, tA)
 
-            deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = None
-            rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = None
+                    sourcesB.insert(i3, sB)
+                    targetsB.insert(i2, tB)
+                else:
+                    print(indent, indent*"  ", "Non Valide 2")
+            deltaA[sourcesA[i][0]][sourcesA[i][1]] = dA
+            rhoA[sourcesA[i][0]][sourcesA[i][1]] = rA
+
+            deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = dB
+            rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = rB
         if i == None:
             return False
         i += 1
 
 
-import generator
 M1 = generator.helix(2, 2)
 M2 = generator.helix(2, 2)
 print(factor(product(M1, M2)))
