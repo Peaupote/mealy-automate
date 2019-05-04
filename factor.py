@@ -142,6 +142,7 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
         print(indent, indent*"  ", "sourcesA", sourcesA, "targetsA", targetsA)
         print(indent, indent*"  ", "sourcesB", sourcesB, "targetsB", targetsB)
         i = find(sourcesA, i, labels[p][0], x)
+        print(indent, indent*"  ", "new i", i)
         if i != None:
             dA = deltaA[sourcesA[i][0]][sourcesA[i][1]]
             rA = rhoA[sourcesA[i][0]][sourcesA[i][1]]
@@ -201,7 +202,7 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
             else:
                 # print(indent, "sourcesA[i][0]", sourcesA[i][0], "sourcesA[i][1]", sourcesA[i][1], "targetsA[i4][0]", targetsA[i4][0])
 
-                print(indent, indent*"  ", "i", i, "i4", i4)
+                # print(indent, indent*"  ", "i", i, "i4", i4)
                 print(indent, indent*"  ", "A avant :", deltaA, rhoA)
                 print(indent, indent*"  ", "B avant :", deltaB, rhoB)
 
@@ -256,7 +257,7 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
 
             deltaB[sourcesB[i3][0]][sourcesB[i3][1]] = dB
             rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = rB
-        if i == None:
+        else: #None
             return False
         i += 1
 
