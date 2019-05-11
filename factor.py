@@ -43,6 +43,8 @@ def __init(nb_states, nb_letters):
     return delta, rho, sources, targets
 
 
+couples = []
+
 def factor(m):
     for i in range(2, m.nb_states // 2 + 1):
         if m.nb_states % i == 0:
@@ -78,6 +80,7 @@ def factor_step1(m, i):
 
 
 def factor_step2(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, indent):
+    print(indent, indent*" ", "factor_step2")
     q, y = m.delta[p][x], m.rho[p][x]
     i = 0
     while True:
@@ -93,6 +96,7 @@ def factor_step2(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
 
 
 def factor_step3(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, indent):
+    print(indent, indent*" ", "factor_step3")
     i = 0
     while True:
         i = find(sourcesB, i, labels[p][1], None)
@@ -107,6 +111,7 @@ def factor_step3(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
 
 
 def factor_step4(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, indent):
+    print(indent, indent*" ", "factor_step4")
     i = 0
     while True:
         i = find(targetsA, i, labels[q][0], sourcesB[i3][1])
@@ -132,17 +137,18 @@ def factor_step4(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
 
 
 def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, q, y, i2, i3, i4, indent):
+    print(indent, indent*" ", "factor_step5")
     global NB_PRODUCT
     print(indent, indent*"  ", "p", p, "x", x, "q", q, "y", y)
     print(indent, indent*"  ", "Reste :", len(vertices))
     print(indent, indent*"  ", "Label :", labels)
+    print(indent, indent*" ", "({},{}) --> ({},{})  <~> ({},{} --> ({},{}))".format(labels[p][0], x, labels[q][0], targetsA[i3][1], labels[p][1], sourcesB[i3][1], labels[q][1], y))
     i = 0
     while True:
-        print(indent, indent*"  ", "i", i)
-        print(indent, indent*"  ", "sourcesA", sourcesA, "targetsA", targetsA)
-        print(indent, indent*"  ", "sourcesB", sourcesB, "targetsB", targetsB)
         i = find(sourcesA, i, labels[p][0], x)
         print(indent, indent*"  ", "new i", i)
+        print(indent, indent*"  ", "sourcesA", sourcesA, "targetsA", targetsA)
+        print(indent, indent*"  ", "sourcesB", sourcesB, "targetsB", targetsB)
         if i != None:
             dA = deltaA[sourcesA[i][0]][sourcesA[i][1]]
             rA = rhoA[sourcesA[i][0]][sourcesA[i][1]]
@@ -150,9 +156,12 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
             dB = deltaB[sourcesB[i3][0]][sourcesB[i3][1]]
             rB = rhoB[sourcesB[i3][0]][sourcesB[i3][1]]
             if labels[p] == (None, None):
-                tmp = (sourcesA[i][0], targetsB[i3][0])
+                tmp = (sourcesA[i][0], sourcesB[i3][0])
                 if tmp in labels:
-                    break
+                    print("break label")
+                    print(p, tmp)
+                    i+=1
+                    continue
                 labels[p] = tmp
                 deltaA[sourcesA[i][0]][sourcesA[i][1]] = targetsA[i4][0]
                 rhoA[sourcesA[i][0]][sourcesA[i][1]] = targetsA[i4][1]
@@ -183,16 +192,16 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
                             i += 1
                             continue
 
-                    p, x = vertices.pop()
+                    newp, newx = vertices.pop()
                     sA = sourcesA.pop(i)
                     tA = targetsA.pop(i4)
                     sB = sourcesB.pop(i3)
                     tB = targetsB.pop(i2)
                     res = factor_step2(m, vertices, deltaA, rhoA, sourcesA,
-                                       targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, indent+1)
+                                       targetsA, deltaB, rhoB, sourcesB, targetsB, labels, newp, newx, indent+1)
                     if res:
                         return res
-                    vertices.append((p, x))
+                    vertices.append((newp, newx))
                     sourcesA.insert(i, sA)
                     targetsA.insert(i4, tA)
 
@@ -220,8 +229,7 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
                     if len(sourcesA) == 1 and len(sourcesB) == 1:
                         mA = MealyMachine(deltaA, rhoA)
                         mB = MealyMachine(deltaB, rhoB)
-                        NB_PRODUCT += 1
-                        prod = product(mA, mB)
+                        NB_PRODUCT += 1                        prod = product(mA, mB)
                         print(indent, indent*"  ", "produit",
                               prod.delta, prod.rho)
                         print(indent, indent*"  ", "m      ", m.delta, m.rho)
@@ -235,16 +243,16 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
                             rhoB[sourcesB[i3][0]][sourcesB[i3][1]] = rB
                             i += 1
                             continue
-                    p, x = vertices.pop()
+                    newp, newx = vertices.pop()
                     sA = sourcesA.pop(i)
                     tA = targetsA.pop(i4)
                     sB = sourcesB.pop(i3)
                     tB = targetsB.pop(i2)
                     res = factor_step2(m, vertices, deltaA, rhoA, sourcesA,
-                                       targetsA, deltaB, rhoB, sourcesB, targetsB, labels, p, x, indent+1)
+                                       targetsA, deltaB, rhoB, sourcesB, targetsB, labels, newp, newx, indent+1)
                     if res:
                         return res
-                    vertices.append((p, x))
+                    vertices.append((newp, newx))
                     sourcesA.insert(i, sA)
                     targetsA.insert(i4, tA)
 
@@ -264,4 +272,9 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
 
 M1 = generator.helix(2, 2)
 M2 = generator.helix(2, 2)
-print(factor(product(M1, M2)))
+prod = product(M1, M2)
+while not prod.bireversible():
+    M1 = generator.helix(2, 2)
+    M2 = generator.helix(2, 2)
+    prod = product(M1, M2)
+print(factor(prod))
