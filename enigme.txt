@@ -1,0 +1,4 @@
+L'algo de factorisation (à iso près) ne trouve pas de facteur au produit
+des deux automates suivant:
+m1 -> delta : [[1, 0], [0, 1]] rho : [[1, 0], [1, 0]]
+m2 -> delta : [[1, 0], [0, 1]] rho : [[0, 1], [0, 1]]
