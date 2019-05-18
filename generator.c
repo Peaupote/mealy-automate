@@ -105,9 +105,14 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
 int canonical() {
     unsigned int x, p, index, k;
 
-
-    int rc, st, fds[2];
+    int rc, st, fds[2], fds2[2];
     rc = pipe(fds);
+    if (rc < 0) {
+        perror("pipe");
+        exit(1);
+    }
+
+    rc = pipe(fds2);
     if (rc < 0) {
         perror("pipe");
         exit(1);
@@ -116,8 +121,11 @@ int canonical() {
     rc = fork();
     if (rc == 0) {
         dup2(fds[0], 0);
+        dup2(fds2[1], 1);
         close(fds[0]);
         close(fds[1]);
+        close(fds2[0]);
+        close(fds2[1]);
         // rc = execlp("/usr/bin/cat", "cat", 0);
         rc = execl(dreadnaut, dreadnaut, 0);
         if (rc < 0) {
@@ -127,44 +135,27 @@ int canonical() {
         exit(0);
     }
 
+    close(fds2[1]);
     close(fds[0]);
     FILE *din = fdopen(fds[1], "w");
-    fprintf(din, "n=%d d g\n", n);
+    fprintf(din, "n=%d d ", n);
+    fprintf(din, " f=[ 0:%d | %d:%d ] g\n", size - 1,
+            size, size + nb_states - 1);
 
     // LinkedList new = new_node(m, n);
     EMPTYGRAPH(g, m, n);
-    int offset = 3 + nb_states + nb_letters;
-
-    // printf("n : %d - m : %d\n", n,m);
-    // 0 : fixateur du fixateur
-    // 1 : fixateur des etats
-    // 2 : fixateur des lettres
-    ADDONEARC(g, 2, 0, m);
-    fprintf(din, ";;0;");
-
-    for (p = 0; p < nb_states; p++) {
-        ADDONEEDGE(g, 3 + p, 1, m);
-        fprintf(din, "%d;\n", 3 + p, 1);
-    }
-
-    // lettres -> fixateur des lettres
-    for (x = 0; x < nb_letters; x++) {
-        ADDONEEDGE(g, 3 + nb_states + x, 2, m);
-        fprintf(din, "%d;\n", 3 + nb_states + x, 2);
-    }
 
     for (p = 0; p < nb_states; p++) {
         for (x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
-            ADDONEEDGE(g, offset + index,
-                      offset + delta[index] * nb_letters + rho[index], m);
-            ADDONEEDGE(g, offset + index, 3 + p, m);
-            ADDONEEDGE(g, offset + index, 3 + nb_states + x, m);
-            fprintf(din, "%d, %d, %d;\n", offset + index,
-                    offset + delta[index] * nb_letters + rho[index],
-                    3 + p, 3 + nb_states + x);
+            fprintf(din, "%d, %d, %d;\n",
+                    delta[index] * nb_letters + rho[index],
+                    size + p, size + nb_states + x);
         }
     }
+
+    for (p = 0; p < nb_states + nb_letters; p++)
+        fprintf(din, ";");
 
     fprintf(din, " p c *=13 k=0 99 x b q");
     fflush(din);
@@ -177,32 +168,19 @@ int canonical() {
         exit(1);
     }
 
-    // densenauty(g, lab, ptn, orbits, &options, &stats, m, n, new->can);
-    // densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
+    char buff[5000];
+    int len;
+    while((rc = read(fds2[0], buff + len, 5000 - len)) > 0)
+        len += rc;
 
-    /* if(!is_in_list(canlist, new->can, m, n)){ */
-    /*     new->next = canlist; */
-    /*     canlist = new; */
-    /*     printf("size of list %d\n", size_of_list(canlist)); */
-    /*     return 1; */
-    /* } */
+    if (rc < 0) {
+        perror("read");
+        exit(1);
+    }
 
+    write(1, buff, len);
 
-    /* for (k = 0; k < n; k++) { */
-    /*     printf("%d ", lab[k]); */
-    /* } */
-    /* printf("\n"); */
-    /* printf("---\n"); */
-
-    // compare only vertices from helix graph
-    /* for (k = offset; k < m*(size_t)n; k++) { */
-    /*     uint64_t mask = ((1UL << size) - 1) << ((sizeof(can[k]) * 8) - n); */
-    /*     //printf("%016lx\n", g[k]); */
-    /*     //printf("%016lx\n", can[k]); */
-    /*     //printf("%016lx\n\n", mask); */
-    /*     if (!(can[k] & g[k] & mask)) */
-    /*         return 0; */
-    /* } */
+    printf("====\n");
 
     return 1;
 }
@@ -379,9 +357,9 @@ int main (int argc, char *argv[]) {
 
     if (use_nauty) {
         options.getcanon = TRUE;
-        options.defaultptn = FALSE;
+        //options.defaultptn = FALSE;
 
-        n = size + nb_letters + nb_states + 3;
+        n = size + nb_letters + nb_states;
         m = SETWORDSNEEDED(n);
         nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
 
