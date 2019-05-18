@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -7,6 +9,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <sys/wait.h>
+#include <assert.h>
 
 #include "nauty.h"
 #include "generator_struct.h"
@@ -173,14 +176,32 @@ int canonical() {
     while((rc = read(fds2[0], buff + len, 5000 - len)) > 0)
         len += rc;
 
+    close(fds2[0]);
+
     if (rc < 0) {
         perror("read");
         exit(1);
     }
 
-    write(1, buff, len);
+    char *ptr = memmem(buff, len, ".\n", 2);
+    assert(ptr != 0);
 
-    printf("====\n");
+    ptr += 2 * (1 + size);
+
+    //write(1, ptr, len - (ptr - buff));
+    char *end = memchr(ptr, '\n', len - (ptr - buff));
+    assert(end != 0);
+    *end = 0;
+
+    int h;
+    for (p = 0; p < nb_states + nb_letters; p++, ptr = 0) {
+        char *tmp = strtok(ptr, " ");
+        h = atoi(tmp);
+        //printf("%s=%d, ", tmp, h);
+        if (h != p + size) return 0;
+    }
+
+    //printf("\n--\n");
 
     return 1;
 }
