@@ -159,14 +159,19 @@ int canonical() {
     ptn[size + nb_states - 1] = 0;
     ptn[n - 1] = 0;
 
+    for(p = 0; p < 3*size; p++) {
+        sg.e[p] = -1;
+    }
+
     // Liaisons entre les états du graphe en hélice et leurs fixateurs
     int index;
     for (p = 0; p < nb_states; p++) {
         for (int x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
             sg.e[sg.v[index]] = delta[index] * nb_letters + rho[index];
-            sg.e[sg.v[size + p]] = index; // Liaison avec le fixateur des états
-            sg.e[sg.v[size + nb_states + x]] = index; // Liaison avec le fixateur des lettres
+            printf("%d - %d\n", p ,sg.v[size + p]);
+            sg.e[sg.v[size + p] + x] = index; // Liaison avec le fixateur des états
+            sg.e[sg.v[size + nb_states + x] + p] = index; // Liaison avec le fixateur des lettres
             compteur += 3;
         }
     }
@@ -201,7 +206,6 @@ int canonical() {
     for (p = size; p < n; p++) {
         printf("%d - %d\n", lab[p], p);
         if (lab[p] != p) {
-            printf("break\n");
             return 0;
         }
     }
