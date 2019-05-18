@@ -44,6 +44,8 @@ def __init(nb_states, nb_letters):
     return delta, rho, sources, targets
 
 
+couples = []
+
 def factor(m):
     for i in range(2, m.nb_states // 2 + 1):
         if m.nb_states % i == 0:
@@ -230,8 +232,7 @@ def factor_step5(m, vertices, deltaA, rhoA, sourcesA, targetsA, deltaB, rhoB, so
                     if len(sourcesA) == 1 and len(sourcesB) == 1:
                         mA = MealyMachine(deltaA, rhoA)
                         mB = MealyMachine(deltaB, rhoB)
-                        NB_PRODUCT += 1
-                        prod = product(mA, mB)
+                        NB_PRODUCT += 1                        prod = product(mA, mB)
                         print(indent, indent*"  ", "produit",
                               prod.delta, prod.rho)
                         print(indent, indent*"  ", "m      ", m.delta, m.rho)
