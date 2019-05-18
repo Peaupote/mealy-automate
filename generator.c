@@ -12,7 +12,7 @@
 #include <assert.h>
 
 #include "nauty.h"
-#include "generator_struct.h"
+#include "nautinv.h"
 
 char *usage =
     "Usage: %s [-s nb_states] [-l nb_letters]"
@@ -28,7 +28,6 @@ u_int8_t *delta, *rho;
 int buffersize, bufferp;
 unsigned char *buffer;
 char debug = 0, use_nauty = 0;
-LinkedList canlist = NULL;
 
 DYNALLSTAT(graph, g, g_sz);
 DYNALLSTAT(graph, can, can_sz);
@@ -108,94 +107,29 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
 int canonical() {
     unsigned int x, p, index, k;
 
-    int rc, st, fds[2], fds2[2];
-    rc = pipe(fds);
-    if (rc < 0) {
-        perror("pipe");
-        exit(1);
-    }
-
-    rc = pipe(fds2);
-    if (rc < 0) {
-        perror("pipe");
-        exit(1);
-    }
-
-    rc = fork();
-    if (rc == 0) {
-        dup2(fds[0], 0);
-        dup2(fds2[1], 1);
-        close(fds[0]);
-        close(fds[1]);
-        close(fds2[0]);
-        close(fds2[1]);
-        // rc = execlp("/usr/bin/cat", "cat", 0);
-        rc = execl(dreadnaut, dreadnaut, 0);
-        if (rc < 0) {
-            perror("execl");
-            exit(1);
-        }
-        exit(0);
-    }
-
-    close(fds2[1]);
-    close(fds[0]);
-    FILE *din = fdopen(fds[1], "w");
-    fprintf(din, "n=%d d ", n);
-    fprintf(din, " f=[ 0:%d | %d:%d ] g\n", size - 1,
-            size, size + nb_states - 1);
-
-    // LinkedList new = new_node(m, n);
     EMPTYGRAPH(g, m, n);
-
     for (p = 0; p < nb_states; p++) {
         for (x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
-            fprintf(din, "%d, %d, %d;\n",
-                    delta[index] * nb_letters + rho[index],
-                    size + p, size + nb_states + x);
+            ADDONEARC(g, index, delta[index] * nb_letters + rho[index], m);
+            ADDONEARC(g, index, size + p, m);
+            ADDONEARC(g, index, size + nb_states + x, m);
         }
     }
 
-    for (p = 0; p < nb_states + nb_letters; p++)
-        fprintf(din, ";");
-
-    fprintf(din, " p c *=13 k=0 99 x b q");
-    fflush(din);
-    fclose(din);
-    close(fds[1]);
-
-    rc = waitpid(rc, &st, 0);
-    if (rc < 0) {
-        perror("waitpid");
-        exit(1);
+    for (p = 0; p < n; p++) {
+        lab[p] = p;
+        ptn[p] = 1;
     }
 
-    char buff[5000];
-    int len;
-    while((rc = read(fds2[0], buff + len, 5000 - len)) > 0)
-        len += rc;
+    ptn[size - 1] = 0;
+    ptn[size + nb_states - 1] = 0;
+    ptn[n - 1] = 0;
 
-    close(fds2[0]);
+    densenauty(g, lab, ptn, orbits, &options, &stats, m, n, can);
 
-    if (rc < 0) {
-        perror("read");
-        exit(1);
-    }
-
-    char *ptr = memmem(buff, len, ".\n", 2);
-    assert(ptr != 0);
-    ptr += 3;
-
-    for (p = 0; p < size; p++) {
-        ptr = memchr(ptr, ' ', len - (ptr - buff)) + 1;
-    }
-
-    int h;
-    for (p = 0; p < nb_states + nb_letters; p++) {
-        sscanf(ptr, "%d", &h);
-        ptr = memchr(ptr, ' ', len - (ptr - buff)) + 1;
-        if (h != p + size) return 0;
+    for (p = size; p < n; p++) {
+        if (lab[p] != p) return 0;
     }
 
     return 1;
@@ -373,7 +307,8 @@ int main (int argc, char *argv[]) {
 
     if (use_nauty) {
         options.getcanon = TRUE;
-        //options.defaultptn = FALSE;
+        options.defaultptn = FALSE;
+        options.digraph = TRUE;
 
         n = size + nb_letters + nb_states;
         m = SETWORDSNEEDED(n);

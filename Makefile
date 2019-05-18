@@ -12,9 +12,9 @@ all: prettyprint generator
 	@echo "Compiling $?"
 	@$(CC) $(FLAGS) -c $? -o $@ $(LIBS)
 
-generator: generator_struct.o utils.o generator.o
+generator: utils.o generator.o
 	@echo "Generate executable generator"
-	@$(CC) $(FLAGS) generator_struct.o utils.o $(DEPS) generator.o -o generator $(LIBS)
+	@$(CC) $(FLAGS) utils.o $(DEPS) generator.o -o generator $(LIBS)
 
 prettyprint: utils.o prettyprint.o
 	@echo "Generate executable prettyprint"
