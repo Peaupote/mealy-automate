@@ -12,7 +12,6 @@
 #include <assert.h>
 
 #include "nauty.h"
-#include "generator_struct.h"
 
 char *usage =
     "Usage: %s [-s nb_states] [-l nb_letters]"
@@ -28,7 +27,6 @@ u_int8_t *delta, *rho;
 int buffersize, bufferp;
 unsigned char *buffer;
 char debug = 0, use_nauty = 0;
-LinkedList canlist = NULL;
 
 DYNALLSTAT(graph, g, g_sz);
 DYNALLSTAT(graph, can, can_sz);
