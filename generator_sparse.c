@@ -387,7 +387,7 @@ int main(int argc, char *argv[]) {
     if (use_nauty) {
         options.getcanon = TRUE;
         options.defaultptn = FALSE;
-        // options.digraph = TRUE;
+        options.digraph = TRUE;
 
         n = size + nb_letters + nb_states;
         m = SETWORDSNEEDED(n);
