@@ -32,8 +32,15 @@ class MealyMachine:
             for x in range(self.nb_letters):
                 if other.delta[p][x] != self.delta[p][x]:
                     return False
+        for p in range(self.nb_states):
+            for x in range(self.nb_letters):
+                if other.rho[p][x] != self.rho[p][x]:
+                    return False
         return True
         # return other and self.delta == other.delta and self.rho == other.rho
+
+    def __str__(self):
+        return "delta : " + str(self.delta) + " rho : " + str(self.rho)
 
     def __hash__(self):
         return hash(str(self.states).join(str(self.rho)))
