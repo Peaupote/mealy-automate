@@ -210,7 +210,7 @@ void rec(u_int8_t start_p, u_int8_t start_x,
 
     if (sup - 1 == sources && sup - 1 == targets) {
         count++;
-        if (count % 100000 == 0) {
+        if (count % 10000 == 0) {
             printf("%u\n", count);
         }
 
