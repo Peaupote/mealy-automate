@@ -6,6 +6,7 @@ nauty26r11
 # executable
 prettyprint
 generator
+generator_sparse
 
 # Show Graphviz
 *.pdf

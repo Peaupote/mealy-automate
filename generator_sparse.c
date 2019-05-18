@@ -1,4 +1,7 @@
-// gcc -W -g utils.o nauty26r11/nausparse.o nauty26r11/nauty.c nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/schreier.c nauty26r11/naurng.c generator_sparse.c -o generator_sparse -I nauty26r11 -L nauty26r11
+// gcc -W -g utils.o nauty26r11/nausparse.o nauty26r11/nauty.c
+// nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/schreier.c
+// nauty26r11/naurng.c generator_sparse.c -o generator_sparse -I nauty26r11 -L
+// nauty26r11
 
 #include <fcntl.h>
 #include <math.h>
@@ -10,8 +13,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "nausparse.h"
 #include "generator_struct.h"
+#include "nausparse.h"
 
 char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f "
               "nb_forks] [-d] [-n]\n";
@@ -21,10 +24,10 @@ int fd = -1;
 int buffersize, bufferp;
 unsigned char *buffer;
 
-unsigned int nb_states = 2, nb_letters = 2;
+int nb_states = 2, nb_letters = 2;
 
 // Variable pour nauty
-unsigned int size, sl, st = 0;
+int size, sl, st = 0;
 int n, m = 0;
 
 // Pour fork
@@ -41,27 +44,27 @@ char debug = 0, use_nauty = 0;
 
 LinkedListSparse canlist = NULL;
 
-DYNALLSTAT(int, lab1, lab1_sz);
+DYNALLSTAT(int, lab, lab_sz);
 DYNALLSTAT(int, ptn, ptn_sz);
 DYNALLSTAT(int, orbits, orbits_sz);
 DYNALLSTAT(int, map, map_sz);
 static DEFAULTOPTIONS_SPARSEGRAPH(options);
 statsblk stats;
 /* Declare and initialize sparse graph structures */
-SG_DECL(sg1);
-SG_DECL(cg1);
+SG_DECL(sg);
+SG_DECL(cg);
 
 void pb(u_int32_t t, int indent) {
     for (int i = 0; i <= indent; i++)
         printf(" ");
-    for (unsigned int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         printf("%d", (t >> i) & 1);
     }
     printf("\n");
 }
 
 void pt(u_int8_t *tab) {
-    unsigned int p, x;
+    int p, x;
     for (p = 0; p < nb_states; p++) {
         for (x = 0; x < nb_letters; x++) {
             printf("%u ", tab[p * nb_letters + x]);
@@ -71,7 +74,7 @@ void pt(u_int8_t *tab) {
 }
 
 int valid_rho() {
-    unsigned int p, x, index, out;
+    int p, x, index, out;
     for (p = 0; p < nb_states; p++) {
         out = 0;
         for (x = 0; x < nb_letters; x++) {
@@ -88,7 +91,7 @@ int valid_rho() {
 }
 
 int valid_delta() {
-    unsigned int p, x, index, out;
+    int p, x, index, out;
     for (x = 0; x < nb_letters; x++) {
         out = 0;
         for (p = 0; p < nb_states; p++) {
@@ -104,7 +107,7 @@ int valid_delta() {
     return 1;
 }
 
-unsigned int pop(u_int32_t *tab, unsigned int i) {
+int pop(u_int32_t *tab, int i) {
     for (; i < size; i++) {
         if ((((*tab) >> i) & 1) == 0) {
             *tab ^= 1UL << i;
@@ -115,8 +118,7 @@ unsigned int pop(u_int32_t *tab, unsigned int i) {
     return i;
 }
 
-unsigned int iter(u_int32_t *tab, unsigned int i) {
-
+int iter(u_int32_t *tab, int i) {
     (*tab) ^= 1UL << i++;
     while (i < size && ((*tab) >> i) & 1)
         i++;
@@ -126,12 +128,12 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
 }
 
 int canonical() {
-    unsigned int i;
+    int i, p;
 
     int compteur = 0;
     for (i = 0; i < size; ++i) {
-        sg1.v[i] = 3 * i; /* Position of vertex i in v array */
-        sg1.d[i] = 3;     /* out-Degree of vertex i */
+        sg.v[i] = 3 * i; /* Position of vertex i in v array */
+        sg.d[i] = 3;     /* out-Degree of vertex i */
     }
 
     // 0 < size < st < sl
@@ -140,72 +142,56 @@ int canonical() {
     // sl+2 : fixateur du fixateur des lettres
 
     for (i = 0; i < nb_states + nb_letters; ++i) {
-        sg1.v[size + i] = 3 * size + i;
-        sg1.d[size + i] = 1;
+        sg.v[size + i] = 3 * size + i;
+        sg.d[size + i] = 1;
     }
 
-    sg1.v[sl + 2] = 3 * size + nb_letters + nb_states;
-    sg1.d[sl + 2] = 1;
-
-    // Liaison fixateur des lettres <- fixateur du fixateur
-    sg1.e[sg1.v[sl + 2]] = sl + 1;
-    compteur++;
-
-    // Liaisons entre les lettres -> le fixateur des lettres
-    for (i = st; i < sl; ++i) {
-        sg1.e[sg1.v[i]] = sl + 1;
-        compteur++;
+    for (p = 0; p < n; p++) {
+        lab[p] = p;
+        ptn[p] = 1;
     }
 
-    // Liaisons entre les états -> le fixateur des états
-    for (i = size; i < st; ++i) {
-        sg1.e[sg1.v[i]] = sl;
-        compteur++;
-    }
+    ptn[size - 1] = 0;
+    ptn[size + nb_states - 1] = 0;
+    ptn[n - 1] = 0;
 
     // Liaisons entre les états du graphe en hélice et leurs fixateurs
     int index;
-    for (unsigned int p = 0; p < nb_states; p++) {
-        for (unsigned int x = 0; x < nb_letters; x++) {
+    for (p = 0; p < nb_states; p++) {
+        for (int x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
-            sg1.e[sg1.v[index]] = delta[index] * nb_letters + rho[index];
-            sg1.e[sg1.v[index] + 1] = size + p; // Liaison avec le fixateur des états
-            sg1.e[sg1.v[index] + 2] = st + x; // Liaison avec le fixateur des lettres
+            sg.e[sg.v[index]] = delta[index] * nb_letters + rho[index];
+            sg.e[sg.v[index] + 1] =
+                size + p; // Liaison avec le fixateur des états
+            sg.e[sg.v[index] + 2] =
+                st + x; // Liaison avec le fixateur des lettres
             compteur += 3;
         }
     }
 
-    // printf("compteur = %d\n", compteur);
-    SG_DECL(can);
+    for (p = 0; p < n; p++) {
+        printf("%d ", lab[p]);
+    }
+    printf("\n");
 
-    sparsenauty(&sg1, lab1, ptn, orbits, &options, &stats, &can);
-    
-    sortlists_sg(&can);
-    
-    put_sg(stdout, &sg1, 1, 70);
-    put_sg(stdout, &can, 1, 70);
+    sparsenauty(&sg, lab, ptn, orbits, &options, &stats, &cg);
 
-    print_sparse_list(canlist);
+    for (p = 0; p < n; p++) {
+        printf("%d ", lab[p]);
+    }
+    printf("\n");
 
-    if(is_in_list_sparse(canlist, &can)) {
-      printf("IS IN\n");
-      return 0;
+    for (p = 0; p < n; p++) {
+        printf("--", lab[p]);
+    }
+    printf("\n");
+
+    for (p = size; p < n; p++) {
+        if (lab[p] != p)
+            return 0;
     }
 
-    LinkedListSparse new = new_node_sparse(n, 3 * size + nb_letters + nb_states + 1);
-    // new->sg = &can;
-    new->sg = copy_sg(&can, new->sg);
-    new->next = canlist;
-    canlist = new;
     return 1;
-
-    
-
-    // if (aresame_sg(&sg1, &cg1)) {
-    //     return 1;
-    // }
-
-    // return 0;
 }
 
 void rec(u_int8_t start_p, u_int8_t start_x, u_int8_t prev_p, u_int8_t prev_x,
@@ -245,7 +231,7 @@ void rec(u_int8_t start_p, u_int8_t start_x, u_int8_t prev_p, u_int8_t prev_x,
     }
 
     unsigned char add = 0;
-    unsigned int index, i = -1;
+    int index, i = -1;
     u_int8_t next_p, next_x;
 
     if (prev_x == 0xFF) {
@@ -280,11 +266,13 @@ void rec(u_int8_t start_p, u_int8_t start_x, u_int8_t prev_p, u_int8_t prev_x,
                 if (depth < nb_forks) {
                     if (fork() == 0) {
                         depth++;
-                        rec(start_p, start_x, next_p, next_x, sources, targets, ident + 4);
+                        rec(start_p, start_x, next_p, next_x, sources, targets,
+                            ident + 4);
                         return;
                     }
                 } else {
-                    rec(start_p, start_x, next_p, next_x, sources, targets, ident + 4);
+                    rec(start_p, start_x, next_p, next_x, sources, targets,
+                        ident + 4);
                 }
                 sources ^= index;
             }
@@ -293,7 +281,8 @@ void rec(u_int8_t start_p, u_int8_t start_x, u_int8_t prev_p, u_int8_t prev_x,
                 if (depth < nb_forks) {
                     if (fork() == 0) {
                         depth++;
-                        rec(0xFF, 0xFF, 0xFF, 0xFF, sources, targets, ident + 4);
+                        rec(0xFF, 0xFF, 0xFF, 0xFF, sources, targets,
+                            ident + 4);
                         return;
                     }
                 } else {
@@ -363,8 +352,8 @@ int main(int argc, char *argv[]) {
     if (!rho)
         return -1;
 
-    for (unsigned int p = 0; p < nb_states; p++) {
-        for (unsigned int x = 0; x < nb_letters; x++) {
+    for (int p = 0; p < nb_states; p++) {
+        for (int x = 0; x < nb_letters; x++) {
             delta[p * nb_letters + x] = 0xFF;
             rho[p * nb_letters + x] = 0xFF;
         }
@@ -376,25 +365,24 @@ int main(int argc, char *argv[]) {
 
     if (use_nauty) {
         options.getcanon = TRUE;
+        options.defaultptn = FALSE;
+        options.digraph = TRUE;
 
-        st = size + nb_states;
-        sl = st + nb_letters;
-        n = sl + 3;
-
+        n = size + nb_letters + nb_states;
         m = SETWORDSNEEDED(n);
         nauty_check(WORDSIZE, m, n, NAUTYVERSIONID);
-        DYNALLOC1(int, lab1, lab1_sz, n, "malloc");
+
+        DYNALLOC1(int, lab, lab_sz, n, "malloc");
         DYNALLOC1(int, ptn, ptn_sz, n, "malloc");
         DYNALLOC1(int, orbits, orbits_sz, n, "malloc");
         DYNALLOC1(int, map, map_sz, n, "malloc");
 
-        SG_ALLOC(sg1, n, 3 * size + nb_letters + nb_states + 1, "malloc");
+        SG_ALLOC(sg, n, 3 * size, "malloc");
 
-        sg1.nv = n;                                   /* Number of vertices */
-        sg1.nde = 3 * size + nb_letters + nb_states + 1; /* Number of directed edges */
+        sg.nv = n;         /* Number of vertices */
+        sg.nde = 3 * size; /* Number of directed edges */
 
-
-        printf("Nb_edges = %d\n", sg1.nde);
+        printf("Nb_edges = %d\n", sg.nde);
         printf("Size = %d\n", size);
         printf("Nb_states = %d\n", nb_states);
         printf("Nb_letters = %d\n", nb_letters);
