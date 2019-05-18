@@ -185,23 +185,18 @@ int canonical() {
 
     char *ptr = memmem(buff, len, ".\n", 2);
     assert(ptr != 0);
+    ptr += 3;
 
-    ptr += 2 * (1 + size);
-
-    //write(1, ptr, len - (ptr - buff));
-    char *end = memchr(ptr, '\n', len - (ptr - buff));
-    assert(end != 0);
-    *end = 0;
-
-    int h;
-    for (p = 0; p < nb_states + nb_letters; p++, ptr = 0) {
-        char *tmp = strtok(ptr, " ");
-        h = atoi(tmp);
-        //printf("%s=%d, ", tmp, h);
-        if (h != p + size) return 0;
+    for (p = 0; p < size; p++) {
+        ptr = memchr(ptr, ' ', len - (ptr - buff)) + 1;
     }
 
-    //printf("\n--\n");
+    int h;
+    for (p = 0; p < nb_states + nb_letters; p++) {
+        sscanf(ptr, "%d", &h);
+        ptr = memchr(ptr, ' ', len - (ptr - buff)) + 1;
+        if (h != p + size) return 0;
+    }
 
     return 1;
 }
