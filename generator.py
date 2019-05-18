@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 from random import sample, shuffle, randint
-from mealy import MealyMachine
+from mealy import MealyMachine, product
 
 
 def __valid_delta(delta):
@@ -196,15 +196,17 @@ def rec_gen(start, prev, sources, targets, delta, rho, enum):
 # count 335 classes for 3,3
 
 
-def isomorphism_class(nb_states, nb_letters):
+def isomorphism_class(nb_states, nb_letters, debug=False):
     """Renvoie la liste des automates à nb_states états
     et nb_letters lettres à isomorphisme près"""
     CL = []
     res = []
-    c = 0
+    if debug:
+        c = 0
     for a in helix_gen(nb_states, nb_letters):
-        c += 1
-        print(c)
+        if debug:
+            c += 1
+            print(c)
         can = a.canonical_graph()
         in_cl = False
         for M in CL:
@@ -214,5 +216,43 @@ def isomorphism_class(nb_states, nb_letters):
         if not in_cl:
             CL.append(can)
             res.append(a)
-            print("found", len(res))
+            if debug:
+                print("found", len(res))
     return res
+
+
+def factor_inv(m):
+    factors = set()
+    mini_m = m.minimize()
+    for i in range(2, m.nb_states // 2 + 1):
+        print(i)
+        if m.nb_states % i == 0:
+            print("#####", i, "#####")
+            tot_class = helix_gen(i, m.nb_letters)
+            # iso_class = isomorphism_class(i, m.nb_letters)
+            for n, mb in enumerate(tot_class):
+                print("iso", n)
+                ma = product(m, mb.inverse())
+                if ma.bireversible() and product(ma, mb).minimize() == mini_m:
+                    for mc in tot_class:
+                        if product(mc, mb) == m:
+                            factors.add((mc, mb))
+    return factors
+
+
+def test_factor():
+    m1 = helix(2, 4)
+    m2 = helix(2, 4)
+    print("m1", m1)
+    print("m2", m2)
+    m = product(m1, m2)
+    L = factor_inv(m)
+    # print(L)
+    for m3, m4 in L:
+        if m1 == m3 and m2 == m4:
+            print("FIND RIGHT")
+        print(m3)
+        print(m4)
+        print("-----------------------------------------------")
+        
+            
