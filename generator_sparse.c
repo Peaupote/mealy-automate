@@ -131,19 +131,23 @@ int canonical() {
     int i, p;
 
     int compteur = 0;
+
+    // init sommet helix
     for (i = 0; i < size; ++i) {
-        sg.v[i] = 3 * i; /* Position of vertex i in v array */
-        sg.d[i] = 3;     /* out-Degree of vertex i */
+        sg.v[i] = i; /* Position of vertex i in v array */
+        sg.d[i] = 1; /* out-Degree of vertex i */
     }
 
-    // 0 < size < st < sl
-    // sl : fixateur des états
-    // sl+1 : fixateur des lettres
-    // sl+2 : fixateur du fixateur des lettres
+    // init fixateurs états
+    for (i = 0; i < nb_states; ++i) {
+        sg.v[size + i] = size + nb_letters*i;
+        sg.d[size + i] = nb_letters;
+    }
 
-    for (i = 0; i < nb_states + nb_letters; ++i) {
-        sg.v[size + i] = 0;
-        sg.d[size + i] = 0;
+    // init fixateurs états
+    for (i = 0; i < nb_letters; ++i) {
+        sg.v[size + nb_states + i] = size + nb_states*nb_letters + nb_states*i;
+        sg.d[size + nb_states + i] = nb_states;
     }
 
     for (p = 0; p < n; p++) {
@@ -161,10 +165,8 @@ int canonical() {
         for (int x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
             sg.e[sg.v[index]] = delta[index] * nb_letters + rho[index];
-            sg.e[sg.v[index] + 1] =
-                size + p; // Liaison avec le fixateur des états
-            sg.e[sg.v[index] + 2] =
-                st + x; // Liaison avec le fixateur des lettres
+            sg.e[sg.v[size + p]] = index; // Liaison avec le fixateur des états
+            sg.e[sg.v[size + nb_states + x]] = index; // Liaison avec le fixateur des lettres
             compteur += 3;
         }
     }
@@ -197,8 +199,11 @@ int canonical() {
     printf("\n");
 
     for (p = size; p < n; p++) {
-        if (lab[p] != p)
+        printf("%d - %d\n", lab[p], p);
+        if (lab[p] != p) {
+            printf("break\n");
             return 0;
+        }
     }
 
     return 1;
