@@ -1,4 +1,4 @@
-// gcc -W -g utils.o nauty26r11/nausparse.o nauty26r11/nauty.c
+// gcc -O3 -g utils.o nauty26r11/nausparse.o nauty26r11/nauty.c
 // nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/schreier.c
 // nauty26r11/naurng.c generator_sparse.c -o generator_sparse -I nauty26r11 -L
 // nauty26r11
@@ -387,7 +387,7 @@ int main(int argc, char *argv[]) {
     if (use_nauty) {
         options.getcanon = TRUE;
         options.defaultptn = FALSE;
-        options.digraph = TRUE;
+        // options.digraph = TRUE;
 
         n = size + nb_letters + nb_states;
         m = SETWORDSNEEDED(n);
