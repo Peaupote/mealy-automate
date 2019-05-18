@@ -11,6 +11,7 @@
 #include <unistd.h>
 
 #include "nausparse.h"
+#include "generator_struct.h"
 
 char *usage = "Usage: %s [-s nb_states] [-l nb_letters] [-o outputfile] [-f "
               "nb_forks] [-d] [-n]\n";
@@ -37,6 +38,8 @@ u_int8_t *delta, *rho;
 
 // options
 char debug = 0, use_nauty = 0;
+
+LinkedListSparse canlist = NULL;
 
 DYNALLSTAT(int, lab1, lab1_sz);
 DYNALLSTAT(int, ptn, ptn_sz);
@@ -172,14 +175,37 @@ int canonical() {
         }
     }
 
-    printf("compteur = %d\n", compteur);
-    sparsenauty(&sg1, lab1, ptn, orbits, &options, &stats, &cg1);
+    // printf("compteur = %d\n", compteur);
+    SG_DECL(can);
 
-    if (aresame_sg(&sg1, &cg1)) {
-        return 1;
+    sparsenauty(&sg1, lab1, ptn, orbits, &options, &stats, &can);
+    
+    sortlists_sg(&can);
+    
+    put_sg(stdout, &sg1, 1, 70);
+    put_sg(stdout, &can, 1, 70);
+
+    print_sparse_list(canlist);
+
+    if(is_in_list_sparse(canlist, &can)) {
+      printf("IS IN\n");
+      return 0;
     }
 
-    return 0;
+    LinkedListSparse new = new_node_sparse(n, 3 * size + nb_letters + nb_states + 1);
+    // new->sg = &can;
+    new->sg = copy_sg(&can, new->sg);
+    new->next = canlist;
+    canlist = new;
+    return 1;
+
+    
+
+    // if (aresame_sg(&sg1, &cg1)) {
+    //     return 1;
+    // }
+
+    // return 0;
 }
 
 void rec(u_int8_t start_p, u_int8_t start_x, u_int8_t prev_p, u_int8_t prev_x,
