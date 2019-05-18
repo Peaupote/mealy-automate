@@ -20,11 +20,11 @@ prettyprint: utils.o prettyprint.o
 	@echo "Generate executable prettyprint"
 	@$(CC) $(FLAGS) utils.o $(DEPS) prettyprint.o -o prettyprint $(LIBS)
 
-report: project.tex project.bib
+report: rapport/project.tex rapport/project.bib
 	@echo "Compiling latex report"
-	@$(LATEX) project
-	@$(BIB) project
-	@$(LATEX) project
+	@$(LATEX) rapport/project
+	@$(BIB) rapport/project
+	@$(LATEX) rapport/project
 
 clean:
 	@echo "Clean executable"
