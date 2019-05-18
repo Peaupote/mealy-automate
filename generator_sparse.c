@@ -140,13 +140,14 @@ int canonical() {
 
     // init fixateurs états
     for (i = 0; i < nb_states; ++i) {
-        sg.v[size + i] = size + nb_letters*i;
+        sg.v[size + i] = size + nb_letters * i;
         sg.d[size + i] = nb_letters;
     }
 
     // init fixateurs états
     for (i = 0; i < nb_letters; ++i) {
-        sg.v[size + nb_states + i] = size + nb_states*nb_letters + nb_states*i;
+        sg.v[size + nb_states + i] =
+            size + nb_states * nb_letters + nb_states * i;
         sg.d[size + nb_states + i] = nb_states;
     }
 
@@ -159,52 +160,53 @@ int canonical() {
     ptn[size + nb_states - 1] = 0;
     ptn[n - 1] = 0;
 
-    for(p = 0; p < 3*size; p++) {
-        sg.e[p] = -1;
-    }
-
     // Liaisons entre les états du graphe en hélice et leurs fixateurs
     int index;
     for (p = 0; p < nb_states; p++) {
         for (int x = 0; x < nb_letters; x++) {
             index = p * nb_letters + x;
             sg.e[sg.v[index]] = delta[index] * nb_letters + rho[index];
-            printf("%d - %d\n", p ,sg.v[size + p]);
-            sg.e[sg.v[size + p] + x] = index; // Liaison avec le fixateur des états
-            sg.e[sg.v[size + nb_states + x] + p] = index; // Liaison avec le fixateur des lettres
+            sg.e[sg.v[size + p] + x] =
+                index; // Liaison avec le fixateur des états
+            sg.e[sg.v[size + nb_states + x] + p] =
+                index; // Liaison avec le fixateur des lettres
             compteur += 3;
         }
     }
 
-    for(p = 0; p < n; p++) {
-        printf("%d ", sg.v[p]);
-    }
-    printf("\n");
+    if (debug) {
+        for (p = 0; p < n; p++) {
+            printf("%d ", sg.v[p]);
+        }
+        printf("\n");
 
-    for(p = 0; p < 3*size; p++) {
-        printf("%d ", sg.e[p]);
-    }
-    printf("\n");
+        for (p = 0; p < 3 * size; p++) {
+            printf("%d ", sg.e[p]);
+        }
+        printf("\n");
 
-    for (p = 0; p < n; p++) {
-        printf("%d ", lab[p]);
+        for (p = 0; p < n; p++) {
+            printf("%d ", lab[p]);
+        }
+        printf("\n");
     }
-    printf("\n");
 
     sparsenauty(&sg, lab, ptn, orbits, &options, &stats, &cg);
 
-    for (p = 0; p < n; p++) {
-        printf("%d ", lab[p]);
-    }
-    printf("\n");
+    if (debug) {
+        for (p = 0; p < n; p++) {
+            printf("%d ", lab[p]);
+        }
+        printf("\n");
 
-    for (p = 0; p < n; p++) {
-        printf("--", lab[p]);
+        for (p = 0; p < n; p++) {
+            printf("--", lab[p]);
+        }
+        printf("\n");
     }
-    printf("\n");
 
     for (p = size; p < n; p++) {
-        printf("%d - %d\n", lab[p], p);
+        // printf("%d - %d\n", lab[p], p);
         if (lab[p] != p) {
             return 0;
         }
@@ -385,7 +387,6 @@ int main(int argc, char *argv[]) {
     if (use_nauty) {
         options.getcanon = TRUE;
         options.defaultptn = FALSE;
-        options.digraph = TRUE;
 
         n = size + nb_letters + nb_states;
         m = SETWORDSNEEDED(n);
