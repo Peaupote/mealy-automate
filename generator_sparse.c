@@ -142,8 +142,8 @@ int canonical() {
     // sl+2 : fixateur du fixateur des lettres
 
     for (i = 0; i < nb_states + nb_letters; ++i) {
-        sg.v[size + i] = 3 * size + i;
-        sg.d[size + i] = 1;
+        sg.v[size + i] = 0;
+        sg.d[size + i] = 0;
     }
 
     for (p = 0; p < n; p++) {
@@ -168,6 +168,16 @@ int canonical() {
             compteur += 3;
         }
     }
+
+    for(p = 0; p < n; p++) {
+        printf("%d ", sg.v[p]);
+    }
+    printf("\n");
+
+    for(p = 0; p < 3*size; p++) {
+        printf("%d ", sg.e[p]);
+    }
+    printf("\n");
 
     for (p = 0; p < n; p++) {
         printf("%d ", lab[p]);
