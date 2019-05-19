@@ -1,12 +1,16 @@
 LATEX = pdflatex
 BIB = bibtex
 CC = gcc
-FLAGS = -O3 -g
+FLAGS = -O3 -g -Wall
 LIBS = -I nauty26r11 -L nauty26r11
-DEPS = nauty26r11/nauty.c nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/schreier.c nauty26r11/naurng.c
-DEPS_SPARSE = nauty26r11/nausparce.o
+DEPS = nauty26r11/nauty.c nauty26r11/nautil.c \
+		nauty26r11/naugraph.c nauty26r11/schreier.c \
+		nauty26r11/naurng.c
+DEPS_SPARSE = nauty26r11/nautil.o nauty26r11/nausparse.o \
+				nauty26r11/naugraph.o nauty26r11/schreier.o \
+				nauty26r11/naurng.o nauty26r11/nauty.o
 
-all: prettyprint generator
+all: prettyprint generator generator_sparse
 
 %.o: %.c
 	@echo "Compiling $?"
@@ -15,6 +19,10 @@ all: prettyprint generator
 generator: utils.o generator.o
 	@echo "Generate executable generator"
 	@$(CC) $(FLAGS) utils.o $(DEPS) generator.o -o generator $(LIBS)
+
+generator_sparse: utils.o generator_sparse.o
+	$(CC) $(FLAGS) utils.o $(DEPS_SPARSE) \
+		generator_sparse.o -o generator_sparse $(LIBS)
 
 prettyprint: utils.o prettyprint.o
 	@echo "Generate executable prettyprint"
