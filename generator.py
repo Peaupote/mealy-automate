@@ -221,7 +221,7 @@ def isomorphism_class(nb_states, nb_letters, debug=False):
     return res
 
 
-def factor_inv(m, debug = False):
+def factor_inv(m, debug=False):
     factors = set()
     mini_m = m.minimize()
     if debug:
@@ -252,11 +252,16 @@ def factor_inv(m, debug = False):
 
 
 def test_factor():
-    m1 = helix(2, 4)
-    m2 = helix(2, 4)
-    print("m1", m1)
-    print("m2", m2)
-    m = product(m1, m2)
+    m = None
+    while True:
+        m1 = helix(2, 2)
+        m2 = helix(2, 2)
+        m = product(m1, m2)
+        if m.bireversible():
+            print("m1", m1)
+            print("m2", m2)
+            break
+    
     L = factor_inv(m, debug=True)
     # print(L)
     for m3, m4 in L:
@@ -265,4 +270,11 @@ def test_factor():
         print(m3)
         print(m4)
         print("-----------------------------------------------")
-        
+        return True
+    return False
+
+def test_factor_n(n):
+    for _ in range(n):
+        if not test_factor():
+            return False
+    return True
