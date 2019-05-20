@@ -18,10 +18,8 @@ char *usage =
     "Usage: %s [-s nb_states] [-l nb_letters]"
     "[-o outputfile] [-f nb_forks] [-d] [-n]\n";
 
-char *dreadnaut = "./nauty26r11/dreadnaut";
-
 int fd = -1, nb_states = 2, nb_letters = 2, size,
-    sl, st, n, m,
+    n, m,
     nb_forks = 0, depth = 0;
 u_int32_t sup, count = 0, can_count = 0;
 u_int8_t *delta, *rho;
@@ -105,7 +103,7 @@ unsigned int iter(u_int32_t *tab, unsigned int i) {
 }
 
 int canonical() {
-    unsigned int x, p, index, k;
+    unsigned int x, p, index;
 
     EMPTYGRAPH(g, m, n);
     for (p = 0; p < nb_states; p++) {
@@ -146,8 +144,8 @@ void rec(u_int8_t start_p, u_int8_t start_x,
 
     if (sup - 1 == sources && sup - 1 == targets) {
         count++;
-        if (count % 10000 == 0) {
-            printf("%u\n", count);
+        if (count % 1000 == 0) {
+            printf("[%d]: %u\n", getpid(), count);
         }
 
         if (!use_nauty || (use_nauty && canonical())) {
@@ -338,11 +336,10 @@ int main (int argc, char *argv[]) {
         write(fd, buffer, bufferp);
     }
 
-    printf("Total count %u.\n", count);
+    printf("[%d]: Total count %u.\n", getpid(), count);
 
     if (use_nauty) {
-        printf("Canonical count %u.\n", can_count);
-        // printf("Canlist size %d\n", size_of_list(canlist));
+        printf("[%d]: Canonical count %u.\n", getpid(), can_count);
     }
 
     close(fd);
