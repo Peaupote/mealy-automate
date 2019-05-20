@@ -224,32 +224,44 @@ def isomorphism_class(nb_states, nb_letters, debug=False):
 def factor_inv(m, debug = False):
     factors = set()
     mini_m = m.minimize()
-    if debug:
-        nb_ma_birev = 0
-        nb_mini = 0
     for i in range(2, m.nb_states // 2 + 1):
-        print(i)
         if m.nb_states % i == 0:
-            print("#####", i, "#####")
             tot_class = helix_gen(i, m.nb_letters)
             # iso_class = isomorphism_class(i, m.nb_letters)
-            for n, mb in enumerate(tot_class):
-                # if debug:
-                    # print("tour n°{}".format(n))
+            for mb in tot_class:
                 ma = product(m, mb.inverse())
-                if ma.bireversible():
-                    if debug:
-                        nb_ma_birev += 1
-                    if product(ma, mb).minimize() == mini_m:
-                        if debug:
-                            nb_mini += 1
-                        for mc in tot_class:
-                            if product(mc, mb) == m:
-                                factors.add((mc, mb))
-                if debug:
-                    print("tour", n+1, "-", nb_ma_birev, "-", nb_mini)
+                if (ma.bireversible() and
+                    product(ma, mb).minimize() == mini_m):
+                    factors.add((ma, mb))
     return factors
 
+def not_min(nb_states, nb_letters):
+    while True:
+        m = helix(nb_states, nb_letters)
+        if m.minimize() != m:
+            return m
+c
+def not_factorizable():
+    factorisable = set()
+    for a in helix_gen(2, 2):
+        for b in helix_gen(2, 2):
+            factorisable.add((a, b))
+    for a in helix_gen(4, 2):
+        if not a in factorisable:
+            return a
+    return False
+
+def test(m):
+    L = factor_inv(m)
+    mini_m = m.minimize()
+    if m == mini_m:
+        print("Minimal")
+    print("Potential factorisations", len(L))
+    for a, b in L:
+        if product(a, b).minimize() != mini_m:
+            return False
+        print(a, b)
+    return True
 
 def test_factor():
     m1 = helix(2, 4)
@@ -265,4 +277,3 @@ def test_factor():
         print(m3)
         print(m4)
         print("-----------------------------------------------")
-        
