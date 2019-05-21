@@ -1,8 +1,3 @@
-// gcc -O3 -g utils.o nauty26r11/nausparse.o nauty26r11/nauty.c
-// nauty26r11/nautil.c nauty26r11/naugraph.c nauty26r11/schreier.c
-// nauty26r11/naurng.c generator_sparse.c -o generator_sparse -I nauty26r11 -L
-// nauty26r11
-
 #include <fcntl.h>
 #include <math.h>
 #include <stdint.h>
@@ -41,8 +36,6 @@ u_int8_t *delta, *rho;
 
 // options
 char debug = 0, use_nauty = 0;
-
-LinkedListSparse canlist = NULL;
 
 DYNALLSTAT(int, lab, lab_sz);
 DYNALLSTAT(int, ptn, ptn_sz);
@@ -176,7 +169,7 @@ int canonical() {
 
     if (debug) {
         for (p = 0; p < n; p++) {
-            printf("%d ", sg.v[p]);
+            printf("%ld ", sg.v[p]);
         }
         printf("\n");
 
@@ -197,10 +190,10 @@ int canonical() {
         for (p = 0; p < n; p++) {
             printf("%d ", lab[p]);
         }
-        printf("\n");
+        printf("\n--");
 
         for (p = 0; p < n; p++) {
-            printf("--", lab[p]);
+            printf("--");
         }
         printf("\n");
     }
@@ -403,7 +396,7 @@ int main(int argc, char *argv[]) {
         sg.nv = n;         /* Number of vertices */
         sg.nde = 3 * size; /* Number of directed edges */
 
-        printf("Nb_edges = %d\n", sg.nde);
+        printf("Nb_edges = %ld\n", sg.nde);
         printf("Size = %d\n", size);
         printf("Nb_states = %d\n", nb_states);
         printf("Nb_letters = %d\n", nb_letters);

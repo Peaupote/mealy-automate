@@ -223,52 +223,49 @@ def isomorphism_class(nb_states, nb_letters, debug=False):
 
 def factor_inv(m, m1, m2, debug=False):
     factors = set()
+    good_factor = set()
     mini_m = m.minimize()
-    if debug:
-        nb_ma_birev = 0
-        nb_mini = 0
     for i in range(2, m.nb_states // 2 + 1):
-        print(i)
         if m.nb_states % i == 0:
-            print("#####", i, "#####")
             tot_class = helix_gen(i, m.nb_letters)
             # iso_class = isomorphism_class(i, m.nb_letters)
-            for n, mb in enumerate(tot_class):
-                # if debug:
-                    # print("tour n°{}".format(n))
+            for mb in tot_class:
                 ma = product(m, mb.inverse())
-                if debug and mb == m2 :
-                    print("mb = m2")
-                if ma.bireversible():
-                    if debug:
-                        print("ma birev")
-                        nb_ma_birev += 1
-                    if product(ma, mb).minimize() == mini_m:
-                        if debug:
-                            nb_mini += 1
-                            print("produit minimisé = mini_m")  
-                        for mc in tot_class:
-                            if debug and mc == m1 :
-                                print("mc = m1")
-                            if product(mc, mb) == m:
-                                factors.add((mc, mb))
-                if debug:
-                    print("tour", n+1, "-", nb_ma_birev, "-", nb_mini)
-    return factors
+                if (ma.bireversible() and
+                        product(ma, mb).minimize() == mini_m):
+                    for mc in tot_class:
+                        if product(mc, mb) == m:
+                            good_factor.add((mc, mb))
+                    factors.add((ma, mb))
+    return factors, good_factor
+
+
+def not_min(nb_states, nb_letters):
+    while True:
+        m = helix(nb_states, nb_letters)
+        if m.minimize() != m:
+            return m
+
+
+def not_factorizable():
+    factorisable = set()
+    for a in helix_gen(2, 2):
+        for b in helix_gen(2, 2):
+            factorisable.add((a, b))
+    for a in helix_gen(4, 2):
+        if not a in factorisable:
+            return a
+    return False
 
 
 def test_factor():
-    m = None
-    while True:
-        m1 = helix(2, 3)
-        m2 = helix(2, 3)
-        m = product(m1, m2)
-        if m.bireversible():
-            print("m1", m1)
-            print("m2", m2)
-            break
-    
-    L = factor_inv(m, m1, m2, debug=True)
+
+    m1 = helix(2, 3)
+    m2 = helix(2, 3)
+    print("m1", m1)
+    print("m2", m2)
+    m = product(m1, m2)
+    _, L = factor_inv(m, m1, m2, debug=True)
     # print(L)
     for m3, m4 in L:
         if m1 == m3 and m2 == m4:
@@ -276,11 +273,37 @@ def test_factor():
         print(m3)
         print(m4)
         print("-----------------------------------------------")
-        return True
-    return False
 
-def test_factor_n(n):
-    for _ in range(n):
-        if not test_factor():
-            return False
-    return True
+
+def test_cycles():
+    for a in helix_gen(2, 2):
+        for b in helix_gen(2, 2):
+            print(a.cycles())
+            print(b.cycles())
+            print(product(a, b).cycles())
+            print("--")
+
+
+def bad_facto(m):
+    for i in range(2, m.nb_states):
+        if m.nb_states % i != 0:
+            continue
+
+        for a in helix_gen(i, m.nb_letters):
+            for b in helix_gen(m.nb_states // i, m.nb_letters):
+                if product(a, b) == m:
+                    return a, b
+    return None
+
+
+def mdc_reduce(m, steps):
+    for k in range(steps):
+        m = m.md_reduce()
+        if m.is_trivial():
+            return True, k
+        factors = bad_facto(m)
+        if factors is None:
+            return False, k
+        a, b = factors
+        m = product(b, a)
+    return False, steps

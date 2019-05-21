@@ -40,7 +40,7 @@ class MealyMachine:
         # return other and self.delta == other.delta and self.rho == other.rho
 
     def __str__(self):
-        return "delta : " + str(self.delta) + " rho : " + str(self.rho)
+        return "(delta : " + str(self.delta) + ",\n rho : " + str(self.rho) + ")"
 
     def __hash__(self):
         return hash(str(self.states).join(str(self.rho)))
@@ -265,7 +265,7 @@ class MealyMachine:
         return cycles
 
     def augmented_helix_graph(self):
-        """Renvoie le graphe en hélice augmenté avec igraph, 
+        """Renvoie le graphe en hélice augmenté avec igraph,
         utilisé pour le calcul des automorphismes"""
         # construction of helix graph using igraph
         H = igraph.Graph(directed=True)

@@ -1,7 +1,5 @@
-\documentclass[11pt,a4paper,sans]{article}
+\documentclass[11pt,a4paper]{article}
 
-\usepackage[francais]{babel}
-\usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -13,6 +11,9 @@
 \usepackage{xfrac}
 \usepackage{caption}
 \usepackage{threeparttable}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
 
 \newtheorem{prop}{Proposition}
 \newtheorem{lemma}{Lemme}
@@ -183,7 +184,7 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
 
 
   Considérons un état $(p, r)$ de ce produit. Alors $\rho_r\circ\rho'_p=\rho_{(p,r)}$, or puisque les automates $\mathcal{A}$ et $\mathcal{B}$ sont inversibles, $\rho_p$ et $\rho'_r$ sont des permutations du groupe de symétrie de $\Sigma$, on en déduit que $\rho_{(p, r)}$ en est une aussi.
-  
+
   On a bien que tous les ${(\rho''_q)}_{q\in Q\times Q'}$ sont des permutations sur les lettres, c'est à dire que l'automate est inversible.
 \end{proof}
 
