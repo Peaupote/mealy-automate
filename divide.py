@@ -3,34 +3,17 @@ import sys
 from generator import helix
 from mealy import product, MealyMachine
 
-COMPTEUR = 0
-
 
 def find1(r, lpr, lqr, y):
-    # print("delta", r.delta)
-    # print("rho", r.rho)
-    # print("lpr", lpr, "lqr", lqr, "y", y)
     for i in range(r.nb_letters):
-        # print(r.delta[lpr][i], " = ", lqr, " - ", r.rho[lpr][i], " = ", y)
         if r.delta[lpr][i] == lqr and r.rho[lpr][i] == y:
             return i
     return None
 
 
-def rec(m, r, delta, rho, label, vertices):
-    global COMPTEUR
-    COMPTEUR += 1
-    # print(COMPTEUR)
+def rec_div(m, r, delta, rho, label, vertices):
     if not vertices:
-        l = MealyMachine(delta, rho)
-        if product(l, r) != m:
-            print("PROBLEM")
-            print(l)
-            print(r)
-            print(m)
-            print(label)
-            sys.exit(0)
-        return delta, rho
+        return MealyMachine(delta, rho)
 
     p, x = vertices.pop()
     q, y = m.delta[p][x], m.rho[p][x]
@@ -39,39 +22,30 @@ def rec(m, r, delta, rho, label, vertices):
 
     index = find1(r, lpr, lqr, y)
     if index is None:
-        print("PREMIER")
-        return False
+        return None
 
-    if delta[lpl][x] is not None and delta[lpl][x] != lql and rho[lpl][x] != index:
-        print("DEUXIEME")
-        return False
+    if (delta[lpl][x] is not None
+        and (delta[lpl][x] != lql or rho[lpl][x] != index)):
+        return None
 
     delta[lpl][x] = lql
     rho[lpl][x] = index
-    return rec(m, r, delta, rho, label, vertices)
+    return rec_div(m, r, delta, rho, label, vertices)
 
 
 def divide_right(m, r):
     couples = [(x, y)
                for x in range(m.nb_states // r.nb_states)
                for y in range(r.nb_states)]
-    div = set()
-    nb_permut = 0
-    for p in itertools.permutations(list(range(m.nb_states))):
-        nb_permut += 1
-        print("Permutation", nb_permut)
-        label = [couples[p[i]] for i in range(m.nb_states)]
-        delta = [[None for _ in range(m.nb_letters)]
+    label = [(i // r.nb_states, i % r.nb_states) for i in range(m.nb_states)]
+    delta = [[None for _ in range(m.nb_letters)]
                  for _ in range(m.nb_states // r.nb_states)]
-        rho = [[None for _ in range(m.nb_letters)]
+    rho = [[None for _ in range(m.nb_letters)]
                for _ in range(m.nb_states // r.nb_states)]
-        vertices = [(x, y) for x in range(m.nb_states)
+    vertices = [(x, y) for x in range(m.nb_states)
                     for y in range(m.nb_letters)]
-        res = rec(m, r, delta, rho, label, vertices)
-        if res:
-            div.add(MealyMachine(res[0], res[1]))
 
-    return div
+    return rec_div(m, r, delta, rho, label, vertices)
 
 
 def test_divide(nb_states, nb_letters):
@@ -82,20 +56,17 @@ def test_divide(nb_states, nb_letters):
         if m.bireversible():
             break
 
-    find = False
-    res = divide_right(m, m2)
-    for ma in res:
-        print(ma)
-        if ma == m1:
-            print("C'EST LE BON")
-            find = True
+    ma = divide_right(m, m2)
+
+    print(ma)
+    if ma == m1:
+        print("C'EST LE BON")
         prod = product(ma, m2)
-        if not prod.bireversible():
-            print("PAS BIREV")
-        if prod != m:
-            print("PUTAINS")
-    print(len(res))
-    return find
+        return True
+#    if prod == m:
+#        return True
+
+    return False
 
 
 def test_divide_n(nb_states, nb_letters, n):
