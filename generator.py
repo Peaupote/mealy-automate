@@ -221,7 +221,7 @@ def isomorphism_class(nb_states, nb_letters, debug=False):
     return res
 
 
-def factor_inv(m, debug=False):
+def factor_inv(m, m1, m2, debug=False):
     factors = set()
     mini_m = m.minimize()
     if debug:
@@ -237,13 +237,19 @@ def factor_inv(m, debug=False):
                 # if debug:
                     # print("tour n°{}".format(n))
                 ma = product(m, mb.inverse())
+                if debug and mb == m2 :
+                    print("mb = m2")
                 if ma.bireversible():
                     if debug:
+                        print("ma birev")
                         nb_ma_birev += 1
                     if product(ma, mb).minimize() == mini_m:
                         if debug:
                             nb_mini += 1
+                            print("produit minimisé = mini_m")  
                         for mc in tot_class:
+                            if debug and mc == m1 :
+                                print("mc = m1")
                             if product(mc, mb) == m:
                                 factors.add((mc, mb))
                 if debug:
@@ -254,15 +260,15 @@ def factor_inv(m, debug=False):
 def test_factor():
     m = None
     while True:
-        m1 = helix(2, 2)
-        m2 = helix(2, 2)
+        m1 = helix(2, 3)
+        m2 = helix(2, 3)
         m = product(m1, m2)
         if m.bireversible():
             print("m1", m1)
             print("m2", m2)
             break
     
-    L = factor_inv(m, debug=True)
+    L = factor_inv(m, m1, m2, debug=True)
     # print(L)
     for m3, m4 in L:
         if m1 == m3 and m2 == m4:
