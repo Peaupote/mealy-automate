@@ -1,4 +1,5 @@
 import itertools
+import sys
 from generator import helix
 from mealy import product, MealyMachine
 
@@ -21,6 +22,14 @@ def rec(m, r, delta, rho, label, vertices):
     COMPTEUR += 1
     # print(COMPTEUR)
     if not vertices:
+        l = MealyMachine(delta, rho)
+        if product(l, r) != m:
+            print("PROBLEM")
+            print(l)
+            print(r)
+            print(m)
+            print(label)
+            sys.exit(0)
         return delta, rho
 
     p, x = vertices.pop()
@@ -29,11 +38,11 @@ def rec(m, r, delta, rho, label, vertices):
     lql, lqr = label[q]
 
     index = find1(r, lpr, lqr, y)
-    if index == None:
+    if index is None:
         print("PREMIER")
         return False
 
-    if delta[lpl][x] != None and delta[lpl][x] != lql and rho[lpl][x] != index:
+    if delta[lpl][x] is not None and delta[lpl][x] != lql and rho[lpl][x] != index:
         print("DEUXIEME")
         return False
 
