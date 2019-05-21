@@ -223,6 +223,7 @@ def isomorphism_class(nb_states, nb_letters, debug=False):
 
 def factor_inv(m, debug = False):
     factors = set()
+    good_factor = set()
     mini_m = m.minimize()
     for i in range(2, m.nb_states // 2 + 1):
         if m.nb_states % i == 0:
@@ -232,15 +233,18 @@ def factor_inv(m, debug = False):
                 ma = product(m, mb.inverse())
                 if (ma.bireversible() and
                     product(ma, mb).minimize() == mini_m):
+                    for mc in tot_class:
+                        if product(mc, mb) == m:
+                            good_factor.add((mc, mb))
                     factors.add((ma, mb))
-    return factors
+    return factors, good_factor
 
 def not_min(nb_states, nb_letters):
     while True:
         m = helix(nb_states, nb_letters)
         if m.minimize() != m:
             return m
-c
+
 def not_factorizable():
     factorisable = set()
     for a in helix_gen(2, 2):
@@ -264,12 +268,12 @@ def test(m):
     return True
 
 def test_factor():
-    m1 = helix(2, 4)
-    m2 = helix(2, 4)
+    m1 = helix(2, 3)
+    m2 = helix(2, 3)
     print("m1", m1)
     print("m2", m2)
     m = product(m1, m2)
-    L = factor_inv(m, debug=True)
+    _, L = factor_inv(m, debug=True)
     # print(L)
     for m3, m4 in L:
         if m1 == m3 and m2 == m4:
@@ -277,3 +281,34 @@ def test_factor():
         print(m3)
         print(m4)
         print("-----------------------------------------------")
+
+def test_cycles():
+    for a in helix_gen(2, 2):
+        for b in helix_gen(2, 2):
+            print(a.cycles())
+            print(b.cycles())
+            print(product(a, b).cycles())
+            print("--")
+
+def bad_facto(m):
+    for i in range(2, m.nb_states):
+        if m.nb_states % i != 0:
+            continue
+
+        for a in helix_gen(i, m.nb_letters):
+            for b in helix_gen(m.nb_states // i, m.nb_letters):
+                if product(a, b) == m:
+                    return a, b
+    return None
+
+def mdc_reduce(m, steps):
+    for k in range(steps):
+        m = m.md_reduce()
+        if m.is_trivial():
+            return True, k
+        factors = bad_facto(m)
+        if factors is None:
+            return False, k
+        a, b = factors
+        m = product(b, a)
+    return False, steps

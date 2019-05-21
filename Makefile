@@ -32,7 +32,7 @@ prettyprint: utils.o prettyprint.o
 report: rapport/project.tex rapport/project.bib
 	@echo "Compiling latex report"
 	@$(LATEX) rapport/project
-	@$(BIB) rapport/project
+	@$(BIB)   rapport/project
 	@$(LATEX) rapport/project
 
 clean:
