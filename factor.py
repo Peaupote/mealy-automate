@@ -1,22 +1,13 @@
 import generator
 from mealy import *
-
-def is_full(tab):
-    for x in tab:
-        for y in x:
-            if y is None:
-                return False
-    return True
+import itertools
 
 depth = -1
-def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
+def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices):
     global depth
     depth += 1
     if depth >= len(vertices):
         depth -= 1
-        if ((not is_full(deltal)) or (not is_full(deltar))
-            or (not is_full(rhol)) or (not is_full(rhor))):
-            return None
         m1 = MealyMachine(deltal, rhol)
         m2 = MealyMachine(deltar, rhor)
         if product(m1, m2) == m:
@@ -28,8 +19,8 @@ def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
     q, y = m.delta[p][x], m.rho[p][x]
     print("  " * depth, "p {}, q {}, x {}, y {}".format(p, q, x, y))
 
-    lpl, lpr = p // len(deltar), p % len(deltar)
-    lql, lqr = q // len(deltar), p % len(deltar)
+    lpl, lpr = label[p]
+    lql, lqr = label[q]
     print("  " * depth, "lpl {}, lpr {}".format(lpl, lpr))
     print("  " * depth, "lql {}, lqr {}".format(lql, lqr))
 
@@ -41,7 +32,7 @@ def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
             continue
 
         # letter z has a value and its not y. contradiction
-        if rhor[lpr][z] is not None and rhol[lpr][z] != y:
+        if rhor[lpr][z] is not None and rhor[lpr][z] != y:
             continue
 
         prev_deltal = deltal[lpl][x]
@@ -60,7 +51,7 @@ def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
         print("  " * depth, deltar, rhor)
         print("  " * depth, "-" * 10)
 
-        res = rec_factor(m, deltal, rhol, deltar, rhor, vertices)
+        res = rec_factor(m, label, deltal, rhol, deltar, rhor, vertices)
         if res is not None:
             depth -= 1
             return res
@@ -77,10 +68,12 @@ def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
 
 
 def factor(m):
+    global depth
     for i in range(2, m.nb_states):
         if m.nb_states % i != 0:
             continue
 
+        depth = -1
         deltal = [[None for _ in range(m.nb_letters)]
                   for _ in range(i)]
         rhol = [[None for _ in range(m.nb_letters)]
@@ -95,7 +88,12 @@ def factor(m):
                     for x in range(m.nb_states)
                     for y in range(m.nb_letters)]
 
-        return rec_factor(m, deltal, rhol, deltar, rhor, vertices)
+        couples = [(x, y) for x in range(i) for y in range(m.nb_states // i)]
+        for p in itertools.permutations(range(m.nb_states)):
+            label = [couples[p[i]] for i in range(m.nb_states)]
+            res = rec_factor(m, label, deltal, rhol, deltar, rhor, vertices)
+            if res:
+                return res
 
 
 def test_facto():
