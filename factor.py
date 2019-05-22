@@ -67,7 +67,7 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
 
 def factor(m):
     factors = set()
-    for i in range(2, m.nb_states):
+    for i in range(2, m.nb_states // 2 + 1):
         if m.nb_states % i != 0:
             continue
 
@@ -121,10 +121,10 @@ def factor_inv(m):
         if m.nb_states % i == 0:
             tot_class = generator.helix_gen(i, m.nb_letters)
             # iso_class = isomorphism_class(i, m.nb_letters)
-            for mb in tot_class:
-                ma = divide.divide_right(m, mb)
-                if ma:
-                    factors.add((ma, mb))
+            for r in tot_class:
+                l = divide.divide_right(m, r)
+                if l:
+                    factors.add((l, r))
     return factors
 
 
@@ -147,3 +147,69 @@ def test_facto_inv_n(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2, n):
             c += 1
     print(c, "/", n)
 
+
+def factor_naive(m):
+    factors = set()
+    for i in range(2, m.nb_states // 2 + 1):
+        if m.nb_states % i != 0:
+            continue
+        tot_class = generator.helix_gen(i, m.nb_letters)
+        for l in tot_class:
+            for r in tot_class:
+                if product(l, r) == m:
+                    factors.add((l, r))
+    return factors
+
+
+def test_all_factors(m):
+    factors_naive = factor_naive(m)
+    factors_inv = factor_inv(m)
+    factors_smart = factor(m)
+
+    inv = False
+    smart = False
+
+    if factors_naive == factors_inv:
+        inv = True
+        print("INV WORKS")
+    if factors_naive == factors_smart:
+        smart = True
+        print("SMART WORKS")
+
+    return inv, smart
+
+
+def test_all_factors_n(n):
+    c_inv = 0
+    c_smart = 0
+    for _ in range(n):
+        inv, smart = test_all_factors(generator.helix(4, 2))
+        if inv:
+            c_inv += 1
+        if smart:
+            c_smart += 1
+    print("inv", c_inv, "/", n)
+    print("smart", c_smart, "/", n)
+
+
+def test_all_factors_iso(m):
+    factors_naive = factor_naive(m)
+    factors_smart = factor(m)
+
+    for nl, nr in factors_naive:
+        find = False
+        for sl, sr in factors_smart:
+            if nl.isomorphic(sl) and nr.isomorphic(sr):
+                find = True
+        if not find:
+            return False
+    return True
+
+
+def test_all_factors_iso_n(n):
+    c_smart = 0
+    for _ in range(n):
+        smart = test_all_factors_iso(generator.helix(4, 2))
+        if smart:
+            c_smart += 1
+    print("smart", c_smart, "/", n)
