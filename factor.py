@@ -90,14 +90,15 @@ def factor(m):
         label = [(j // (nb_state_r), j % (nb_state_r))
                  for j in range(m.nb_states)]
 
-        rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth)
+        rec_factor(m, label, deltal, rhol, deltar,
+                   rhor, vertices, factors, depth)
         return factors
 
 
-def test_facto():
+def test_facto(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2):
     while True:
-        m1 = generator.helix(3, 3)
-        m2 = generator.helix(3, 3)
+        m1 = generator.helix(nb_states_1, nb_letters_1)
+        m2 = generator.helix(nb_states_2, nb_letters_2)
         m = product(m1, m2)
         if m.bireversible():
             break
@@ -106,15 +107,15 @@ def test_facto():
     return len(factor(m)) != 0
 
 
-def test_facto_n(n):
+def test_facto_n(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2, n):
     c = 0
     for _ in range(n):
-        if test_facto():
+        if test_facto(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2):
             c += 1
     print(c, "/", n)
 
 
-def factor_inv(m, debug=False):
+def factor_inv(m):
     factors = set()
     for i in range(2, m.nb_states // 2 + 1):
         if m.nb_states % i == 0:
@@ -127,10 +128,10 @@ def factor_inv(m, debug=False):
     return factors
 
 
-def test_factor_inv():
+def test_factor_inv(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2):
     while True:
-        m1 = generator.helix(3, 3)
-        m2 = generator.helix(3, 3)
+        m1 = generator.helix(nb_states_1, nb_letters_1)
+        m2 = generator.helix(nb_states_2, nb_letters_2)
         m = product(m1, m2)
         if m.bireversible():
             break
@@ -139,9 +140,10 @@ def test_factor_inv():
     return factor_inv(m) is not None
 
 
-def test_facto_inv_n(n):
+def test_facto_inv_n(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2, n):
     c = 0
     for _ in range(n):
-        if test_factor_inv():
+        if test_factor_inv(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2):
             c += 1
     print(c, "/", n)
+
