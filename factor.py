@@ -44,6 +44,12 @@ def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
         if rhor[lpr][z] is not None and rhol[lpr][z] != y:
             continue
 
+        prev_deltal = deltal[lpl][x]
+        prev_rhol = rhol[lpl][x]
+
+        prev_deltar = deltar[lpr][z]
+        prev_rhor = rhor[lpr][z]
+
         deltal[lpl][x] = lql
         rhol[lpl][x] = z
 
@@ -59,11 +65,11 @@ def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
             depth -= 1
             return res
 
-        deltal[lpl][x] = None
-        rhol[lpl][x] = None
+        deltal[lpl][x] = prev_deltal
+        rhol[lpl][x] = prev_rhol
 
-        deltar[lpr][z] = None
-        rhor[lpr][z] = None
+        deltar[lpr][z] = prev_deltar
+        rhor[lpr][z] = prev_rhor
 
     print("  " * depth, "Impasse")
     depth -= 1
