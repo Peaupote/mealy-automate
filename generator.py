@@ -221,19 +221,6 @@ def isomorphism_class(nb_states, nb_letters, debug=False):
     return res
 
 
-def factor_inv(m, debug=False):
-    factors = set()
-    for i in range(2, m.nb_states // 2 + 1):
-        if m.nb_states % i == 0:
-            tot_class = helix_gen(i, m.nb_letters)
-            # iso_class = isomorphism_class(i, m.nb_letters)
-            for mb in tot_class:
-                ma = divide_right(m, mb)
-                if ma:
-                    factors.add((ma, mb))
-    return factors
-
-
 def not_min(nb_states, nb_letters):
     while True:
         m = helix(nb_states, nb_letters)
@@ -250,23 +237,6 @@ def not_factorizable():
         if not a in factorisable:
             return a
     return False
-
-
-def test_factor():
-    while True:
-        m1 = helix(2, 3)
-        m2 = helix(2, 3)
-        m = product(m1, m2)
-        if m.bireversible():
-            break
-
-    L = factor_inv(m, debug=True)
-    for m3, m4 in L:
-        if m1 == m3 and m2 == m4:
-            print("FIND RIGHT")
-        print(m3)
-        print(m4)
-        print("-----------------------------------------------")
 
 
 def test_cycles():

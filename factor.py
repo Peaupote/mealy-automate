@@ -1,31 +1,32 @@
+import divide
 import generator
-from mealy import *
 import itertools
+from mealy import *
 
-depth = -1
-def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices):
-    global depth
+
+def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
     depth += 1
+
     if depth >= len(vertices):
         depth -= 1
         m1 = MealyMachine(deltal, rhol)
         m2 = MealyMachine(deltar, rhor)
-        if product(m1, m2) == m:
-            return m1, m2
-        return None
+
+        factors.add((m1, m2))
+        return
 
     vertex = vertices[depth]
     p, x = vertex
     q, y = m.delta[p][x], m.rho[p][x]
-    print("  " * depth, "p {}, q {}, x {}, y {}".format(p, q, x, y))
+    # print("  " * depth, "p {}, q {}, x {}, y {}".format(p, q, x, y))
 
     lpl, lpr = label[p]
     lql, lqr = label[q]
-    print("  " * depth, "lpl {}, lpr {}".format(lpl, lpr))
-    print("  " * depth, "lql {}, lqr {}".format(lql, lqr))
+    # print("  " * depth, "lpl {}, lpr {}".format(lpl, lpr))
+    # print("  " * depth, "lql {}, lqr {}".format(lql, lqr))
 
-    for z in range(m.nb_letters): # TODO: do something smart
-        print("  " * depth, "test", z)
+    for z in range(m.nb_letters):  # TODO: do something smart
+        # print("  " * depth, "test", z)
 
         # letter x has a value and its not z. contradiction
         if rhol[lpl][x] is not None and rhol[lpl][x] != z:
@@ -47,14 +48,12 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices):
         deltar[lpr][z] = lqr
         rhor[lpr][z] = y
 
-        print("  " * depth, deltal, rhol)
-        print("  " * depth, deltar, rhor)
-        print("  " * depth, "-" * 10)
+        # print("  " * depth, deltal, rhol)
+        # print("  " * depth, deltar, rhor)
+        # print("  " * depth, "-" * 10)
 
-        res = rec_factor(m, label, deltal, rhol, deltar, rhor, vertices)
-        if res is not None:
-            depth -= 1
-            return res
+        rec_factor(m, label, deltal, rhol, deltar,
+                   rhor, vertices, factors, depth)
 
         deltal[lpl][x] = prev_deltal
         rhol[lpl][x] = prev_rhol
@@ -62,13 +61,12 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices):
         deltar[lpr][z] = prev_deltar
         rhor[lpr][z] = prev_rhor
 
-    print("  " * depth, "Impasse")
+    # print("  " * depth, "Impasse")
     depth -= 1
-    return None
 
 
 def factor(m):
-    global depth
+    factors = set()
     for i in range(2, m.nb_states):
         if m.nb_states % i != 0:
             continue
@@ -79,37 +77,71 @@ def factor(m):
         rhol = [[None for _ in range(m.nb_letters)]
                 for _ in range(i)]
 
+        nb_state_r = m.nb_states // i
         deltar = [[None for _ in range(m.nb_letters)]
-                  for _ in range(m.nb_states // i)]
+                  for _ in range(nb_state_r)]
         rhor = [[None for _ in range(m.nb_letters)]
-                  for _ in range(m.nb_states // i)]
+                for _ in range(nb_state_r)]
 
         vertices = [(x, y)
                     for x in range(m.nb_states)
                     for y in range(m.nb_letters)]
 
-        couples = [(x, y) for x in range(i) for y in range(m.nb_states // i)]
-        for p in itertools.permutations(range(m.nb_states)):
-            label = [couples[p[i]] for i in range(m.nb_states)]
-            res = rec_factor(m, label, deltal, rhol, deltar, rhor, vertices)
-            if res:
-                return res
+        label = [(j // (nb_state_r), j % (nb_state_r))
+                 for j in range(m.nb_states)]
+
+        rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth)
+        return factors
 
 
 def test_facto():
     while True:
-        m1 = generator.helix(2, 2)
-        m2 = generator.helix(2, 2)
+        m1 = generator.helix(3, 3)
+        m2 = generator.helix(3, 3)
         m = product(m1, m2)
         if m.bireversible():
             break
 
     print(m)
-    return factor(m) is not None
+    return len(factor(m)) != 0
+
 
 def test_facto_n(n):
     c = 0
     for _ in range(n):
         if test_facto():
+            c += 1
+    print(c, "/", n)
+
+
+def factor_inv(m, debug=False):
+    factors = set()
+    for i in range(2, m.nb_states // 2 + 1):
+        if m.nb_states % i == 0:
+            tot_class = generator.helix_gen(i, m.nb_letters)
+            # iso_class = isomorphism_class(i, m.nb_letters)
+            for mb in tot_class:
+                ma = divide.divide_right(m, mb)
+                if ma:
+                    factors.add((ma, mb))
+    return factors
+
+
+def test_factor_inv():
+    while True:
+        m1 = generator.helix(3, 3)
+        m2 = generator.helix(3, 3)
+        m = product(m1, m2)
+        if m.bireversible():
+            break
+
+    print(m)
+    return factor_inv(m) is not None
+
+
+def test_facto_inv_n(n):
+    c = 0
+    for _ in range(n):
+        if test_factor_inv():
             c += 1
     print(c, "/", n)
