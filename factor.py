@@ -8,11 +8,11 @@ def is_full(tab):
                 return False
     return True
 
-depth = 0
+depth = -1
 def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
     global depth
     depth += 1
-    if not vertices:
+    if depth >= len(vertices):
         depth -= 1
         if ((not is_full(deltal)) or (not is_full(deltar))
             or (not is_full(rhol)) or (not is_full(rhor))):
@@ -23,7 +23,7 @@ def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
             return m1, m2
         return None
 
-    vertex = vertices.pop()
+    vertex = vertices[depth]
     p, x = vertex
     q, y = m.delta[p][x], m.rho[p][x]
     print("  " * depth, "p {}, q {}, x {}, y {}".format(p, q, x, y))
@@ -67,9 +67,6 @@ def rec_factor(m, deltal, rhol, deltar, rhor, vertices):
 
     print("  " * depth, "Impasse")
     depth -= 1
-    # append and pop is not necessary and inefficient
-    # a simple integer should do the job
-    vertices.append(vertex)
     return None
 
 
