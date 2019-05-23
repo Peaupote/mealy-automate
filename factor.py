@@ -5,10 +5,7 @@ from mealy import *
 
 
 def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
-    depth += 1
-
     if depth >= len(vertices):
-        depth -= 1
         m1 = MealyMachine(deltal, rhol)
         m2 = MealyMachine(deltar, rhor)
 
@@ -53,9 +50,7 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
         # print("  " * depth, "-" * 10)
 
         rec_factor(m, label, deltal, rhol, deltar,
-                   rhor, vertices, factors, depth)
-
-        depth -= 1
+                   rhor, vertices, factors, depth+1)
 
         deltal[lpl][x] = prev_deltal
         rhol[lpl][x] = prev_rhol
@@ -64,7 +59,6 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
         rhor[lpr][z] = prev_rhor
 
     # print("  " * depth, "Impasse")
-    depth -= 1
 
 
 def factor(m):
@@ -73,7 +67,7 @@ def factor(m):
         if m.nb_states % i != 0:
             continue
 
-        depth = -1
+        depth = 0
         deltal = [[None for _ in range(m.nb_letters)]
                   for _ in range(i)]
         rhol = [[None for _ in range(m.nb_letters)]
