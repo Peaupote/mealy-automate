@@ -55,7 +55,7 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
 
 def factor(m):
     factors = set()
-    for i in range(2, m.nb_states // 2 + 1):
+    for i in range(2, m.nb_states + 1):
         if m.nb_states % i != 0:
             continue
 
@@ -79,7 +79,7 @@ def factor(m):
 
         rec_factor(m, label, deltal, rhol, deltar,
                    rhor, vertices, factors, 0)
-        return factors
+    return factors
 
 
 def test_facto(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2):
