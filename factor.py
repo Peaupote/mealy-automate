@@ -88,7 +88,7 @@ def factor(m):
 
         rec_factor(m, label, deltal, rhol, deltar,
                    rhor, vertices, factors, depth)
-        return factors
+    return factors
 
 
 def test_facto(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2):
