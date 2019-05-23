@@ -55,6 +55,8 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
         rec_factor(m, label, deltal, rhol, deltar,
                    rhor, vertices, factors, depth)
 
+        depth -= 1
+
         deltal[lpl][x] = prev_deltal
         rhol[lpl][x] = prev_rhol
 
@@ -103,7 +105,7 @@ def test_facto(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2):
         if m.bireversible():
             break
 
-    print(m)
+    # print(m)
     return len(factor(m)) != 0
 
 
