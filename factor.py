@@ -53,7 +53,6 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
         deltar[lpr][z] = prev_deltar
         rhor[lpr][z] = prev_rhor
 
-
 def factor(m):
     factors = set()
     for i in range(2, m.nb_states // 2 + 1):
