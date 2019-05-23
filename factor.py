@@ -1,8 +1,8 @@
 import divide
 import generator
-import itertools
 from mealy import *
-
+import sys, time, random as rand
+import matplotlib.pyplot as plt
 
 def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
     depth += 1
@@ -12,6 +12,8 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
         m1 = MealyMachine(deltal, rhol)
         m2 = MealyMachine(deltar, rhor)
 
+        if product(m1, m2) != m:
+            return
         factors.add((m1, m2))
         return
 
@@ -90,14 +92,15 @@ def factor(m):
         label = [(j // (nb_state_r), j % (nb_state_r))
                  for j in range(m.nb_states)]
 
-        rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth)
+        rec_factor(m, label, deltal, rhol, deltar,
+                   rhor, vertices, factors, depth)
         return factors
 
 
 def test_facto():
     while True:
-        m1 = generator.helix(3, 3)
-        m2 = generator.helix(3, 3)
+        m1 = generator.helix(3, 5)
+        m2 = generator.helix(3, 5)
         m = product(m1, m2)
         if m.bireversible():
             break
@@ -113,14 +116,15 @@ def test_facto_n(n):
             c += 1
     print(c, "/", n)
 
-
 def factor_inv(m, debug=False):
     factors = set()
     for i in range(2, m.nb_states // 2 + 1):
         if m.nb_states % i == 0:
-            tot_class = generator.helix_gen(i, m.nb_letters)
+            if not (i, m.nb_letters) in helix_cache:
+                print("noo", i, m.nb_letters)
+                helix_cache[(i, m.nb_letters)] = generator.helix_gen(i, m.nb_letters)
             # iso_class = isomorphism_class(i, m.nb_letters)
-            for mb in tot_class:
+            for mb in helix_cache[(i, m.nb_letters)]:
                 ma = divide.divide_right(m, mb)
                 if ma:
                     factors.add((ma, mb))
@@ -145,3 +149,53 @@ def test_facto_inv_n(n):
         if test_factor_inv():
             c += 1
     print(c, "/", n)
+
+def perf_facto(fname, f, test_size, test_set, x):
+    bar = [0] * test_size
+    count = [0] * test_size
+
+    for m in test_set:
+        tstart = time.time()
+        f(m)
+        tend = time.time()
+        index = m.nb_states * m.nb_letters - 1
+        bar[index] += tend - tstart
+        count[index] += 1
+
+    for i in range(test_size):
+        if count[i] != 0:
+            bar[i] /= count[i]
+
+    return bar
+
+def perf_func(test_size, funcs):
+    test_set = []
+    for i in range(1, test_size):
+        for j in range(test_size):
+            if i * j <= test_size:
+                for _ in range(2):
+                    test_set.append(generator.helix(i, j))
+                    print("Generated", len(test_set))
+    print("Test set generated")
+    bars = []
+    for f in funcs:
+        bars.append(perf_facto(f[0], f[1], len(test_set) // 2, test_set, x))
+
+    plt.figure(1)
+    ind = list(range(len(test_set) // 2))
+    for i in range(len(bars)):
+        plt.subplot(1, 2, i + 1)
+        plt.bar(ind, bars[i], 1)
+        plt.title(funcs[i][0])
+
+    plt.show()
+
+if __name__ == "__main__":
+    print("Fill cache")
+    helix_cache = dict()
+    for x in range(1, 4):
+        for y in range(1, 3):
+            helix_cache[(x, y)] = generator.helix_gen(x, y)
+
+    print("Perf func")
+    perf_func(25, [("factor", factor), ("inv", factor_inv)])
