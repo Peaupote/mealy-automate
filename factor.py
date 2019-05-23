@@ -211,7 +211,29 @@ def test_all_factors_iso(m):
 def test_all_factors_iso_n(n):
     c_smart = 0
     for _ in range(n):
-        smart = test_all_factors_iso(generator.helix(4, 2))
+        smart = test_all_factors_iso(generator.helix(4, 4))
+        if smart:
+            c_smart += 1
+    print("smart", c_smart, "/", n)
+
+def test_all_factors_iso_inv(m):
+    factors_inv = factor_inv(m)
+    factors_smart = factor(m)
+
+    for il, ir in factors_inv:
+        find = False
+        for sl, sr in factors_smart:
+            if il.isomorphic(sl) and ir.isomorphic(sr):
+                find = True
+        if not find:
+            return False
+    return True
+
+
+def test_all_factors_iso_inv_n(n):
+    c_smart = 0
+    for _ in range(n):
+        smart = test_all_factors_iso_inv(generator.helix(4, 4))
         if smart:
             c_smart += 1
     print("smart", c_smart, "/", n)
