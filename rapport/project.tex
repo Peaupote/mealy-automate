@@ -11,6 +11,9 @@
 \usepackage{xfrac}
 \usepackage{caption}
 \usepackage{threeparttable}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{subcaption}
 
 \usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
@@ -48,31 +51,48 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
   Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexé par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexé par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
 \end{definition}
 
-\begin{center}
-  \begin{figure}[h]
-    \label{fig:example}
-    ====> INSERER MACHINE TIKZ <====
+\begin{figure}[h]
+  \begin{center}
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+      \label{fig:example}
+      \node[state] (q_0) {$0$};
+      \node[state] (q_1) [right=of q_0] {$1$};
+      \path[->]
+      (q_0) edge [loop above] node {$1|0$} (q_0)
+      edge node {$0|1$} (q_1)
+      (q_1) edge [loop above] node {$0|0~1|1$} (q_1);
+    \end{tikzpicture}
     \caption{une machine de Mealy}
-  \end{figure}
-\end{center}
+  \end{center}
+\end{figure}
 
 On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
 
-\begin{center}
-  \begin{figure}[h]
-    ====> INSERER DIAGRAMME EN CROIX TIKZ <====
+\begin{figure}[h]
+  \begin{center}
+    DIAGRAMME EN CROIX
     \caption{action de la machine \ref{fig:example} sur le mot xxxx}
-  \end{figure}
-\end{center}
+  \end{center}
+\end{figure}
 
 Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice.
 
-\begin{center}
-  \begin{figure}[h]
-    ====> INSERER GRAPHE HELICE TIKZ <====
+\begin{figure}[h]
+  \begin{center}
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+      \node[state] (q_00) {$0, 0$};
+      \node[state] (q_11) [right=of q_00] {$1, 1$};
+      \node[state] (q_10) [above=of q_11] {$1, 0$};
+      \node[state] (q_01) [above=of q_00] {$0, 1$};
+      \path[->]
+      (q_00) edge node {} (q_11)
+      (q_10) edge [loop above] node {} (q_10)
+      (q_11) edge [loop above] node {} (q_11)
+      (q_01) edge node {} (q_10);
+    \end{tikzpicture}
     \caption{graphe en hélice de \ref{fig:example}}
-  \end{figure}
-\end{center}
+  \end{center}
+\end{figure}
 
 \begin{definition}
   Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy.
