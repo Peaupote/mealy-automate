@@ -11,6 +11,9 @@
 \usepackage{xfrac}
 \usepackage{caption}
 \usepackage{threeparttable}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{subcaption}
 
 \usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
@@ -48,11 +51,52 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
   Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexé par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexé par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
 \end{definition}
 
-% exemple avec figure
+\begin{figure}[h]
+  \begin{center}
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+      \label{fig:example}
+      \node[state] (q_0) {$0$};
+      \node[state] (q_1) [right=of q_0] {$1$};
+      \path[->]
+      (q_0) edge [loop above] node {$1|0$} (q_0)
+      edge node {$0|1$} (q_1)
+      (q_1) edge [loop above] node {$0|0~1|1$} (q_1);
+    \end{tikzpicture}
+    \caption{une machine de Mealy}
+  \end{center}
+\end{figure}
+
+On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
+
+\begin{figure}[h]
+  \begin{center}
+    DIAGRAMME EN CROIX
+    \caption{action de la machine \ref{fig:example} sur le mot xxxx}
+  \end{center}
+\end{figure}
+
+Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice.
+
+\begin{figure}[h]
+  \begin{center}
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+      \node[state] (q_00) {$0, 0$};
+      \node[state] (q_11) [right=of q_00] {$1, 1$};
+      \node[state] (q_10) [above=of q_11] {$1, 0$};
+      \node[state] (q_01) [above=of q_00] {$0, 1$};
+      \path[->]
+      (q_00) edge node {} (q_11)
+      (q_10) edge [loop above] node {} (q_10)
+      (q_11) edge [loop above] node {} (q_11)
+      (q_01) edge node {} (q_10);
+    \end{tikzpicture}
+    \caption{graphe en hélice de \ref{fig:example}}
+  \end{center}
+\end{figure}
 
 \begin{definition}
   Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy.
-  \begin{enumerate}[i)]
+  \begin{enumerate}[(i)]
   \item On dit que $\mathcal{A}$ est \textbf{inversible} si $\rho_q$ est une permutation de $\Sigma$ pour tout état $q$.
   \item On dit que $\mathcal{A}$ est \textbf{réversible} si $\delta_x$ est une permuration de $\mathcal{Q}$ pour toute lettre $x$.
   \item On dit que $\mathcal{A}$ est \textbf{biréversible} s'il est inversible, réversible et que son inverse est réversible.
@@ -116,12 +160,19 @@ Des proposition \ref{prop:finitude-d} et \ref{prop:finitude-m} on déduit la pro
 La réciproque est fausse en général. Il semble pourtant que dans la classe particulière des automates biréversibles, la $\mathfrak{md}$-réduction est efficace.
 
 \begin{thm}(\citeauthor{Klimann13})
+  \label{thm:K}
   Tout automate fini à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
 \end{thm}
 
 Ce théorème ne se généralise pas aux biréversibles en général.
 
-% TODO: include fantastique figures
+\begin{center}
+  \begin{figure}[h]
+    ====> INSERER FANTASTIQUE TIKZ <====
+    \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques}
+  \end{figure}
+\end{center}
+
 
 Ces contres exemples sont pourtant factorisables, et en conjugant leur factorisation, on trouve un automate $\mathfrak{md}$-trivial. Ce qui nous conduit à la conjecture suivante.
 
@@ -253,8 +304,53 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
     Ainsi, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont bien biréversibles.
 \end{proof}
 
+\subsection{Algorithme de génération des biréversibles\label{sec:gen}}
 
-\subsection{Benchmark}
+\subsubsection*{L'algorithme}
+Notre algorithme de génération se base sur le résultat suivant de \cite{DBLP:journals/corr/abs-1105-4725}
+
+\begin{thm}
+  \label{thm:ir-helix}
+  Soit $\mathcal{A}$ un automate de Mealy inversible réversible. Les propositions suivantes sont équivalentes
+
+  \begin{enumerate}[(i)]
+  \item $\mathcal{A}$ est biréversible
+  \item Le graphe en hélice de $\mathcal{A}$ est une union de cycles disjoints.
+  \end{enumerate}
+\end{thm}
+
+Notre algorithme procède donc à la recherche exhaustive de toutes les machines de Mealy inversibles réversibles en maintenant la contrainte que le graphe en hélice est une union de cycles disjoints.
+
+\subsubsection*{À isomorphisme près}
+
+On a rapidement constaté que le nombre d'automates a générer est très important. Aussi, il ne semble pas réaliste de tester la $\mathfrak{mdc}$-réduction sur tout ceux-ci. On a donc cherché à extraire seulement les classes d'isomorphismes de notre génération.
+
+M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty} qui est, semble-t'il, la plus efficace. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} corresponde bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent.
+
+\begin{center}
+  \begin{figure}[h]
+    ====> INSERER GRAPHE EN HELICE AUGMENTE TIKZ <====
+    \caption{graphe en hélice augmenté de l'automate xx}
+  \end{figure}
+\end{center}
+
+Pour calculer les isomorphismes entre les graphes \textrm{Nauty} associe à un graphe \textit{\textbf{une forme canonique}}, ie. un graphe représentant de sa classe d'isomorphisme. Nous prenons donc comme représentant des classes d'isomorphismes de machine de Mealy celles sont une forme canonique au sens de \textrm{Nauty}. Lors de la génération nous nous contentons de calculer la forme canonique du graphe en hélice augmenté puis de tester s'il laisse les lettres et les états inchangés. Auquel cas, il est canonique.
+
+Nauty permet de préciser des classes d'équivalence sur les sommets du graphe qui doivent êtres préservés lors du passage à la forme canonique. Les sommets correspondants aux états, aux lettres et au graphe en hélice simple représente trois classes qui ne doivent pas être mélangées les unes avec les autres par \textrm{Nauty}.
+
+\subsubsection*{Quelques optimisations conséquentes}
+Nous avions commencé par implémenter la génération en \textrm{Python} mais nous avions trois inconvénients majeurs
+\begin{itemize}
+\item La complexité en mémoire: l'énorme quantité de machines à générer fait très vite exploser la \textrm{RAM} de l'ordinateur\footnote{Plus tard nous arrivions finalement à obtenir un fichier de 31 gigas octets contenant tous les automates biréversibles à 4 états et 4 lettres} sans qu'on puisse bien la contrôler en Python.
+\item La complexité en temps.
+\item \textrm{Nauty} ne dispose pas d'interface efficace en python.
+\end{itemize}
+
+Nous avons donc décidé d'implémenter une version C beaucoup plus efficace.
+
+Le test de la forme canonique ne nécessitant le parcours d'aucune structure de donnée globale au programme, il a été très facile de le parallèlliser.
+
+\subsubsection*{Quelques benchmarks}
 
 \begin{center}
   \begin{table}[h!]
@@ -284,6 +380,10 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
 \end{threeparttable}
   \end{table}
 \end{center}
+
+\subsection{Algorithme de division}
+\subsection{Algorithme de factorisation}
+
 
 \newpage
 \bibliography{project}{

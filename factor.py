@@ -1,6 +1,7 @@
 import divide
 import generator
 from mealy import *
+from math import sqrt, ceil
 import sys, time, random as rand
 import matplotlib.pyplot as plt
 
@@ -55,7 +56,7 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
 
 def factor(m):
     factors = set()
-    for i in range(2, m.nb_states + 1):
+    for i in range(2, ceil(sqrt(m.nb_states)) + 1):
         if m.nb_states % i != 0:
             continue
 

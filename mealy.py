@@ -182,7 +182,8 @@ class MealyMachine:
         return self.nb_states == 1 and self.rho[0] == [i for i in range(self.nb_letters)]
 
     def is_md_trivial(self):
-        return self.md_reduce().is_trivial()
+        red = self.md_reduce()
+        return red.is_trivial() or red.dual().is_trivial()
 
     def show(self, view=True, destfile=None):
         """Affiche l'automate"""
