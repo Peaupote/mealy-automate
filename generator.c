@@ -32,7 +32,7 @@ DYNALLSTAT(graph, can, can_sz);
 DYNALLSTAT(int, lab, lab_sz);
 DYNALLSTAT(int, ptn, ptn_sz);
 DYNALLSTAT(int, orbits, orbits_sz);
-static DEFAULTOPTIONS_GRAPH(options);
+static DEFAULTOPTIONS_DIGRAPH(options);
 statsblk stats;
 
 void pb(u_int32_t t, int indent) {
