@@ -1,8 +1,9 @@
 import mealy
 import factor
 import generator
+import sys
 
-# this probqbly dont work
+# this probably dont work
 def mdc_reduce(machine):
     stack = [machine]
 
@@ -62,16 +63,21 @@ def read_canonics(fname):
 
         can.append(mealy.MealyMachine(delta, rho))
         count += 1
-        print("count", count)
+        print("Machine ", count, end='\r', flush=True)
 
 if __name__ == "__main__":
-    cans = read_canonics("file")
+    if len(sys.argv) < 2:
+        print("usage: {} file".format(sys.argv[0]), file=sys.stderr)
+        sys.exit(1)
+
+    cans = read_canonics(sys.argv[1])
+    print("Total count {}.".format(len(cans)))
 
     t = set()
     countmd = 0
     countmdc = 0
     for i, m in enumerate(cans):
-        print("{:10}".format(i), "/", len(cans))
+        print("Analyzed {:2.0f}%".format(i * 100 / len(cans)), end='\r')
         md = m.is_md_trivial()
         mdc = mdc_reduce(m)
         if md:
@@ -81,6 +87,8 @@ if __name__ == "__main__":
         if mdc and not md:
             t.add(m)
 
-    print("Md-trivial", countmd, "/", len(cans))
-    print("Mdc-trivial", countmdc, "/", len(cans))
-    print("Result", len(t), "/", len(cans))
+    print("Done analyzing.")
+    print("Results:")
+    print("Md-trivial     {:>4} / {:>4}".format(countmd, len(cans)))
+    print("Mdc-trivial    {:>4} / {:>4}".format(countmdc, len(cans)))
+    print("Md but not mdc {:>4} / {:>4}".format(len(t), len(cans)))
