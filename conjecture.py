@@ -74,6 +74,7 @@ if __name__ == "__main__":
 
     countmd = 0
     countmdc = 0
+    countelse = 0
     for i, m in enumerate(read_canonics(sys.argv[1])):
         print("Machine", i, end='\r')
 
@@ -85,10 +86,14 @@ if __name__ == "__main__":
             countmdc += 1
         if mdc and not md:
             t.add(m)
+        if not mdc and not md:
+            countelse += 1
 
-    print("Total count {}.".format(i))
+
+    print("Total count {}.".format(i+1))
     print("Done analyzing.")
     print("Results:")
-    print("Md-trivial       {:>4} / {:>4}".format(countmd, i))
-    print("Mdc-trivial      {:>4} / {:>4}".format(countmdc, i))
-    print("Md but not mdc   {:>4} / {:>4}".format(len(t), i))
+    print("Md-trivial       {:>4} / {:>4}".format(countmd, i+1))
+    print("Mdc-trivial      {:>4} / {:>4}".format(countmdc, i+1))
+    print("Mdc but not md   {:>4} / {:>4}".format(len(t), i+1))
+    print("Not trivial   {:>4} / {:>4}".format(countelse, i+1))
