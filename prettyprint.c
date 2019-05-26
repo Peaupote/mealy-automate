@@ -135,17 +135,9 @@ int main (int argc, char *argv[]) {
 
         /* printf("Automorphism group size = "); */
         /* writegroupsize(stdout, stats.grpsize1, stats.grpsize2); */
-
-        red = md_reduce(machine);
-        if (is_trivial(red)) trivial_count++;
-        else if (mexp(red, 1000) < 100) finite_not_trivial++;
-
-        free_mealy(red);
     }
 
     printf("Total count %lu.\n", count);
-    printf("Md-trivial count %lu.\n", trivial_count);
-    printf("Finite not trivial %lu.\n", finite_not_trivial);
 
     close(fd);
     return 0;
