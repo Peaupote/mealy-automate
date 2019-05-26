@@ -5,7 +5,7 @@ FLAGS = -O3 -g -Wall
 LIBS = -I nauty26r11 -L nauty26r11
 DEPS = nauty26r11/nauty.o nauty26r11/nautil.o \
 		nauty26r11/naugraph.o nauty26r11/schreier.o \
-		nauty26r11/naurng.o
+		nauty26r11/naurng.o nauty26r11/nautinv.o
 DEPS_SPARSE = nauty26r11/nautil.o nauty26r11/nausparse.o \
 				nauty26r11/naugraph.o nauty26r11/schreier.o \
 				nauty26r11/naurng.o nauty26r11/nauty.o
