@@ -6,6 +6,8 @@ import generator
 import sys
 
 # this probably dont work
+
+
 def mdc_reduce(machine):
     stack = [machine]
 
@@ -37,6 +39,7 @@ def mdc_reduce(machine):
                 stack.append(d)
     return False
 
+
 def read_canonics(fname):
     f = open(fname, "rb")
     nb_states = int.from_bytes(f.read(1), byteorder='little')
@@ -60,7 +63,7 @@ def read_canonics(fname):
         for p in range(nb_states):
             for x in range(nb_letters):
                 delta[p][x] = buf[p * nb_letters + x]
-                rho[p][x]   = buf[p * nb_letters + x + size]
+                rho[p][x] = buf[p * nb_letters + x + size]
 
         yield mealy.MealyMachine(delta, rho)
 
@@ -88,7 +91,6 @@ if __name__ == "__main__":
             t.add(m)
         if not mdc and not md:
             countelse += 1
-
 
     print("Total count {}.".format(i+1))
     print("Done analyzing.")

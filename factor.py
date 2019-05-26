@@ -2,10 +2,13 @@ import divide
 import generator
 from mealy import *
 from math import sqrt, ceil
-import sys, time, random as rand
+import sys
+import time
+import random as rand
 import matplotlib.pyplot as plt
 
 helix_cache = dict()
+
 
 def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
     if depth >= len(vertices):
@@ -53,6 +56,7 @@ def rec_factor(m, label, deltal, rhol, deltar, rhor, vertices, factors, depth):
 
         deltar[lpr][z] = prev_deltar
         rhor[lpr][z] = prev_rhor
+
 
 def factor(m):
     factors = set()
@@ -109,7 +113,8 @@ def factor_inv(m):
         if m.nb_states % i == 0:
             if not (i, m.nb_letters) in helix_cache:
                 print("add to helix cache", i, m.nb_letters)
-                helix_cache[(i, m.nb_letters)] = generator.helix_gen(i, m.nb_letters)
+                helix_cache[(i, m.nb_letters)] = generator.helix_gen(
+                    i, m.nb_letters)
             # iso_class = isomorphism_class(i, m.nb_letters)
             for r in helix_cache[(i, m.nb_letters)]:
                 l = divide.divide_right(m, r)
@@ -136,6 +141,7 @@ def test_facto_inv_n(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2, n):
         if test_factor_inv(nb_states_1, nb_letters_1, nb_states_2, nb_letters_2):
             c += 1
     print(c, "/", n)
+
 
 def factor_naive(m):
     factors = set()
@@ -203,6 +209,7 @@ def test_all_factors_iso_n(n):
             c_smart += 1
     print("smart", c_smart, "/", n)
 
+
 def test_all_factors_iso_inv(m):
     factors_inv = factor_inv(m)
     factors_smart = factor(m)
@@ -244,6 +251,7 @@ def perf_facto(fname, f, test_size, test_set, x):
 
     return bar
 
+
 def perf_func(test_size, funcs):
     test_set = []
     for i in range(1, test_size):
@@ -265,6 +273,7 @@ def perf_func(test_size, funcs):
         plt.title(funcs[i][0])
 
     plt.show()
+
 
 if __name__ == "__main__":
     print("Fill cache")
