@@ -168,6 +168,31 @@ class MealyMachine:
                 cl = new_cl
         return self.__fusion(cl)
 
+    def expansion(self, exp):
+        "Renvoie un automate dans lequel l'état i de self apparait exp[i] > 0 fois"
+        nb_states = 0
+        for i in range(self.nb_states):
+            if exp[i] < 1:
+                print("Erreur dans exp, exp[{}] < 1".format(i))
+            nb_states += exp[i]
+        delta = [[None for _ in range(self.nb_letters)]
+                 for _ in range(nb_states)]
+        rho = [[None for _ in range(self.nb_letters)]
+               for _ in range(nb_states)]
+        print(len(delta))
+        for i in range(self.nb_states):
+            for j in range(self.nb_letters):
+                delta[i][j] = self.delta[i][j]
+                rho[i][j] = self.rho[i][j]
+        indice = self.nb_states
+        for i in range(self.nb_states):
+            for _ in range(1, exp[i]):
+                for j in range(self.nb_letters):
+                    delta[indice][j] = self.delta[i][j]
+                    rho[indice][j] = self.rho[i][j]
+                indice += 1
+        return MealyMachine(delta, rho)
+
     def md_reduce(self):
         prev, current = None, self
         while prev != current:
