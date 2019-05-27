@@ -5,7 +5,6 @@ import factor
 import generator
 import sys
 
-# this probably dont work
 def mdc_reduce(machine):
     stack = [machine]
 
@@ -15,19 +14,16 @@ def mdc_reduce(machine):
             return True
 
         m = m.md_reduce()
-#        print(m.nb_states, m.nb_letters)
 
         fs = factor.factor(m)
         if not fs:
             m = m.dual()
-#            print("dual", m.nb_states, m.nb_letters)
             if m.is_trivial():
                 return True
             fs = factor.factor(m)
             if not fs:
                 continue
 
-#        print("facto nb", len(fs))
         for a, b in fs:
             c = mealy.product(b, a)
             d = c.md_reduce()
@@ -86,9 +82,10 @@ if __name__ == "__main__":
         if mdc and not md:
             t.add(m)
 
+    i += 1
     print("Total count {}.".format(i))
     print("Done analyzing.")
     print("Results:")
-    print("Md-trivial       {:>4} / {:>4}".format(countmd, i))
-    print("Mdc-trivial      {:>4} / {:>4}".format(countmdc, i))
-    print("Md but not mdc   {:>4} / {:>4}".format(len(t), i))
+    print("Md-trivial       {:>10} / {:>10}".format(countmd, i))
+    print("Mdc-trivial      {:>10} / {:>10}".format(countmdc, i))
+    print("Mdc but not md   {:>10} / {:>10}".format(len(t), i))

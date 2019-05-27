@@ -79,11 +79,7 @@ def factor(m):
                  for j in range(m.nb_states)]
 
         rec_factor(m, label, deltal, rhol, deltar,
-<<<<<<< HEAD
-                   rhor, vertices, factors, depth)
-=======
                    rhor, vertices, factors, 0)
->>>>>>> 8e4c566cfd98d4957408b8fc113c68584645e0d5
     return factors
 
 
