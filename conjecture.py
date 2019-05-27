@@ -5,6 +5,7 @@ import factor
 import generator
 import sys
 
+
 def mdc_reduce(machine):
     stack = [machine]
 
@@ -33,6 +34,7 @@ def mdc_reduce(machine):
                 stack.append(d)
     return False
 
+
 def read_canonics(fname):
     f = open(fname, "rb")
     nb_states = int.from_bytes(f.read(1), byteorder='little')
@@ -56,7 +58,7 @@ def read_canonics(fname):
         for p in range(nb_states):
             for x in range(nb_letters):
                 delta[p][x] = buf[p * nb_letters + x]
-                rho[p][x]   = buf[p * nb_letters + x + size]
+                rho[p][x] = buf[p * nb_letters + x + size]
 
         yield mealy.MealyMachine(delta, rho)
 
@@ -70,6 +72,7 @@ if __name__ == "__main__":
 
     countmd = 0
     countmdc = 0
+    countelse = 0
     for i, m in enumerate(read_canonics(sys.argv[1])):
         print("Machine", i, end='\r')
 
@@ -81,6 +84,8 @@ if __name__ == "__main__":
             countmdc += 1
         if mdc and not md:
             t.add(m)
+        if not mdc and not md:
+            countelse += 1
 
     i += 1
     print("Total count {}.".format(i))
@@ -89,3 +94,4 @@ if __name__ == "__main__":
     print("Md-trivial       {:>10} / {:>10}".format(countmd, i))
     print("Mdc-trivial      {:>10} / {:>10}".format(countmdc, i))
     print("Mdc but not md   {:>10} / {:>10}".format(len(t), i))
+    print("Not trivial      {:>10} / {:>10}".format(countelse, i+1))
