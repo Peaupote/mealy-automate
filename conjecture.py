@@ -39,8 +39,8 @@ def read_canonics(fname):
     f = open(fname, "rb")
     nb_states = int.from_bytes(f.read(1), byteorder='little')
     nb_letters = int.from_bytes(f.read(1), byteorder='little')
-    print("Nb states", nb_states)
-    print("Nb letters", nb_letters)
+    # print("Nb states", nb_states)
+    # print("Nb letters", nb_letters)
 
     size = nb_states * nb_letters
     delta = [[None for _ in range(nb_letters)]
@@ -63,7 +63,27 @@ def read_canonics(fname):
         yield mealy.MealyMachine(delta, rho)
 
 
-if __name__ == "__main__":
+def conjecturebis(file1, file2):
+    if len(sys.argv) < 3:
+        print("usage: {} file1 file2".format(sys.argv[0]))
+        sys.exit(1)
+
+    tot = 0
+    res = set()
+    for a in read_canonics(file1):
+        for b in read_canonics(file2):
+            tot += 1
+            print("Machine", tot, end='\r')
+            if (not mealy.product(a, b).is_md_trivial()
+                and mealy.product(b, a).is_md_trivial()):
+                res.add(mealy.product(a, b))
+
+    print("Total factorisable count {}.".format(tot))
+    print("AB not md-trivial and BA md-trivial {}".format(len(res)))
+    return res
+
+
+def conjecture(fname):
     if len(sys.argv) < 2:
         print("usage: {} file".format(sys.argv[0]), file=sys.stderr)
         sys.exit(1)
@@ -94,4 +114,8 @@ if __name__ == "__main__":
     print("Md-trivial       {:>10} / {:>10}".format(countmd, i))
     print("Mdc-trivial      {:>10} / {:>10}".format(countmdc, i))
     print("Mdc but not md   {:>10} / {:>10}".format(len(t), i))
-    print("Not trivial      {:>10} / {:>10}".format(countelse, i+1))
+    print("Not trivial      {:>10} / {:>10}".format(countelse, i))
+
+
+if __name__ == "__main__":
+    res = conjecturebis(sys.argv[1], sys.argv[2])
