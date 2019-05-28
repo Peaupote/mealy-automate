@@ -168,11 +168,32 @@ Ce théorème ne se généralise pas aux biréversibles en général.
 
 \begin{center}
   \begin{figure}[h]
-    ====> INSERER FANTASTIQUE TIKZ <====
+    \begin{tikzpicture}
+    \coordinate (A) at (0,0);
+		\coordinate (B) at (0:3);
+		\coordinate (C) at (120:3);
+		\coordinate (D) at (240:3);
+    % \draw (A) -- (B) -- (C) -- (D) -- cycle;
+    \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+    \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+    \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+    \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+    \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$1|0$} (QB);
+    \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$2|0$} (QA);
+    \draw[->,>=latex] (QA) to[bend right] node[midway, above right]{$0|1$} (QC);
+    \draw[->,>=latex] (QC) to[bend right] node[midway, below left]{$0|2$} (QA);
+    \draw[->,>=latex] (QA) to[bend right] node[midway, above left]{$2|2$} (QD);
+    \draw[->,>=latex] (QD) to[bend right] node[midway, below right]{$1|1$} (QA);
+    \draw[->,>=latex] (QB) to[bend right] node[midway, below]{$1|2$} (QC);
+    \draw[->,>=latex] (QC) to[bend left=40] node[midway, above]{$2|1$} (QB);
+    \draw[->,>=latex] (QC) to[bend right] node[midway, right]{$1|0$} (QD);
+    \draw[->,>=latex] (QD) to[bend left=40] node[midway, left]{$2|0$} (QC);
+    \draw[->,>=latex] (QD) to[bend right] node[midway, above]{$0|2$} (QB);
+    \draw[->,>=latex] (QB) to[bend left=40] node[midway, below]{$0|1$} (QD);
+    \end{tikzpicture}
     \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques}
   \end{figure}
 \end{center}
-
 
 Ces contres exemples sont pourtant factorisables, et en conjugant leur factorisation, on trouve un automate $\mathfrak{md}$-trivial. Ce qui nous conduit à la conjecture suivante.
 
