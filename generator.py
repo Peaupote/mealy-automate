@@ -196,14 +196,14 @@ def rec_gen(start, prev, sources, targets, delta, rho, enum):
 # count 335 classes for 3,3
 
 
-def isomorphism_class(nb_states, nb_letters, debug=False):
+def isomorphism_class(machines, debug=False):
     """Renvoie la liste des automates à nb_states états
     et nb_letters lettres à isomorphisme près"""
     CL = []
     res = []
     if debug:
         c = 0
-    for a in helix_gen(nb_states, nb_letters):
+    for a in machines:
         if debug:
             c += 1
             print(c)

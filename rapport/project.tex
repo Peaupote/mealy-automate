@@ -54,7 +54,6 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
 \begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-      \label{fig:example}
       \node[state] (q_0) {$0$};
       \node[state] (q_1) [right=of q_0] {$1$};
       \path[->]
@@ -62,7 +61,7 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
       edge node {$0|1$} (q_1)
       (q_1) edge [loop above] node {$0|0~1|1$} (q_1);
     \end{tikzpicture}
-    \caption{une machine de Mealy}
+    \caption{une machine de Mealy\label{fig:example}}
   \end{center}
 \end{figure}
 
@@ -70,8 +69,17 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
 
 \begin{figure}[h]
   \begin{center}
-    DIAGRAMME EN CROIX
-    \caption{action de la machine \ref{fig:example} sur le mot xxxx}
+    \begin{tikzpicture}
+      \draw[->] (-1.25, 0.5) node[above] {1} to (-1.25, -0.5) node[below] {0};
+      \draw[->] (-1.5, 0) node[left] {0} to (-1, 0) node[right] {0};
+
+      \draw[->] (-0.25, 0.5) node[above] {0} to (-0.25, -0.5) node[below] {1};
+      \draw[->] (-0.5, 0) to (0, 0) node[right] {1};
+
+      \draw[->] (0.75, 0.5) node[above] {1} to (0.75, -0.5) node[below] {1};
+      \draw[->] (0.5, 0) to (1, 0) node[right] {1};
+    \end{tikzpicture}
+    \caption{action de l'état 0 de la machine \ref{fig:example} sur le mot 101. Sont représentés horizontalement les états sucessifs et verticalement l'action de chacun de ces états sur les lettres du mot.}
   \end{center}
 \end{figure}
 
@@ -114,6 +122,40 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
 
   Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x(\bar{p}) = \bar{\delta_x(p)}$ et $\bar{\rho}_{\bar{p}} =  \rho_p$.
 \end{definition}
+
+\begin{definition}
+  \label{def:produit}
+  Soient $A = \left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $B = \left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates sur le même alphabet. On appelle \textbf{\textit{automate produit}} la machine $\mathcal{AB} = \left(\mathcal{Q}\times\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ où
+
+\[ \delta_x''(p, q) = (\delta_x(p), \delta_x'(q))\]
+et
+\[ \rho_{(p,q)}(x) = \rho_q'(\rho_p(x)). \]
+\end{definition}
+
+\begin{figure}[h!]
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \draw [->] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
+      \draw [->] (0, 1.5) node[above] {x} to (0, 0.5);
+
+      \draw [->] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
+      \draw [->] (0, 0) node[above] {z} to (0, -1) node[below] {y};
+    \end{tikzpicture}
+    \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \draw [->] (-0.5, 0) node[left] {$p_0p_1$} to (0.5, 0) node[right] {$q_0q_1$};
+      \draw [->] (0, 0.5) node[above] {x} to (0, -0.5) node[below] {y};
+    \end{tikzpicture}
+    \caption{Une flèche de l'automate $\mathcal{AB}$}
+  \end{subfigure}
+  \caption{Correspondance entre les flèches dans $\mathcal{AB}$ et celles de $\mathcal{A}$ et de $\mathcal{B}$}
+\end{figure}
+
 
 \subsection{Action sur les mots et (semi-)groupes engendrés}
 
@@ -402,9 +444,45 @@ Le test de la forme canonique ne nécessitant le parcours d'aucune structure de 
   \end{table}
 \end{center}
 
-\subsection{Algorithme de division}
 \subsection{Algorithme de factorisation}
 
+  Notons $\matcal{Q}$ les états de $\mathcal{A}$, $\mathcal{Q'}$ les états de $\mathcal{B}$ et $\mathcal{Q''}$ les états de $\mathcal{M}$. On remarque que tel qu'a été définit le produit (définition \ref{def:produit}) les états de $\mathcal{AB}$ sont des éléments de $\mathcal{Q}\times\mathcal{Q'}$.
+
+Or quand on factorise un automate, l'ensemble de ses états n'apparait pas comme un produit d'ensemble. Aussi faut-il choisir une manière canonique de construire une bijection $\iota$ de $\mathcal{Q''}$ dans $\mathcal{Q}\times\mathcal{Q'}$ qui représente cette correspondance. Il est clair que si une telle bijection n'existe pas -- c'est à dire si $|\mathcal{Q}''| \ne |\mathcal{Q}|\times|\mathcal{Q'}|$ -- l'automate $\mathcal{M}$ n'est pas factorisable par $\mathcal{A}$ et $\mathcal{B}$.
+
+Quand on cherchera à factoriser un automate $\mathcal{M}$ dont les états sont $\mathcal{Q}$, on identifira ses états à $\iota(\mathcal{Q})$ un produit d'ensemble.
+
+\begin{figure}[h!]
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \draw [->] (-0.5, 0) node[left] {p} to (0.5, 0) node[right] {q};
+      \draw [->] (0, 0.5) node[above] {x} to (0, -0.5) node[below] {y};
+    \end{tikzpicture}
+    \caption{Une flèche de l'automate $\mathcal{M}$}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \begin{tikzpicture}
+      \draw [->] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
+      \draw [->] (0, 1.5) node[above] {x} to (0, 0.5);
+
+      \draw [->] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
+      \draw [->] (0, 0) node[above] {z} to (0, -1) node[below] {y};
+    \end{tikzpicture}
+    \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$\label{fig:factor-ab}}
+  \end{subfigure}
+  \caption{Correspondance entre les flèches dans $\mathcal{M}$ et celles de $\mathcal{A}$ et $\mathcal{B}$. Ici on a que $\iota(p) = (p_0,~p_1)$ et $\iota(q)=(q_0, q_1)$\label{fig:facto}}
+\end{figure}
+
+On remarque alors, que connaissant $\mathcal{M}$, la seule donnée inconnue de la figure \ref{fig:factor-ab} est le $z$. Notre algorithme de factorisation consiste donc à essayer tout les $z$ possible pour chaque arrête de $\mathcal{M}$ pour chaque couple de diviseur du nombre d'états de $\mathcal{M}$. On construit ainsi toutes les flèches des facteurs.
+
+On peut borner grossièrement la complexité en temps de l'algorithme par $\mathcal{O}(|\mathcal{Q''}|^2|\Sigma|^2)$. Ce qui est une complexité satisfaisante par rapport à celle de nos autres algorithmes.
+
+\section{Avancées sur le problème de finitude}
+
+\section{Conclusions}
 
 \newpage
 \bibliography{project}{
