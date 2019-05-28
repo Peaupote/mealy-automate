@@ -11,6 +11,7 @@
 \usepackage{xfrac}
 \usepackage{caption}
 \usepackage{threeparttable}
+\usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{automata,positioning}
 \usepackage{subcaption}
@@ -157,7 +158,7 @@ et
 \end{figure}
 
 
-\subsection{Action sur les mots et (semi-)groupes engendrés}
+\subsection{Action sur les mots et (semi-)groupes engendrés\label{sec:action}}
 
 \begin{definition}
   Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy. On peut étendre l'ensemble de définition de $\rho$ à sur $\Sigma^*$ par induction comme suit.
@@ -211,7 +212,7 @@ Ce théorème ne se généralise pas aux biréversibles en général.
 \begin{center}
   \begin{figure}[h]
     ====> INSERER FANTASTIQUE TIKZ <====
-    \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques}
+    \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques\label{fig:fantastiques}}
   \end{figure}
 \end{center}
 
@@ -429,6 +430,10 @@ Le test de la forme canonique ne nécessitant le parcours d'aucune structure de 
 
 Or quand on factorise un automate, l'ensemble de ses états n'apparait pas comme un produit d'ensemble. Aussi faut-il choisir une manière canonique de construire une bijection $\iota$ de $\mathcal{Q''}$ dans $\mathcal{Q}\times\mathcal{Q'}$ qui représente cette correspondance. Il est clair que si une telle bijection n'existe pas -- c'est à dire si $|\mathcal{Q}''| \ne |\mathcal{Q}|\times|\mathcal{Q'}|$ -- l'automate $\mathcal{M}$ n'est pas factorisable par $\mathcal{A}$ et $\mathcal{B}$.
 
+
+On remarquera que toutes les bijections $\iota$ ne conduisent pas à une factorisation. Pour que l'automate soit factorisable il doit seulement en exister une. On remarque aussi que si on fixe la bijection $\iota$ il existe au moins une permutation $\sigma\in\mathfrak{S}(\mathcal{Q})$ des états de l'automate tel que $\left(\sigma(\mathcal{Q}), \Sigma, \delta, \rho\right)$ soit factorisable.
+
+
 Quand on cherchera à factoriser un automate $\mathcal{M}$ dont les états sont $\mathcal{Q}$, on identifira ses états à $\iota(\mathcal{Q})$ un produit d'ensemble.
 
 \begin{figure}[h!]
@@ -457,9 +462,79 @@ Quand on cherchera à factoriser un automate $\mathcal{M}$ dont les états sont 
 
 On remarque alors, que connaissant $\mathcal{M}$, la seule donnée inconnue de la figure \ref{fig:factor-ab} est le $z$. Notre algorithme de factorisation consiste donc à essayer tout les $z$ possible pour chaque arrête de $\mathcal{M}$ pour chaque couple de diviseur du nombre d'états de $\mathcal{M}$. On construit ainsi toutes les flèches des facteurs.
 
-On peut borner grossièrement la complexité en temps de l'algorithme par $\mathcal{O}(|\mathcal{Q''}|^2|\Sigma|^2)$. Ce qui est une complexité satisfaisante par rapport à celle de nos autres algorithmes.
+On peut borner grossièrement la complexité en temps de l'algorithme par $\mathcal{O}(|\mathcal{Q''}|!\left(|\mathcal{Q''}||\Sigma|\right)^2)$.
 
 \section{Avancées sur le problème de finitude}
+
+\subsection{$\mathfrak{md}$-triviaux dans des classes d'automates irréductibles}
+
+Comme dit dans la section \ref{sec:action} la $\mathfrak{md}$-réduction résoud le problème de finitudes pour les automates à deux états/lettres. La figure \ref{fig:fantastiques} montre les 4 automates qui ne se $\mathfrak{md}$-réduisent pas mais engendre du fini pour les biréversibles à 4 états et 3 lettres. Ces automates se factorisent, et la conjugaison de leurs facteurs donne des automates $\mathfrak{md}$-triviaux.
+
+Un critère simple pour étudier la finitude d'un automate est d'étudier sa fonction de masse.
+
+\begin{definition}
+  Soit $\mathcal{A}$ une machine de Mealy. On appelle \textbf{\textit{sa fonction de masse}} la fonction $\pi:\mathbb{N}&\rightarrow\mathbb{N}$ qui à un $n$ associe le nombre d'états de $\mathfrak{m}\left(\mathcal{A}^n\right)$
+\end{definition}
+
+\begin{prop}
+  \label{prop:mass}
+  Si la fonction de masse d'une machine de Mealy $\mathcal{A}$ est bornée, alors $\left<\mathcal{A}\right>$ est fini.
+\end{prop}
+
+La proposition \ref{prop:mass} nous donne dont un critère de semi-décidabilité sur la finitude du groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états sucessifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations couteuse (de complexités respectives $\mathcal{O}\left(\Sigma\log\Sigma\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right$)) qui peuvent être à répetter de nombreuses fois.
+
+Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction marche dans des cas où la factorisation est impossible -- ie. quand le nombre d'état et de lettre est premier.
+
+Nous avons donc généré les fonctions de masses des automates à 3 états, 3 lettres (figure \ref{fig:mass-33}) et 5 états, 3 lettres (figure \ref{fig:mass-53}).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{mass_33.png}
+  \caption{Fonction de masse des automates à 3 états et 3 lettres $\mathfrak{md}$-triviaux à gauche et des non $\mathfrak{md}$-triviaux à droite.\label{fig:mass-33}}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{mass_53.png}
+  \caption{Fonction de masse des automates à 5 états et 3 lettres $\mathfrak{md}$-triviaux à gauche et des non $\mathfrak{md}$-triviaux à droite.\label{fig:mass-53}}
+\end{figure}
+
+Nous en avons déduit que...
+
+\subsection{Automates fantastiques}
+
+Nous avons ensuite cherché dans des classes plus grandes que celles abordées jusqu'alors de trouver des automates \textit{fantastiques}.
+
+\begin{definition}
+  Un automate est \textbf{\textit{fantastique}} s'il n'est pas $\mathfrak{md}$-trivial et $\mathfrak{mdc}$-trivial.
+\end{definition}
+
+La factorisation est une opération couteuse, pour tester la $\mathfrak{mdc}$-réduction il est donc préférable d'énumérer les classes de diviseurs et de faire tous les produits. On trouve ainsi tous les automates fantastiques d'une classe à isomorphisme près.
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{threeparttable}
+      \begin{tabular}{|rrr|}
+        \hline
+        \#états & \#lettres & \#fantastiques \\ [0.5ex]
+        \hline\hline
+        \hline
+        4 & 3 & 4 \\
+        \hline
+        4 & 4 & 38 \\
+        \hline
+        6 & 3 & 0 \\
+        \hline
+      \end{tabular}
+      \caption{Nombre d'automates fantastiques pour des classes d'automates biréversibles}
+    \end{threeparttable}
+  \end{center}
+\end{table}
+
+On a ensuite essayé de déterminer la finitude des groupes engendrés par ces automates. Nous avons trouvé que....
+
+Pour pouvoir valider l'hypothèse, il faut aussi s'assurer qu'aucun automate non $\mathfrak{mdc}$-trivial n'engendre du fini.
+
 
 \section{Conclusions}
 
