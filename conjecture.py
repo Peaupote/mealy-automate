@@ -5,6 +5,7 @@ import factor
 import generator
 import sys
 
+import matplotlib.pyplot as plt
 
 def mdc_reduce(machine):
     stack = [machine]
@@ -63,15 +64,15 @@ def read_canonics(fname):
         yield mealy.MealyMachine(delta, rho)
 
 
-def conjecturebis(file1, file2):
+def conjecturebis():
     if len(sys.argv) < 3:
         print("usage: {} file1 file2".format(sys.argv[0]))
         sys.exit(1)
 
     tot = 0
     res = set()
-    for a in read_canonics(file1):
-        for b in read_canonics(file2):
+    for a in read_canonics(sys.argv[1]):
+        for b in read_canonics(sys.argv[2]):
             tot += 1
             print("Machine", tot, end='\r')
             if (not mealy.product(a, b).is_md_trivial()
@@ -83,7 +84,7 @@ def conjecturebis(file1, file2):
     return res
 
 
-def conjecture(fname):
+def conjecture():
     if len(sys.argv) < 2:
         print("usage: {} file".format(sys.argv[0]), file=sys.stderr)
         sys.exit(1)
@@ -117,5 +118,33 @@ def conjecture(fname):
     print("Not trivial      {:>10} / {:>10}".format(countelse, i))
 
 
+def conjecture_mass():
+    if len(sys.argv) < 2:
+        print("usage: {} fname".format(sys.argv[0]), file=sys.stderr)
+        sys.exit(1)
+
+    n = 4
+    x = list(range(1, n+1))
+
+    plt.figure(1)
+
+    for i, m in enumerate(read_canonics(sys.argv[1])):
+        print("Machine", i, end='\r')
+        y = mealy.mass(m, n)
+        if m.is_md_trivial():
+            plt.subplot(1, 2, 1)
+        else:
+            plt.subplot(1, 2, 2)
+        plt.plot(x, y, '-o')
+
+    print("done.")
+    plt.subplot(1, 2, 1)
+    plt.title("Mass md-trivials")
+
+    plt.subplot(1, 2, 2)
+    plt.title("Mass md-not-trivials")
+
+    plt.show()
+
 if __name__ == "__main__":
-    res = conjecturebis(sys.argv[1], sys.argv[2])
+    res = conjecture_mass()

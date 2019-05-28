@@ -374,8 +374,11 @@ def product(m1, m2):
 def mass(m, n):
     current = m
     size = []
-    for _ in range(n):
+    for i in range(n):
         current = current.minimize()
+        if i > 0 and current.nb_states == size[-1]:
+            size.extend([current.nb_states] * (n - i))
+            return size
         size.append(current.nb_states)
-        current = product(current, current)
+        current = product(current, m)
     return size
