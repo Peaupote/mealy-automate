@@ -128,7 +128,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
   \label{def:produit}
   Soient $A = \left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $B = \left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates sur le même alphabet. On appelle \textbf{\textit{automate produit}} la machine $\mathcal{AB} = \left(\mathcal{Q}\times\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ où
 
-\[ \delta_x''(p, q) = (\delta_x(p), \delta_x'(q))\]
+\[ \delta_x''(p, q) = (\delta_x(p), \delta_{\rho_p(x)}'(q))\]
 et
 \[ \rho_{(p,q)}(x) = \rho_q'(\rho_p(x)). \]
 \end{definition}
@@ -211,73 +211,75 @@ Ce théorème ne se généralise pas aux biréversibles en général.
 
 \begin{center}
   \begin{figure}[h]
-    \begin{tikzpicture}[scale=0.7]
-    
-    \coordinate (A) at (-10,-2);
-		\coordinate (B) at (-6,-2);
-		\coordinate (C) at (-6,2);
-		\coordinate (D) at (-10,2);
-    \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
-    \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
-    \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
-    \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
-    \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|2$} (QA);
-    \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|1$} (QB);
-    \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|0$} (QD);
-    \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|0$} (QA);
-    \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|2$} (QB);
-    \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|1$} (QC);
-    \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
-    \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|2$} (QC);
-    \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|1$} (QD);
-    \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
-    \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|0$} (QC);
-    \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|2$} (QD);
+    \makebox[\textwidth][c]{
+      \begin{tikzpicture}[scale=0.7]
+
+        \coordinate (A) at (-10,-2);
+        \coordinate (B) at (-6,-2);
+        \coordinate (C) at (-6,2);
+        \coordinate (D) at (-10,2);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|2$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|1$} (QB);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|0$} (QD);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|0$} (QA);
+        \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|2$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
+        \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|2$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|1$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|0$} (QC);
+        \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|2$} (QD);
 
 
-    \coordinate (A) at (0,0);
-		\coordinate (B) at (0:3);
-		\coordinate (C) at (120:3);
-		\coordinate (D) at (240:3);
-    \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
-    \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
-    \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
-    \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
-    \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$1|0$} (QB);
-    \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$2|0$} (QA);
-    \draw[->,>=latex] (QA) to[bend right] node[midway, above right]{$0|1$} (QC);
-    \draw[->,>=latex] (QC) to[bend right] node[midway, below left]{$0|2$} (QA);
-    \draw[->,>=latex] (QA) to[bend right] node[midway, above left]{$2|2$} (QD);
-    \draw[->,>=latex] (QD) to[bend right] node[midway, below right]{$1|1$} (QA);
-    \draw[->,>=latex] (QB) to[bend right] node[midway, below]{$1|2$} (QC);
-    \draw[->,>=latex] (QC) to[bend left=40] node[midway, above]{$2|1$} (QB);
-    \draw[->,>=latex] (QC) to[bend right] node[midway, right]{$1|0$} (QD);
-    \draw[->,>=latex] (QD) to[bend left=40] node[midway, left]{$2|0$} (QC);
-    \draw[->,>=latex] (QD) to[bend right] node[midway, above]{$0|2$} (QB);
-    \draw[->,>=latex] (QB) to[bend left=40] node[midway, below]{$0|1$} (QD);
+        \coordinate (A) at (0,0);
+        \coordinate (B) at (0:3);
+        \coordinate (C) at (120:3);
+        \coordinate (D) at (240:3);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$1|0$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$2|0$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, above right]{$0|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, below left]{$0|2$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, above left]{$2|2$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below right]{$1|1$} (QA);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, below]{$1|2$} (QC);
+        \draw[->,>=latex] (QC) to[bend left=40] node[midway, above]{$2|1$} (QB);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, right]{$1|0$} (QD);
+        \draw[->,>=latex] (QD) to[bend left=40] node[midway, left]{$2|0$} (QC);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, above]{$0|2$} (QB);
+        \draw[->,>=latex] (QB) to[bend left=40] node[midway, below]{$0|1$} (QD);
 
-    \coordinate (A) at (6,-2);
-		\coordinate (B) at (10,-2);
-		\coordinate (C) at (10,2);
-		\coordinate (D) at (6,2);
-    \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
-    \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
-    \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
-    \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
-    \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|0$} (QA);
-    \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|2$} (QB);
-    \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|1$} (QD);
-    \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|2$} (QA);
-    \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|1$} (QB);
-    \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|0$} (QC);
-    \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
-    \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|1$} (QC);
-    \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|2$} (QD);
-    \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
-    \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|2$} (QC);
-    \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
-    \end{tikzpicture}
-    \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques}
+        \coordinate (A) at (6,-2);
+        \coordinate (B) at (10,-2);
+        \coordinate (C) at (10,2);
+        \coordinate (D) at (6,2);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|0$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|2$} (QB);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|1$} (QD);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|2$} (QA);
+        \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|1$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|0$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
+        \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|2$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|2$} (QC);
+        \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
+      \end{tikzpicture}
+    }
+    \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques. Le 4eme est l'inverse du premier.}
   \end{figure}
 \end{center}
 
@@ -351,6 +353,9 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
 \end{prop}
 
 \begin{proof}
+  DOUTEUX.
+
+
   Soient $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B}=\left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates réversibles, et soit $\mathcal{A\cdot B}=\left(\mathcal{Q\times Q'}, \Sigma, \delta'', \rho''\right)$ leur produit.
 
 
@@ -360,18 +365,38 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
   Par définition $\delta''_x(pr)=(\delta_x(p), \delta'_{\rho_p(x)}(r))$. Or, puisque les automates sont réversibles, les $(\delta_x)_{x\in\Sigma}$ et ${(\delta'_x)}_{x\in\Sigma}$ sont des bijections. De plus, $\mathcal{A}$ esr inversible donc les ${(\rho_p)}_{p\in \mathcal{Q}}$ sont des bijections. On en conclut que les ${(\delta''_{pr})}_{pr\in\mathcal{Q}\times\mathcal{Q'}}$ sont aussi des bijections.
 \end{proof}
 
-\begin{prop}[Clôture des biréversibles par produit]
-  Soient $\mathcal{A}$ et $\mathcal{B}$ des automates \textbf{biréversibles}, alors $\mathcal{A}\cdot\mathcal{B}$ est \textbf{biréversible}.
-\end{prop}
-
 \begin{prop}[Clôture des inversibles par facteurs]\label{prop_cloture_inv_facteurs}
   Soit $\mathcal{A}$ un automate de Mealy \textbf{inversible} qui se factorise en deux automates $\mathcal{A}_1$ et $\mathcal{A}_2$. Alors ces deux automates sont aussi inversibles.
 \end{prop}
 
+Avant de faire la démonstration, rappelons un résultat élémentaire qui nous sera utile.
+\begin{lemma}
+  Soit $f:A\rightarrow B$ et $g:B\rightarrow C$ deux fonctions telles que $g\circ f$ soit une bijection.
+  Alors
+  \begin{enumerate}[(i)]
+  \item $g$ est surjective
+  \item $f$ est injective.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  \begin{enumerate}[(i)]
+  \item Soit $x\in C$, alors il existe un $y\in A$ tel que
+    \[ (g\circ f)(y) = x \]
+    c'est à dire tel que
+    \[ g(f(y)) = x. \]
+    On en déduit immédiatement que $g$ est surjective.
+
+  \item Soit $x,y \in B$ tels que \[ f(x) = f(y). \] Alors \[ g(f(x)) = g(f(y)) \] et on en déduit que $x = y$, c'est à dire que $f$ est injective.
+  \end{enumerate}
+\end{proof}
+
 \begin{proof}
   Soient $\mathcal{A}=\left(\mathcal{Q\cdot Q'}, \Sigma, \delta, \rho\right)$, $\mathcal{A}_1=\left(\mathcal{Q}, \Sigma, \delta', \rho'\right)$ et $\mathcal{A}_2=\left(\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ tel que ci dessus.
 
-  Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in S(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho'_r\circ\rho''_p$. Puisque $\rho_{(p, r)}$ est une permutation, on en déduit que $\rho'_p$ et $\rho''_r$ en sont aussi, d'où le résultat.
+  Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in \mathfrak{S}(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho'_r\circ\rho''_p$.
+
+  Or $\rho_{(p, r)}$ est une bijection donc $\rho'_r$ est sujective et $\rho''_p$ est injective (lemme \ref{lem:bij}).
 \end{proof}
 
 \begin{prop}\label{prop_inverse_produit}
@@ -413,6 +438,14 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
 
 \subsection{Algorithme de génération des biréversibles\label{sec:gen}}
 
+\subsubsection*{Représentation des machines de Mealy en mémoire(inutile?)}
+Les machines de Mealy sont représenté en mémoire par deux matrices \textrm{delta} et \textrm{rho}, l'une représentant les $(\delta_x)_{x\in\Sigma}$ et l'autre les $(\rho_p)_{p\in\mathcal{Q}}$. Dans les deux cas les lignes des matrices sont indicées par les états et les colonnes par les lettres.
+
+\begin{enumerate}[(i)]
+\item On reconnait une machine réversible en vérifiant que les colonnes de \textrm{delta}  sont des permutations.
+\item On reconnait une machine inversible en vérifiant que les lignes dans \textrm{rho} sont des permutations.
+\end{enumerate}
+
 \subsubsection*{L'algorithme}
 Notre algorithme de génération se base sur le résultat suivant de \cite{DBLP:journals/corr/abs-1105-4725}
 
@@ -428,26 +461,68 @@ Notre algorithme de génération se base sur le résultat suivant de \cite{DBLP:
 
 Notre algorithme procède donc à la recherche exhaustive de toutes les machines de Mealy inversibles réversibles en maintenant la contrainte que le graphe en hélice est une union de cycles disjoints.
 
+Nous maintenons une liste de \textit{sources} et de \textit{targets} qui représentent les sommets du graphe en hélice dont encore aucune flèche ne part et les sommets du graphe en hélice vers encore aucune flèche ne pointe. En choisisant nos sommets dans ces ensembles nous nous assuront que le graphe en hélice obtenu est bien une union de cycles disjoints. À chaque fois que nous modifiont \textrm{delta} ou \textrm{rho}, nous vérifions que la machine est bien inversible-réversible.
+
+Ainsi, les automates trouvés -- en vertu du théorème \ref{thm:ir-helix} -- sont bien biréversibles. La structure globale du programme est représentée sur la figure \ref{fig:gen-pseudo-code}
+
+\begin{figure}
+\begin{verbatim}
+def rec(start, prev, sources, targets, delta, rho):
+    if not sources and not targets:
+        # plus de sources ni de targets
+        # on a fini la génération et on retourne l'automate
+        return delta, rho
+
+    # si aucun sommet ne précède dans le cycle
+    # alors on choisit un sommets dans les sources
+    # et on commence un nouveau cycle
+    if not prev:
+        start = sources.pop()
+
+    [...]
+
+    # on backtrack sur les targets
+    for _ in range(len(targets)):
+        # on choisit le sommet suivant dans le cycle
+        # puis on modifie l'automate en conséquence
+        p_next, x_next = targets.pop(0)
+        delta[p_prev][x_prev] = p_next
+        rho[p_prev][x_prev] = x_next
+
+        [...]
+        # on s'assure que l'automate est encore
+        # inversible-réversible et si c'est le cas
+        # on lance la récursion pour explorer cette direction
+        if valid_delta(delta) and valid_rho(rho):
+          res = rec(None, None, sources,
+                   targets, delta, rho)
+
+    [...]
+
+\end{verbatim}
+  \caption{Structure globale de la fonction de génération en python\label{fig:gen-pseudo-code}}
+\end{figure}
+
 \subsubsection*{À isomorphisme près}
 
 On a rapidement constaté que le nombre d'automates a générer est très important. Aussi, il ne semble pas réaliste de tester la $\mathfrak{mdc}$-réduction sur tout ceux-ci. On a donc cherché à extraire seulement les classes d'isomorphismes de notre génération.
 
-M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty} qui est, semble-t'il, la plus efficace. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} corresponde bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent.
+M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty}\cite{Nauty} qui est, semble-t'il, la plus efficace. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un isomorphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permutte sur tous les sommets du graphe en hélice.
 
 \begin{center}
   \begin{figure}[h]
     \begin{center}
     \begin{tikzpicture}
     \coordinate (A) at (-1,-1);
-		\coordinate (B) at (1,-1);
-		\coordinate (C) at (1,1);
+        \coordinate (B) at (1,-1);
+        \coordinate (C) at (1,1);
     \coordinate (D) at (-1,1);
 
     \coordinate (P1) at (-3,0);
-		\coordinate (P2) at (3,0);
-		\coordinate (PA) at (0,-3);
+        \coordinate (P2) at (3,0);
+        \coordinate (PA) at (0,-3);
     \coordinate (PB) at (0,3);
-    
+
     \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$1|a$};
     \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$2|a$};
     \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$2|b$};
@@ -461,17 +536,17 @@ M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty} qui est, 
     \draw[->,>=latex] (QA) to[bend right] (QB);
     \draw[->,>=latex] (QB) to[bend right] (QC);
     \draw[->,>=latex] (QC) to[bend right] (QD);
-    \draw[->,>=latex] (QD) to[bend right] (QA); 
+    \draw[->,>=latex] (QD) to[bend right] (QA);
 
     \draw[->,>=latex] (F1) to[bend right] (QA);
     \draw[->,>=latex] (F1) to[bend left] (QD);
     \draw[->,>=latex] (F2) to[bend left] (QB);
-    \draw[->,>=latex] (F2) to[bend right] (QC); 
+    \draw[->,>=latex] (F2) to[bend right] (QC);
 
     \draw[->,>=latex] (FA) to[bend right] (QB);
     \draw[->,>=latex] (FA) to[bend left] (QA);
     \draw[->,>=latex] (FB) to[bend left] (QC);
-    \draw[->,>=latex] (FB) to[bend right] (QD); 
+    \draw[->,>=latex] (FB) to[bend right] (QD);
 
     \end{tikzpicture}
     \end{center}
@@ -486,7 +561,6 @@ Nauty permet de préciser des classes d'équivalence sur les sommets du graphe q
 \subsubsection*{Quelques optimisations conséquentes}
 Nous avions commencé par implémenter la génération en \textrm{Python} mais nous avions trois inconvénients majeurs
 \begin{itemize}
-\item La complexité en mémoire: l'énorme quantité de machines à générer fait très vite exploser la \textrm{RAM} de l'ordinateur\footnote{Plus tard nous arrivions finalement à obtenir un fichier de 31 gigas octets contenant tous les automates biréversibles à 4 états et 4 lettres} sans qu'on puisse bien la contrôler en Python.
 \item La complexité en temps.
 \item \textrm{Nauty} ne dispose pas d'interface efficace en python.
 \end{itemize}
@@ -589,7 +663,7 @@ Une première manière de tester la conjecture \ref{conj:birev-mdc} est de teste
 
 Nous avons donc généré les fonctions de masses des automates à 3 états, 3 lettres (figure \ref{fig:mass-33}) et 5 états, 3 lettres (figure \ref{fig:mass-53}).
 
-\begin{figure}[h] 
+\begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{mass_33.png}
   \caption{Fonction de masse des automates à 3 états et 3 lettres $\mathfrak{md}$-triviaux à gauche et des non $\mathfrak{md}$-triviaux à droite.\label{fig:mass-33}}

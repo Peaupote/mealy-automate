@@ -63,12 +63,19 @@ def read_canonics(fname):
 
         yield mealy.MealyMachine(delta, rho)
 
+def in_iso(a, res):
+    for b in res:
+        if a.isomorphic(b):
+            return True
+    return False
 
 def conjecturebis():
-    if len(sys.argv) < 3:
-        print("usage: {} file1 file2".format(sys.argv[0]))
+    if len(sys.argv) < 4:
+        print("usage: {} fileA fileB fileAB".format(sys.argv[0]))
         sys.exit(1)
 
+    max_nb_states_mass = 0
+    exp = 5
     tot = 0
     res = set()
     for a in read_canonics(sys.argv[1]):
@@ -77,10 +84,29 @@ def conjecturebis():
             print("Machine", tot, end='\r')
             if (not mealy.product(a, b).is_md_trivial()
                 and mealy.product(b, a).is_md_trivial()):
-                res.add(mealy.product(a, b))
+                m = mealy.product(a, b)
+                max_nb_states_mass = max(max_nb_states_mass,
+                                         mealy.mass(m, exp)[-1])
+                res.add(m)
 
     print("Total factorisable count {}.".format(tot))
     print("AB not md-trivial and BA md-trivial {}".format(len(res)))
+
+    for i, a in enumerate(read_canonics(sys.argv[3])):
+        print("Machine", i, end='\r')
+        if a.is_md_trivial():
+            max_nb_states_mass = max(max_nb_states_mass,
+                                     mealy.mass(a, exp)[-1] )
+
+    count_not_finite = 0
+    for i, a in enumerate(read_canonics(sys.argv[3])):
+        print("Machine", i, end='\r')
+        if (not a.is_md_trivial()
+            and not in_iso(a, res)
+            and mealy.mass_decide(a, max_nb_states_mass)):
+            count_not_finite += 1
+
+    print("Not md-trivial neither mdc-trivial {}.".format(count_not_finite))
     return res
 
 
@@ -147,4 +173,4 @@ def conjecture_mass():
     plt.show()
 
 if __name__ == "__main__":
-    res = conjecture_mass()
+    res = conjecturebis()

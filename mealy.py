@@ -371,11 +371,22 @@ def product(m1, m2):
     return MealyMachine(delta, rho, states, list(m1.letters))
 
 
+def mass_decide(m, states_limit):
+    current = m.minimize()
+    last_size = m.nb_states
+    # size = []
+    while current.nb_states > states_limit:
+        current = product(current, current)
+        current = current.minimize()
+        if current.nb_states == last_size:
+            return True # finite
+
+    return False # infinit ?
+
 def mass(m, n):
     current = m
     size = []
     for i in range(n):
-        current = current.minimize()
         if i > 0 and current.nb_states == size[-1]:
             size.extend([current.nb_states] * (n - i))
             return size
