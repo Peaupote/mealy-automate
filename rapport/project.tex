@@ -210,12 +210,12 @@ Ce théorème ne se généralise pas aux biréversibles en général.
 
 \begin{center}
   \begin{figure}[h]
-    \begin{tikzpicture}[scale=0.9]
+    \begin{tikzpicture}[scale=0.7]
     
-    \coordinate (A) at (-9,-2);
-		\coordinate (B) at (-5,-2);
-		\coordinate (C) at (-5,2);
-		\coordinate (D) at (-9,2);
+    \coordinate (A) at (-10,-2);
+		\coordinate (B) at (-6,-2);
+		\coordinate (C) at (-6,2);
+		\coordinate (D) at (-10,2);
     \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
     \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
     \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
@@ -254,6 +254,27 @@ Ce théorème ne se généralise pas aux biréversibles en général.
     \draw[->,>=latex] (QD) to[bend left=40] node[midway, left]{$2|0$} (QC);
     \draw[->,>=latex] (QD) to[bend right] node[midway, above]{$0|2$} (QB);
     \draw[->,>=latex] (QB) to[bend left=40] node[midway, below]{$0|1$} (QD);
+
+    \coordinate (A) at (6,-2);
+		\coordinate (B) at (10,-2);
+		\coordinate (C) at (10,2);
+		\coordinate (D) at (6,2);
+    \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+    \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+    \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+    \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+    \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|0$} (QA);
+    \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|2$} (QB);
+    \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|1$} (QD);
+    \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|2$} (QA);
+    \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|1$} (QB);
+    \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|0$} (QC);
+    \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
+    \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|1$} (QC);
+    \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|2$} (QD);
+    \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
+    \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|2$} (QC);
+    \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
     \end{tikzpicture}
     \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques}
   \end{figure}
