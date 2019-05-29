@@ -436,7 +436,45 @@ M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty} qui est, 
 
 \begin{center}
   \begin{figure}[h]
-    ====> INSERER GRAPHE EN HELICE AUGMENTE TIKZ <====
+    \begin{center}
+    \begin{tikzpicture}
+    \coordinate (A) at (-1,-1);
+		\coordinate (B) at (1,-1);
+		\coordinate (C) at (1,1);
+    \coordinate (D) at (-1,1);
+
+    \coordinate (P1) at (-3,0);
+		\coordinate (P2) at (3,0);
+		\coordinate (PA) at (0,-3);
+    \coordinate (PB) at (0,3);
+    
+    \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$1|a$};
+    \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$2|a$};
+    \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$2|b$};
+    \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$1|b$};
+
+    \node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F1) at (P1) {$1$};
+    \node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F2) at (P2) {$2$};
+    \node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FA) at (PA) {$a$};
+    \node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FB) at (PB) {$b$};
+
+    \draw[->,>=latex] (QA) to[bend right] (QB);
+    \draw[->,>=latex] (QB) to[bend right] (QC);
+    \draw[->,>=latex] (QC) to[bend right] (QD);
+    \draw[->,>=latex] (QD) to[bend right] (QA); 
+
+    \draw[->,>=latex] (F1) to[bend right] (QA);
+    \draw[->,>=latex] (F1) to[bend left] (QD);
+    \draw[->,>=latex] (F2) to[bend left] (QB);
+    \draw[->,>=latex] (F2) to[bend right] (QC); 
+
+    \draw[->,>=latex] (FA) to[bend right] (QB);
+    \draw[->,>=latex] (FA) to[bend left] (QA);
+    \draw[->,>=latex] (FB) to[bend left] (QC);
+    \draw[->,>=latex] (FB) to[bend right] (QD); 
+
+    \end{tikzpicture}
+    \end{center}
     \caption{graphe en hélice augmenté de l'automate xx}
   \end{figure}
 \end{center}
@@ -570,7 +608,7 @@ Nous en avons déduit que...
 Nous avons ensuite cherché dans des classes plus grandes que celles abordées jusqu'alors de trouver des automates \textit{fantastiques}.
 
 \begin{definition}
-  Un automate est \textbf{\textit{fantastique}} s'il n'est pas $\mathfrak{md}$-trivial et $\mathfrak{mdc}$-trivial.
+  Un automate est \textbf{\textit{fantastique}} s'il est pas $\mathfrak{mdc}$-trivial mais pas $\mathfrak{md}$-trivial.
 \end{definition}
 
 La factorisation est une opération couteuse, pour tester la $\mathfrak{mdc}$-réduction il est donc préférable d'énumérer les classes de diviseurs et de faire tous les produits. On trouve ainsi tous les automates fantastiques d'une classe à isomorphisme près.
