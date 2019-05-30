@@ -12,26 +12,35 @@ import matplotlib.pyplot as plt
 
 class SomeThread(threading.Thread):
 
-    def __init__(self, i, f, cans):
+    def __init__(self, id, f, cans, n):
         threading.Thread.__init__(self)
-        self.i = i
+        self.id = id
         self.count = 0
         self.action = f
         self.cans = cans
+        self.n = n
 
     def run(self):
         readLock.acquire()
-        for a in self.cans:
+        for m in self.cans:
             readLock.release()
             self.count += 1
-            print(self.i, "Start", self.count)
-            if a.bireversible():
-                print("OK")
+            print(self.id, "-", self.count)
+            # print(m)
+            ordonne = mealy.mass(m, self.n)
+
+            if m.is_md_trivial():
+                data_trivial_lock.acquire()
+                data_trivial.append(ordonne)
+                data_trivial_lock.release()
             else:
-                print("PANIC")
+                data_not_trivial_lock.acquire()
+                data_not_trivial.append(ordonne)
+                data_not_trivial_lock.release()
+            # print(data)
             readLock.acquire()
         readLock.release()
-            # self.action(a)
+        # self.action(a)
 
 
 def mdc_reduce(machine):
@@ -205,17 +214,37 @@ def conjecture_mass():
 def truc(m):
     print(m)
 
-def main():
+
+def main(n):
     threads = []
     cans = read_canonics(sys.argv[1])
     for i in range(4):
-        thread = SomeThread(i, truc, cans)
+        thread = SomeThread(i, truc, cans, n)
         thread.start()
         threads.append(thread)
     for t in threads:
         t.join()
     print("Exiting Main Thread")
 
+
 if __name__ == "__main__":
     readLock = threading.Lock()
-    main()
+    data_trivial_lock = threading.Lock()
+    data_not_trivial_lock = threading.Lock()
+    data_trivial = []
+    data_not_trivial = []
+    borne = 7
+    main(borne)
+
+    plt.figure(1)
+    plt.subplot(1, 2, 1)
+    x = list(range(1, borne+1))
+    for y in data_trivial:
+        plt.plot(x, y, '-o')
+    plt.title("Mass md-trivials")
+
+    plt.subplot(1, 2, 2)
+    for y in data_not_trivial:
+        plt.plot(x, y, '-o')
+    plt.title("Mass md-not-trivials")
+    plt.show()

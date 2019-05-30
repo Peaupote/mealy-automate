@@ -387,6 +387,7 @@ def mass(m, n):
     current = m
     size = []
     for i in range(n):
+        current = current.minimize()
         if i > 0 and current.nb_states == size[-1]:
             size.extend([current.nb_states] * (n - i))
             return size
