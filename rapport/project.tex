@@ -216,7 +216,7 @@ Ce théorème ne se généralise pas aux biréversibles en général.
 \begin{center}
   \begin{figure}[h]
     \makebox[\textwidth][c]{
-      \begin{tikzpicture}[scale=0.7]
+      \begin{tikzpicture}[scale=0.75]
 
         \coordinate (A) at (-10,-2);
         \coordinate (B) at (-6,-2);
@@ -363,7 +363,7 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
   On suppose $\mathcal{A}$ inversible.
 
 
-  Par définition $\delta''_x(pr)=(\delta_x(p), \delta'_{\rho_p(x)}(r))$. Or, puisque les automates sont réversibles, les $(\delta_x)_{x\in\Sigma}$ et ${(\delta'_x)}_{x\in\Sigma}$ sont des bijections. De plus, $\mathcal{A}$ esr inversible donc les ${(\rho_p)}_{p\in \mathcal{Q}}$ sont des bijections. On en conclut que les ${(\delta''_{pr})}_{pr\in\mathcal{Q}\times\mathcal{Q'}}$ sont aussi des bijections.
+  Par définition $\delta''_x(pr)=(\delta_x(p), \delta'_{\rho_p(x)}(r))$. Or, puisque les automates sont réversibles, les $(\delta_x)_{x\in\Sigma}$ et ${(\delta'_x)}_{x\in\Sigma}$ sont des bijections. De plus, $\mathcal{A}$ est inversible donc les ${(\rho_p)}_{p\in \mathcal{Q}}$ sont des bijections. On en conclut que les ${(\delta''_{pr})}_{pr\in\mathcal{Q}\times\mathcal{Q'}}$ sont aussi des bijections.
 \end{proof}
 
 \begin{prop}[Clôture des inversibles par facteurs]\label{prop_cloture_inv_facteurs}
@@ -515,7 +515,7 @@ M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty}\cite{Naut
 
 \begin{figure}[h]
   \begin{center}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.8]
       \coordinate (A) at (-1,-1);
       \coordinate (B) at (1,-1);
       \coordinate (C) at (1,1);
@@ -561,7 +561,7 @@ Pour calculer les isomorphismes entre les graphes \textrm{Nauty} associe à un g
 Nauty permet de préciser des classes d'équivalence sur les sommets du graphe qui doivent êtres préservés lors du passage à la forme canonique. Les sommets correspondants aux états, aux lettres et au graphe en hélice simple représente trois classes (correspondant aux couleurs sur la figure \ref{fig:helix-aug}) qui ne doivent pas être mélangées les unes avec les autres par \textrm{Nauty}.
 
 \subsubsection*{Quelques optimisations conséquentes}
-Nous avions commencé par implémenter la génération en \textrm{Python} mais nous avions trois inconvénients majeurs
+Nous avions commencé par implémenter la génération en \textrm{Python} mais nous avions deux inconvénients majeurs :
 \begin{itemize}
 \item La complexité en temps.
 \item \textrm{Nauty} ne dispose pas d'interface efficace en python.
@@ -632,6 +632,7 @@ Le test de la forme canonique ne nécessitant le parcours d'aucune structure de 
 
 On constate que Nauty ralenti très significativement le temps d'execution.
 
+\newpage
 \subsection{Algorithme de factorisation\label{sec:facto}}
 
   Notons $\mathcal{Q}$ les états de $\mathcal{A}$, $\mathcal{Q'}$ les états de $\mathcal{B}$ et $\mathcal{Q''}$ les états de $\mathcal{M}$. On remarque que tel qu'a été définit le produit (définition \ref{def:produit}) les états de $\mathcal{AB}$ sont des éléments de $\mathcal{Q}\times\mathcal{Q'}$.
@@ -691,7 +692,7 @@ Un critère simple pour étudier la finitude d'un automate est d'étudier sa fon
 
 La proposition \ref{prop:mass} nous donne dont un critère de semi-décidabilité sur la finitude du groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états sucessifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations couteuse (de complexités respectives $\mathcal{O}\left(\Sigma\mathcal{Q}\log\mathcal{Q}\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répetter de nombreuses fois.
 
-Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction marche dans des cas où la factorisation est impossible -- ie. quand le nombre d'état et de lettre est premier.
+Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction semble fonctionner dans des cas où la factorisation est impossible -- ie. quand le nombre d'état et de lettre est premier.
 
 Nous avons donc généré les fonctions de masses des automates à 3 états, 3 lettres (figure \ref{fig:mass-33}) et 5 états, 3 lettres (figure \ref{fig:mass-53}).
 
