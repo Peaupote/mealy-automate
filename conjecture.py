@@ -5,42 +5,9 @@ import factor
 import generator
 import sys
 import time
-import threading
+import os
 
 import matplotlib.pyplot as plt
-
-
-class SomeThread(threading.Thread):
-
-    def __init__(self, id, f, cans, n):
-        threading.Thread.__init__(self)
-        self.id = id
-        self.count = 0
-        self.action = f
-        self.cans = cans
-        self.n = n
-
-    def run(self):
-        readLock.acquire()
-        for m in self.cans:
-            readLock.release()
-            self.count += 1
-            print(self.id, "-", self.count)
-            # print(m)
-            ordonne = mealy.mass(m, self.n)
-
-            if m.is_md_trivial():
-                data_trivial_lock.acquire()
-                data_trivial.append(ordonne)
-                data_trivial_lock.release()
-            else:
-                data_not_trivial_lock.acquire()
-                data_not_trivial.append(ordonne)
-                data_not_trivial_lock.release()
-            # print(data)
-            readLock.acquire()
-        readLock.release()
-        # self.action(a)
 
 
 def mdc_reduce(machine):
@@ -181,70 +148,93 @@ def conjecture():
     print("Mdc but not md   {:>10} / {:>10}".format(len(t), i))
     print("Not trivial      {:>10} / {:>10}".format(countelse, i))
 
+n = 4
+size = 1500
 
-def conjecture_mass():
-    if len(sys.argv) < 2:
-        print("usage: {} fname".format(sys.argv[0]), file=sys.stderr)
-        sys.exit(1)
+def conjecture_mass(fname):
+    #if len(sys.argv) < 2:
+    #    print("usage: {} fname".format(sys.argv[0]), file=sys.stderr)
+    #    sys.exit(1)
 
-    n = 4
     x = list(range(1, n+1))
+    out = open(fname + ".out", "wb")
 
-    plt.figure(1)
+    for i, m in enumerate(read_canonics(fname)):
+        if i % 100 == 0:
+            print("Machine", i)
 
-    for i, m in enumerate(read_canonics(sys.argv[1])):
-        print("Machine", i, end='\r')
-        y = mealy.mass(m, n)
-        if m.is_md_trivial():
-            plt.subplot(1, 2, 1)
-        else:
-            plt.subplot(1, 2, 2)
-        plt.plot(x, y, '-o')
+        info = 1 if m.is_md_trivial() else 0
+        out.write(y.to_bytes(1, byteorder='little'))
 
-    print("done.")
-    plt.subplot(1, 2, 1)
-    plt.title("Mass md-trivials")
+        for y in mealy.mass(m, n):
+            out.write(y.to_bytes(4, byteorder='little'))
 
-    plt.subplot(1, 2, 2)
-    plt.title("Mass md-not-trivials")
-
-    plt.show()
+    out.close()
 
 
-def truc(m):
-    print(m)
+def split_file(fname, nb):
+    f = open(fname, "rb")
+    frags = []
 
+    nb_states = int.from_bytes(f.read(1), byteorder='little')
+    nb_letters = int.from_bytes(f.read(1), byteorder='little')
+    print("states", nb_states)
+    print("letters", nb_letters)
 
-def main(n):
-    threads = []
-    cans = read_canonics(sys.argv[1])
-    for i in range(4):
-        thread = SomeThread(i, truc, cans, n)
-        thread.start()
-        threads.append(thread)
-    for t in threads:
-        t.join()
-    print("Exiting Main Thread")
+    while True:
+        machines = f.read(nb_states * nb_letters * 2 * nb)
+        if not machines:
+            f.close()
+            return frags
 
+        frag_name = "/tmp/mealy_fragment" + str(time.time())
+        frag = open(frag_name, "wb")
+        frag.write(bytes([nb_states, nb_letters]))
+        frag.write(machines)
+        frag.close()
+
+        frags.append(frag_name)
 
 if __name__ == "__main__":
-    readLock = threading.Lock()
-    data_trivial_lock = threading.Lock()
-    data_not_trivial_lock = threading.Lock()
-    data_trivial = []
-    data_not_trivial = []
-    borne = 7
-    main(borne)
+    print("n", n)
+    print("frag size", size)
 
-    plt.figure(1)
-    plt.subplot(1, 2, 1)
-    x = list(range(1, borne+1))
-    for y in data_trivial:
-        plt.plot(x, y, '-o')
-    plt.title("Mass md-trivials")
+    frags = split_file(sys.argv[1], size)
+    print(len(frags))
 
-    plt.subplot(1, 2, 2)
-    for y in data_not_trivial:
-        plt.plot(x, y, '-o')
-    plt.title("Mass md-not-trivials")
-    plt.show()
+    max_fork = 4
+    fork_count = 0
+    outs = []
+
+    for fname in frags:
+        if fork_count >= max_fork:
+            os.wait()
+
+        if os.fork() == 0:
+            conjecture_mass(fname)
+            os.remove(fname)
+            sys.exit(0)
+        else:
+            fork_count += 1
+
+    for i in range(max_fork):
+        os.wait()
+
+    print("All done")
+    print("Reassemble files")
+
+    out = open(sys.argv[1] + ".out", "wb")
+    out.write(n.to_bytes(1, byteorder='little'))
+
+    for fname in frags:
+        fragout = open(fname + ".out", "rb")
+        while True:
+            buf = fragout.read(4 * n + 1)
+            if not buf:
+                fragout.close()
+                break
+
+            out.write(buf)
+
+        os.remove(fname + ".out")
+    out.close()
