@@ -38,9 +38,13 @@
 
 
 \section*{Introduction}
-Blablabla automate
+Les automates de Mealy sont une extension des automates qui écrivent des mots en même temps qu'ils en lisent. À partir de l'action de ces automates sur un ensemble de mot, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes on peut travailler sur des constructions spécifiques à la structure sous jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
 
-\newpage
+Le problème de théorie des groupes auquel nous nous intéressont ici le problème de finitude, c'est à dire savoir si un groupe engendré par un automate est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates. Cependant Klimann\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
+
+Avec M. Picantin, nous aimerions étendre ce résultat aux automates de plus de deux lettres mais il ne semble pas correct pour les automates à 4 états et 3 lettres (voir les 4 contres exemples figure \ref{fig:fantastiques}). Cepedant M. Picantin a remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quand à lui $\mathfrak{md}$-trivial. Nous nous sommes basé sur cet exemple pour fonder la conjecture \ref{conj:birev-mdc} qui a fait tout l'objet de notre recherche.
+
+Pour tenter d'infirmer ou de se convaincre de la justesse de cette conjecture nous avons à la fois fait un travail théorique pour se convaincre de son bien fondé (sections \ref{sec:action} et \ref{sec:cloture}) et en même temps avons été amené à imaginer et implémenter des techniques efficaces pour générer les classes d'automates qui nous intéressent (section \ref{sec:gen}) et les factoriser (section \ref{sec:facto}) -- question sur laquelle aucun vrai résultat n'existe encore. À partir de ces résultats nous avons ensuite essayé de determiner si la $\mathfrak{mdc}$-réduction fournit un bon critère de finitude pour des classes d'automates plus grandes (section \ref{sec:finitude}).
 
 \section{Automates de Mealy}
 
@@ -279,7 +283,7 @@ Ce théorème ne se généralise pas aux biréversibles en général.
         \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
       \end{tikzpicture}
     }
-    \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques. Le 4eme est l'inverse du premier.}
+    \caption{Contre exemple à une génélisation du théorème \ref{thm:K}, aka Les 4 fantastiques. Le 4eme est l'inverse du premier.\label{fig:fantastiques}}
   \end{figure}
 \end{center}
 
@@ -331,7 +335,7 @@ On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref
 La génération et la factorisation d'automates de Mealy est un problème pour lequel aucune solution efficace n'existe pour l'instant. Dans le but de pouvoir infirmer ou consolider la conjecture \ref{conj:birev-mdc}, une partie de notre travail a été d'essayer de trouver et d'implémenter des méthodes de génération et de factorisation efficaces pour les automates de Mealy biréversibles.
 
 
-\subsection{Clôture de classes d'automates}
+\subsection{Clôture de classes d'automates\label{sec:cloture}}
 
 Puisque nous nous interéssont à la classe des automates biréversibles, montrons qu'elle est bien close par les opérations qui nous interésse, ie. la dualisation, la minimisation, le produit et la factorisation.
 
@@ -353,9 +357,6 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
 \end{prop}
 
 \begin{proof}
-  DOUTEUX.
-
-
   Soient $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B}=\left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates réversibles, et soit $\mathcal{A\cdot B}=\left(\mathcal{Q\times Q'}, \Sigma, \delta'', \rho''\right)$ leur produit.
 
 
@@ -477,7 +478,7 @@ def rec(start, prev, sources, targets, delta, rho):
         # on a fini la génération et on retourne l'automate
         return delta, rho
 
-    # si aucun sommet ne précède dans le cycle
+    # s'il n'y a pas de précédent on commence un nouveau cycle
     # alors on choisit un sommets dans les sources
     # et on commence un nouveau cycle
     if not prev:
@@ -498,8 +499,7 @@ def rec(start, prev, sources, targets, delta, rho):
         # inversible-réversible et si c'est le cas
         # on lance la récursion pour explorer cette direction
         if valid_delta(delta) and valid_rho(rho):
-          res = rec(None, None, sources,
-                   targets, delta, rho)
+          res = rec(...)
 
     [...]
 
@@ -509,57 +509,56 @@ def rec(start, prev, sources, targets, delta, rho):
 
 \subsubsection*{À isomorphisme près}
 
-On a rapidement constaté que le nombre d'automates a générer est très important. Aussi, il ne semble pas réaliste de tester la $\mathfrak{mdc}$-réduction sur tout ceux-ci. On a donc cherché à extraire seulement les classes d'isomorphismes de notre génération.
+On a rapidement constaté que le nombre d'automates a générer est très important. Aussi, il ne semble pas réaliste de tester la $\mathfrak{mdc}$-réduction sur tout ceux-ci. On a donc cherché à extraire seulement les classes d'isomorphismes au sens de Nérode de notre génération.
 
 M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty}\cite{Nauty} qui est, semble-t'il, la plus efficace. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un isomorphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permutte sur tous les sommets du graphe en hélice.
 
-
-  \begin{figure}
-    \begin{center}
+\begin{figure}[h]
+  \begin{center}
     \begin{tikzpicture}[scale=0.8]
-    \coordinate (A) at (-1,-1);
-        \coordinate (B) at (1,-1);
-        \coordinate (C) at (1,1);
-    \coordinate (D) at (-1,1);
+      \coordinate (A) at (-1,-1);
+      \coordinate (B) at (1,-1);
+      \coordinate (C) at (1,1);
+      \coordinate (D) at (-1,1);
 
-    \coordinate (P1) at (-3,0);
-        \coordinate (P2) at (3,0);
-        \coordinate (PA) at (0,-3);
-    \coordinate (PB) at (0,3);
+      \coordinate (P1) at (-3,0);
+      \coordinate (P2) at (3,0);
+      \coordinate (PA) at (0,-3);
+      \coordinate (PB) at (0,3);
 
-    \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$1|a$};
-    \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$2|a$};
-    \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$2|b$};
-    \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$1|b$};
+      \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$1|a$};
+      \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$2|a$};
+      \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$2|b$};
+      \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$1|b$};
 
-    \node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F1) at (P1) {$1$};
-    \node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F2) at (P2) {$2$};
-    \node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FA) at (PA) {$a$};
-    \node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FB) at (PB) {$b$};
+      \node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F1) at (P1) {$1$};
+      \node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F2) at (P2) {$2$};
+      \node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FA) at (PA) {$a$};
+      \node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FB) at (PB) {$b$};
 
-    \draw[->,>=latex] (QA) to[bend right] (QB);
-    \draw[->,>=latex] (QB) to[bend right] (QC);
-    \draw[->,>=latex] (QC) to[bend right] (QD);
-    \draw[->,>=latex] (QD) to[bend right] (QA);
+      \draw[->,>=latex] (QA) to[bend right] (QB);
+      \draw[->,>=latex] (QB) to[bend right] (QC);
+      \draw[->,>=latex] (QC) to[bend right] (QD);
+      \draw[->,>=latex] (QD) to[bend right] (QA);
 
-    \draw[->,>=latex] (F1) to[bend right] (QA);
-    \draw[->,>=latex] (F1) to[bend left] (QD);
-    \draw[->,>=latex] (F2) to[bend left] (QB);
-    \draw[->,>=latex] (F2) to[bend right] (QC);
+      \draw[->,>=latex] (F1) to[bend right] (QA);
+      \draw[->,>=latex] (F1) to[bend left] (QD);
+      \draw[->,>=latex] (F2) to[bend left] (QB);
+      \draw[->,>=latex] (F2) to[bend right] (QC);
 
-    \draw[->,>=latex] (FA) to[bend right] (QB);
-    \draw[->,>=latex] (FA) to[bend left] (QA);
-    \draw[->,>=latex] (FB) to[bend left] (QC);
-    \draw[->,>=latex] (FB) to[bend right] (QD);
+      \draw[->,>=latex] (FA) to[bend right] (QB);
+      \draw[->,>=latex] (FA) to[bend left] (QA);
+      \draw[->,>=latex] (FB) to[bend left] (QC);
+      \draw[->,>=latex] (FB) to[bend right] (QD);
 
     \end{tikzpicture}
-    \end{center}
-    \caption{graphe en hélice augmenté de l'automate xx}
-  \end{figure}
+  \end{center}
+  \caption{graphe en hélice augmenté de l'automate xx\label{fig:helix-aug}}
+\end{figure}
 
-Pour calculer les isomorphismes entre les graphes \textrm{Nauty} associe à un graphe \textit{\textbf{une forme canonique}}, ie. un graphe représentant de sa classe d'isomorphisme. Nous prenons donc comme représentant des classes d'isomorphismes de machine de Mealy celles sont une forme canonique au sens de \textrm{Nauty}. Lors de la génération nous nous contentons de calculer la forme canonique du graphe en hélice augmenté puis de tester s'il laisse les lettres et les états inchangés. Auquel cas, il est canonique.
+Pour calculer les isomorphismes entre les graphes \textrm{Nauty} associe à un graphe \textit{\textbf{une forme canonique}}, ie. un graphe représentant de sa classe d'isomorphisme. Nous prenons donc comme représentant des classes d'isomorphismes de machine de Mealy celles qui sont une forme canonique au sens de \textrm{Nauty}. Lors de la génération nous nous contentons de calculer la forme canonique du graphe en hélice augmenté puis de tester s'il laisse les lettres et les états inchangés. Auquel cas, il est canonique.
 
-Nauty permet de préciser des classes d'équivalence sur les sommets du graphe qui doivent êtres préservés lors du passage à la forme canonique. Les sommets correspondants aux états, aux lettres et au graphe en hélice simple représente trois classes qui ne doivent pas être mélangées les unes avec les autres par \textrm{Nauty}.
+Nauty permet de préciser des classes d'équivalence sur les sommets du graphe qui doivent êtres préservés lors du passage à la forme canonique. Les sommets correspondants aux états, aux lettres et au graphe en hélice simple représente trois classes (correspondant aux couleurs sur la figure \ref{fig:helix-aug}) qui ne doivent pas être mélangées les unes avec les autres par \textrm{Nauty}.
 
 \subsubsection*{Quelques optimisations conséquentes}
 Nous avions commencé par implémenter la génération en \textrm{Python} mais nous avions deux inconvénients majeurs :
@@ -574,36 +573,67 @@ Le test de la forme canonique ne nécessitant le parcours d'aucune structure de 
 
 \subsubsection*{Quelques benchmarks}
 
-\begin{center}
-  \begin{table}[h!]
+\begin{table}[h!]
+  \begin{center}
     \begin{threeparttable}
-    \begin{tabular}{|rrrrrr|}
-      \hline
-      \#états & \#lettres & 1 & 2 & 3 & \#biréversibles \\ [0.5ex]
-      \hline\hline
-      2 & 2 & 0.002s & 0.003s & 0.004s & 12 \\
-      \hline
-      3 & 2 & 0.003s & 0.003s & 0.002s & 144 \\
-      \hline
-      3 & 3 & 0.011s & 0.086s & 0.005s & 8 784 \\
-      \hline
-      4 & 3 & 0.830s & 28.018s & 0.368s & 1 092 096 \\
-      \hline
-      4 & 4 & 24:06.15s & trop long & 11:16.96s & 1 031 000 000 \\
-      \hline
-    \end{tabular}
+      \begin{tabular}{|rrrr|}
+        \hline
+        \#états & \#lettres & Temps d'execution & \#biréversibles \\ [0.5ex]
+        \hline\hline
+        2 & 2 & 0.002s & 12 \\
+        \hline
+        3 & 2 & 0.003s & 144 \\
+        \hline
+        3 & 3 & 0.011s & 8 784 \\
+        \hline
+        4 & 3 & 0.156s & 1 092 096 \\
+        \hline
+        5 & 3 & 21s    & 16 128 000 \\
+        \hline
+        4 & 4 & 1m51s  & 1 031 000 000 \\
+        \hline
+        6 & 3 & 145m44s& 9 848 143 872 \\
+        \hline
+      \end{tabular}
 
-    \caption{Benchmark génération d'automates biréversibles}
-    \begin{tablenotes}
-    \item[1] Temps sans nauty sans fork
-    \item[2] Temps avec nauty sans fork
-    \item[3] Temps sans nauty avec fork
-    \end{tablenotes}
-\end{threeparttable}
-  \end{table}
-\end{center}
+      \caption{Benchmark génération d'automates biréversibles}
+    \end{threeparttable}
+  \end{center}
+\end{table}
 
-\subsection{Algorithme de factorisation}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{threeparttable}
+      \begin{tabular}{|rrrr|}
+        \hline
+        \#états & \#lettres & Temps d'execution & \#biréversibles \\ [0.5ex]
+        \hline\hline
+        2 & 2 & 0.002s & 8 \\
+        \hline
+        3 & 2 & 0.003s & 28 \\
+        \hline
+        3 & 3 & 0.011s & 335  \\
+        \hline
+        4 & 3 & 2.59s & 8 605 \\
+        \hline
+        5 & 3 & 12m34s    & 347 752 \\
+        \hline
+        4 & 4 & 56min34s  & 1 831 488 \\
+        \hline
+        6 & 3 & $\infty$  &  \\
+        \hline
+      \end{tabular}
+
+      \caption{Benchmark génération d'automates biréversibles à isomorphisme près}
+    \end{threeparttable}
+  \end{center}
+\end{table}
+
+On constate que Nauty ralenti très significativement le temps d'execution.
+
+\newpage
+\subsection{Algorithme de factorisation\label{sec:facto}}
 
   Notons $\mathcal{Q}$ les états de $\mathcal{A}$, $\mathcal{Q'}$ les états de $\mathcal{B}$ et $\mathcal{Q''}$ les états de $\mathcal{M}$. On remarque que tel qu'a été définit le produit (définition \ref{def:produit}) les états de $\mathcal{AB}$ sont des éléments de $\mathcal{Q}\times\mathcal{Q'}$.
 
@@ -643,7 +673,7 @@ On remarque alors, que connaissant $\mathcal{M}$, la seule donnée inconnue de l
 
 On peut borner grossièrement la complexité en temps de l'algorithme par $\mathcal{O}(|\mathcal{Q''}|!\left(|\mathcal{Q''}||\Sigma|\right)^2)$.
 
-\section{Avancées sur le problème de finitude}
+\section{Avancées sur le problème de finitude\label{sec:finitude}}
 
 \subsection{$\mathfrak{md}$-triviaux dans des classes d'automates irréductibles}
 
@@ -660,7 +690,7 @@ Un critère simple pour étudier la finitude d'un automate est d'étudier sa fon
   Si la fonction de masse d'une machine de Mealy $\mathcal{A}$ est bornée, alors $\left<\mathcal{A}\right>$ est fini.
 \end{prop}
 
-La proposition \ref{prop:mass} nous donne dont un critère de semi-décidabilité sur la finitude du groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états sucessifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations couteuse (de complexités respectives $\mathcal{O}\left(\Sigma\log\Sigma\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répetter de nombreuses fois.
+La proposition \ref{prop:mass} nous donne dont un critère de semi-décidabilité sur la finitude du groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états sucessifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations couteuse (de complexités respectives $\mathcal{O}\left(\Sigma\mathcal{Q}\log\mathcal{Q}\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répetter de nombreuses fois.
 
 Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction semble fonctionner dans des cas où la factorisation est impossible -- ie. quand le nombre d'état et de lettre est premier.
 
@@ -710,9 +740,10 @@ La factorisation est une opération couteuse, pour tester la $\mathfrak{mdc}$-r�
   \end{center}
 \end{table}
 
-On a ensuite essayé de déterminer la finitude des groupes engendrés par ces automates. Nous avons trouvé que....
 
-Pour pouvoir valider l'hypothèse, il faut aussi s'assurer qu'aucun automate non $\mathfrak{mdc}$-trivial n'engendre du fini.
+Pour essayer de se convaincre que notre conjecture est correcte, il faut aussi s'assurer qu'aucun automate non $\mathfrak{mdc}$-trivial n'engendre du fini.
+
+Nous avons donc considéré la borne supérieure du nombre d'états des $\mathfrak{m}(\mathcal{M}^5)$ où $\mathcal{M}$ est une machine biréversible à 4 états 3 lettres ou 4 états 4 lettres $\mathfrak{mdc}$-triviale puis vérifié que la fonction de masse des automates non $\mathfrak{mdc}$-triviaux dépasse bien cette borne. Bien que ce résultat ne prouve rien, il reste encourageant.
 
 
 \section{Conclusions}
