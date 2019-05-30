@@ -1,5 +1,3 @@
-LATEX = pdflatex
-BIB = bibtex
 CC = gcc
 FLAGS = -O3 -g -Wall
 LIBS = -I nauty26r11 -L nauty26r11
@@ -29,11 +27,8 @@ prettyprint: utils.o prettyprint.o
 	@echo "Generate executable prettyprint"
 	@$(CC) $(FLAGS) utils.o $(DEPS) prettyprint.o -o prettyprint $(LIBS)
 
-report: rapport/project.tex rapport/project.bib
-	@echo "Compiling latex report"
-	@$(LATEX) rapport/project
-	@$(BIB)   rapport/project
-	@$(LATEX) rapport/project
+report:
+	$(MAKE) -C rapport
 
 clean:
 	@echo "Clean executable"

@@ -30,12 +30,6 @@
 
 \begin{document}
 \maketitle
-\begin{abstract}
-  Les automates de Mealy sont une extension des automates qui écrivent des mots en même temps qu'ils en lisent. En étudiant leur action sur un ensemble de mot, on peut dégager une structure de (semi-)groupe engendré par l'automate.
-
-  Le problème qui nous intéresse ici est de pouvoir décider si un automate de Mealy engendre une structure finie ou infinie. Ce problème, qui est indécidable en général, semble abordable pour des classes d'automates plus réduites. En suivant la voie ouverte par \citeauthor{Klimann13}, nous avons essayé de généraliser son résultat en ajoutant la conjugaison à la $\mathfrak{md}$-réduction.
-\end{abstract}
-
 
 \section*{Introduction}
 Les automates de Mealy sont une extension des automates qui écrivent des mots en même temps qu'ils en lisent. À partir de l'action de ces automates sur un ensemble de mot, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes on peut travailler sur des constructions spécifiques à la structure sous jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
@@ -443,7 +437,7 @@ Avant de faire la démonstration, rappelons un résultat élémentaire qui nous 
 
 \subsection{Algorithme de génération des biréversibles\label{sec:gen}}
 
-\subsubsection*{Représentation des machines de Mealy en mémoire(inutile?)}
+\subsubsection*{Représentation des machines de Mealy en mémoire}
 Les machines de Mealy sont représenté en mémoire par deux matrices \textrm{delta} et \textrm{rho}, l'une représentant les $(\delta_x)_{x\in\Sigma}$ et l'autre les $(\rho_p)_{p\in\mathcal{Q}}$. Dans les deux cas les lignes des matrices sont indicées par les états et les colonnes par les lettres.
 
 \begin{enumerate}[(i)]
