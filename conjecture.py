@@ -3,9 +3,29 @@
 import mealy
 import factor
 import generator
-import sys
+import sys, time, threading
 
 import matplotlib.pyplot as plt
+
+class SomeThread(threading.Thread):
+
+    def __init__(self, i, f):
+        threading.Thread.__init__(self)
+        self.i = i
+        self.count = 0
+        self.action = f
+
+    def run(self):
+        while True:
+            self.count += 1
+            print(self.i, "Start", self.count)
+
+            a = read_canonics(sys.argv[0])
+            if not a:
+                return
+
+            self.action(a)
+
 
 def mdc_reduce(machine):
     stack = [machine]
@@ -172,12 +192,9 @@ def conjecture_mass():
 
     plt.show()
 
+def truc(m):
+    print(m)
+
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("usage: {} fname".format(sys.argv[0]), file=sys.stderr)
-        sys.exit(1)
-
-    for i, m in enumerate(read_canonics(sys.argv[1])):
-        print("Machine", i, end='\r')
-
-    print("total count", i)
+    for i in range(4):
+        SomeThread(i, truc).start()
