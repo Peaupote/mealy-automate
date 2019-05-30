@@ -370,7 +370,7 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
 \end{prop}
 
 Avant de faire la démonstration, rappelons un résultat élémentaire qui nous sera utile.
-\begin{lemma}
+\begin{lemma}\label{lem:bij}
   Soit $f:A\rightarrow B$ et $g:B\rightarrow C$ deux fonctions telles que $g\circ f$ soit une bijection.
   Alors
   \begin{enumerate}[(i)]
@@ -391,12 +391,14 @@ Avant de faire la démonstration, rappelons un résultat élémentaire qui nous 
   \end{enumerate}
 \end{proof}
 
-\begin{proof}
+\begin{proof}[Démonstration de la proposition \ref{prop_cloture_inv_facteurs}]
   Soient $\mathcal{A}=\left(\mathcal{Q\cdot Q'}, \Sigma, \delta, \rho\right)$, $\mathcal{A}_1=\left(\mathcal{Q}, \Sigma, \delta', \rho'\right)$ et $\mathcal{A}_2=\left(\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ tel que ci dessus.
 
   Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in \mathfrak{S}(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho'_r\circ\rho''_p$.
 
-  Or $\rho_{(p, r)}$ est une bijection donc $\rho'_r$ est sujective et $\rho''_p$ est injective (lemme \ref{lem:bij}).
+  Or $\rho_{(p, r)}$ est une bijection donc $\rho'_r$ est sujective et $\rho''_p$ est injective (lemme \ref{lem:bij}). Or puisque ce sont des fonctions de $\Sigma$ dans $\Sigma$ qui est fini on a l'équivalence
+  \[ injective \iff surjective \iff bijective. \]
+  D'où le résultat.
 \end{proof}
 
 \begin{prop}\label{prop_inverse_produit}
@@ -405,7 +407,9 @@ Avant de faire la démonstration, rappelons un résultat élémentaire qui nous 
 \end{prop}
 
 \begin{proof}
-  TODO
+  Notons $\rho$, $\rho_1$ et $\rho_2$ les fonctions associées aux machines $\mathcal{A}$, $\mathcal{A}_1$ et $\mathcal{A}_2$. Alors par définition \[ \rho = \rho_2\circ\rho_1 \] et donc que \[ \rho^{-1} = \left(\rho_2\circ\rho_1\right)^{-1} = \rho_1^{-1}\circ\rho_2^{-1}. \]
+
+  $\rho_1^{-1}$ et $\rho_2^{-1}$ sont bien définies puisqu'on a montré précedémment (prop \ref{prop_cloture_inv_facteurs}) que les automates inversibles étaient clos par facteurs.
 \end{proof}
 
 \begin{prop}[Clôture des réversibles par facteurs]\label{prop_cloture_rev_facteurs}
