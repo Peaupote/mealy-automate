@@ -40,11 +40,11 @@
 \section*{Introduction}
 Les automates de Mealy sont une extension des automates qui écrivent des mots en même temps qu'ils en lisent. À partir de l'action de ces automates sur un ensemble de mot, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes on peut travailler sur des constructions spécifiques à la structure sous jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
 
-Le problème de théorie des groupes auquel nous nous intéressont ici le problème de finitude, c'est à dire savoir si un groupe engendré par un automate est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates. Cependant Klimann dans \cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
+Le problème de théorie des groupes auquel nous nous intéressont ici le problème de finitude, c'est à dire savoir si un groupe engendré par un automate est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates. Cependant Klimann\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
 
 Avec M. Picantin, nous aimerions étendre ce résultat aux automates de plus de deux lettres mais il ne semble pas correct pour les automates à 4 états et 3 lettres (voir les 4 contres exemples figure \ref{fig:fantastiques}). Cepedant M. Picantin a remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quand à lui $\mathfrak{md}$-trivial. Nous nous sommes basé sur cet exemple pour fonder la conjecture \ref{conj:birev-mdc} qui a fait tout l'objet de notre recherche.
 
-Pour tenter d'infirmer ou de se convaincre de la justesse de cette conjecture nous avons à la fois fait un travail théorique pour se convaincre du bien fondé de cette conjecture (sections \ref{sec:action} et \ref{sec:cloture}) et en même temps avons été amené à imaginer et implémenter des techniques efficaces pour générer les classes d'automates qui nous intéressent (section \ref{sec:gen}) et les factoriser (section \ref{sec:facto}) -- question sur laquelle aucun vrai résultat n'existe encore. À partir de ces résultats nous avons ensuite essayé de determiner si la $\mathfrak{mdc}$-réduction fournit un bon critère de finitude pour des classes d'automates plus grandes (section \ref{sec:finitude}).
+Pour tenter d'infirmer ou de se convaincre de la justesse de cette conjecture nous avons à la fois fait un travail théorique pour se convaincre de son bien fondé (sections \ref{sec:action} et \ref{sec:cloture}) et en même temps avons été amené à imaginer et implémenter des techniques efficaces pour générer les classes d'automates qui nous intéressent (section \ref{sec:gen}) et les factoriser (section \ref{sec:facto}) -- question sur laquelle aucun vrai résultat n'existe encore. À partir de ces résultats nous avons ensuite essayé de determiner si la $\mathfrak{mdc}$-réduction fournit un bon critère de finitude pour des classes d'automates plus grandes (section \ref{sec:finitude}).
 
 \section{Automates de Mealy}
 
@@ -357,9 +357,6 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
 \end{prop}
 
 \begin{proof}
-  DOUTEUX.
-
-
   Soient $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B}=\left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates réversibles, et soit $\mathcal{A\cdot B}=\left(\mathcal{Q\times Q'}, \Sigma, \delta'', \rho''\right)$ leur produit.
 
 
@@ -576,34 +573,64 @@ Le test de la forme canonique ne nécessitant le parcours d'aucune structure de 
 
 \subsubsection*{Quelques benchmarks}
 
-\begin{center}
-  \begin{table}[h!]
+\begin{table}[h!]
+  \begin{center}
     \begin{threeparttable}
-    \begin{tabular}{|rrrrrr|}
-      \hline
-      \#états & \#lettres & 1 & 2 & 3 & \#biréversibles \\ [0.5ex]
-      \hline\hline
-      2 & 2 & 0.002s & 0.003s & 0.004s & 12 \\
-      \hline
-      3 & 2 & 0.003s & 0.003s & 0.002s & 144 \\
-      \hline
-      3 & 3 & 0.011s & 0.086s & 0.005s & 8 784 \\
-      \hline
-      4 & 3 & 0.830s & 28.018s & 0.368s & 1 092 096 \\
-      \hline
-      4 & 4 & 24:06.15s & trop long & 11:16.96s & 1 031 000 000 \\
-      \hline
-    \end{tabular}
+      \begin{tabular}{|rrrr|}
+        \hline
+        \#états & \#lettres & Temps d'execution & \#biréversibles \\ [0.5ex]
+        \hline\hline
+        2 & 2 & 0.002s & 12 \\
+        \hline
+        3 & 2 & 0.003s & 144 \\
+        \hline
+        3 & 3 & 0.011s & 8 784 \\
+        \hline
+        4 & 3 & 0.156s & 1 092 096 \\
+        \hline
+        5 & 3 & 21s    & 16 128 000 \\
+        \hline
+        4 & 4 & 1m51s  & 1 031 000 000 \\
+        \hline
+        6 & 3 & xxx    & xxx \\
+        \hline
+      \end{tabular}
 
-    \caption{Benchmark génération d'automates biréversibles}
-    \begin{tablenotes}
-    \item[1] Temps sans nauty sans fork
-    \item[2] Temps avec nauty sans fork
-    \item[3] Temps sans nauty avec fork
-    \end{tablenotes}
-\end{threeparttable}
-  \end{table}
-\end{center}
+      \caption{Benchmark génération d'automates biréversibles}
+    \end{threeparttable}
+  \end{center}
+\end{table}
+
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{threeparttable}
+      \begin{tabular}{|rrrr|}
+        \hline
+        \#états & \#lettres & Temps d'execution & \#biréversibles \\ [0.5ex]
+        \hline\hline
+        2 & 2 & 0.002s & 8 \\
+        \hline
+        3 & 2 & 0.003s & 28 \\
+        \hline
+        3 & 3 & 0.011s & 335  \\
+        \hline
+        4 & 3 & 2.59s & 8 605 \\
+        \hline
+        5 & 3 & 12m34s    & 347 752 \\
+        \hline
+        4 & 4 & 56min34s  & 1 831 488 \\
+        \hline
+        6 & 3 & $\infty$  &  \\
+        \hline
+      \end{tabular}
+
+      \caption{Benchmark génération d'automates biréversibles à isomorphisme près}
+    \end{threeparttable}
+  \end{center}
+\end{table}
+
+On constate que Nauty ralenti très significativement le temps d'execution.
 
 \subsection{Algorithme de factorisation\label{sec:facto}}
 
@@ -712,9 +739,10 @@ La factorisation est une opération couteuse, pour tester la $\mathfrak{mdc}$-r�
   \end{center}
 \end{table}
 
-On a ensuite essayé de déterminer la finitude des groupes engendrés par ces automates. Nous avons trouvé que....
 
-Pour pouvoir valider l'hypothèse, il faut aussi s'assurer qu'aucun automate non $\mathfrak{mdc}$-trivial n'engendre du fini.
+Pour essayer de se convaincre que notre conjecture est correcte, il faut aussi s'assurer qu'aucun automate non $\mathfrak{mdc}$-trivial n'engendre du fini.
+
+Nous avons donc considéré la borne supérieure du nombre d'états des $\mathfrak{m}(\mathcal{M}^5)$ où $\mathcal{M}$ est une machine biréversible à 4 états 3 lettres ou 4 états 4 lettres $\mathfrak{mdc}$-triviale puis vérifié que la fonction de masse des automates non $\mathfrak{mdc}$-triviaux dépasse bien cette borne. Bien que ce résultat ne prouve rien, il reste encourageant.
 
 
 \section{Conclusions}

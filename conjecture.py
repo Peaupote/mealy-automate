@@ -173,4 +173,11 @@ def conjecture_mass():
     plt.show()
 
 if __name__ == "__main__":
-    res = conjecturebis()
+    if len(sys.argv) < 2:
+        print("usage: {} fname".format(sys.argv[0]), file=sys.stderr)
+        sys.exit(1)
+
+    for i, m in enumerate(read_canonics(sys.argv[1])):
+        print("Machine", i, end='\r')
+
+    print("total count", i)
