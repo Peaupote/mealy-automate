@@ -362,7 +362,7 @@ Puisque nous nous interéssont à la classe des automates biréversibles, montro
   On suppose $\mathcal{A}$ inversible.
 
 
-  Par définition $\delta''_x(pr)=(\delta_x(p), \delta'_{\rho_p(x)}(r))$. Or, puisque les automates sont réversibles, les $(\delta_x)_{x\in\Sigma}$ et ${(\delta'_x)}_{x\in\Sigma}$ sont des bijections. De plus, $\mathcal{A}$ esr inversible donc les ${(\rho_p)}_{p\in \mathcal{Q}}$ sont des bijections. On en conclut que les ${(\delta''_{pr})}_{pr\in\mathcal{Q}\times\mathcal{Q'}}$ sont aussi des bijections.
+  Par définition $\delta''_x(pr)=(\delta_x(p), \delta'_{\rho_p(x)}(r))$. Or, puisque les automates sont réversibles, les $(\delta_x)_{x\in\Sigma}$ et ${(\delta'_x)}_{x\in\Sigma}$ sont des bijections. De plus, $\mathcal{A}$ est inversible donc les ${(\rho_p)}_{p\in \mathcal{Q}}$ sont des bijections. On en conclut que les ${(\delta''_{pr})}_{pr\in\mathcal{Q}\times\mathcal{Q'}}$ sont aussi des bijections.
 \end{proof}
 
 \begin{prop}[Clôture des inversibles par facteurs]\label{prop_cloture_inv_facteurs}
@@ -425,7 +425,7 @@ Avant de faire la démonstration, rappelons un résultat élémentaire qui nous 
 
   Par définition, on a que $\delta_x(pr) = (\delta'_x(p), \delta''_{\rho'_p(x)}(r))$. Les ${(\delta_x)}_{x\in\Sigma}$ sont inversibles, alors il est clair les ${(\delta'_x)}_{x\in\Sigma}$ sont inversibles.
 
-  De plus, chacun des $\delta''_{\rho_p(x)}$ est inversibles, donc si $\mathcal{A}_1$ est inversible, les ${(\rho_p)}_{p\in\Sigma}$ étant inversibles, alors tous les ${(\delta''_x)}_{x\in\Sigma}$ sont inversibles. D'où $\mathcal{A}_2$ est réversible.
+  De plus, chacun des $\delta''_{\rho_p(x)}$ est inversibles, donc si $\mathcal{A}_1$ est inversible, les ${(\rho_p)}_{p\in\Sigma}$ étant des bijections, alors tous les ${(\delta''_x)}_{x\in\Sigma}$ sont inversibles. D'où $\mathcal{A}_2$ est réversible.
 \end{proof}
 
 \begin{prop}[Clôture des biréversibles par facteurs]
