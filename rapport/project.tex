@@ -513,10 +513,10 @@ On a rapidement constaté que le nombre d'automates a générer est très import
 
 M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty}\cite{Nauty} qui est, semble-t'il, la plus efficace. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un isomorphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permutte sur tous les sommets du graphe en hélice.
 
-\begin{center}
-  \begin{figure}[h]
+
+  \begin{figure}
     \begin{center}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[scale=0.8]
     \coordinate (A) at (-1,-1);
         \coordinate (B) at (1,-1);
         \coordinate (C) at (1,1);
@@ -556,14 +556,13 @@ M. Picantin nous a parlé de la bibliothèque de graphe \textrm{Nauty}\cite{Naut
     \end{center}
     \caption{graphe en hélice augmenté de l'automate xx}
   \end{figure}
-\end{center}
 
 Pour calculer les isomorphismes entre les graphes \textrm{Nauty} associe à un graphe \textit{\textbf{une forme canonique}}, ie. un graphe représentant de sa classe d'isomorphisme. Nous prenons donc comme représentant des classes d'isomorphismes de machine de Mealy celles sont une forme canonique au sens de \textrm{Nauty}. Lors de la génération nous nous contentons de calculer la forme canonique du graphe en hélice augmenté puis de tester s'il laisse les lettres et les états inchangés. Auquel cas, il est canonique.
 
 Nauty permet de préciser des classes d'équivalence sur les sommets du graphe qui doivent êtres préservés lors du passage à la forme canonique. Les sommets correspondants aux états, aux lettres et au graphe en hélice simple représente trois classes qui ne doivent pas être mélangées les unes avec les autres par \textrm{Nauty}.
 
 \subsubsection*{Quelques optimisations conséquentes}
-Nous avions commencé par implémenter la génération en \textrm{Python} mais nous avions trois inconvénients majeurs
+Nous avions commencé par implémenter la génération en \textrm{Python} mais nous avions deux inconvénients majeurs :
 \begin{itemize}
 \item La complexité en temps.
 \item \textrm{Nauty} ne dispose pas d'interface efficace en python.
@@ -663,7 +662,7 @@ Un critère simple pour étudier la finitude d'un automate est d'étudier sa fon
 
 La proposition \ref{prop:mass} nous donne dont un critère de semi-décidabilité sur la finitude du groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états sucessifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations couteuse (de complexités respectives $\mathcal{O}\left(\Sigma\log\Sigma\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répetter de nombreuses fois.
 
-Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction marche dans des cas où la factorisation est impossible -- ie. quand le nombre d'état et de lettre est premier.
+Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction semble fonctionner dans des cas où la factorisation est impossible -- ie. quand le nombre d'état et de lettre est premier.
 
 Nous avons donc généré les fonctions de masses des automates à 3 états, 3 lettres (figure \ref{fig:mass-33}) et 5 états, 3 lettres (figure \ref{fig:mass-53}).
 
