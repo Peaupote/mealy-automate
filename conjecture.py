@@ -3,28 +3,35 @@
 import mealy
 import factor
 import generator
-import sys, time, threading
+import sys
+import time
+import threading
 
 import matplotlib.pyplot as plt
 
+
 class SomeThread(threading.Thread):
 
-    def __init__(self, i, f):
+    def __init__(self, i, f, cans):
         threading.Thread.__init__(self)
         self.i = i
         self.count = 0
         self.action = f
+        self.cans = cans
 
     def run(self):
-        while True:
+        readLock.acquire()
+        for a in self.cans:
+            readLock.release()
             self.count += 1
             print(self.i, "Start", self.count)
-
-            a = read_canonics(sys.argv[0])
-            if not a:
-                return
-
-            self.action(a)
+            if a.bireversible():
+                print("OK")
+            else:
+                print("PANIC")
+            readLock.acquire()
+        readLock.release()
+            # self.action(a)
 
 
 def mdc_reduce(machine):
@@ -83,11 +90,13 @@ def read_canonics(fname):
 
         yield mealy.MealyMachine(delta, rho)
 
+
 def in_iso(a, res):
     for b in res:
         if a.isomorphic(b):
             return True
     return False
+
 
 def conjecturebis():
     if len(sys.argv) < 4:
@@ -103,7 +112,7 @@ def conjecturebis():
             tot += 1
             print("Machine", tot, end='\r')
             if (not mealy.product(a, b).is_md_trivial()
-                and mealy.product(b, a).is_md_trivial()):
+                    and mealy.product(b, a).is_md_trivial()):
                 m = mealy.product(a, b)
                 max_nb_states_mass = max(max_nb_states_mass,
                                          mealy.mass(m, exp)[-1])
@@ -116,14 +125,14 @@ def conjecturebis():
         print("Machine", i, end='\r')
         if a.is_md_trivial():
             max_nb_states_mass = max(max_nb_states_mass,
-                                     mealy.mass(a, exp)[-1] )
+                                     mealy.mass(a, exp)[-1])
 
     count_not_finite = 0
     for i, a in enumerate(read_canonics(sys.argv[3])):
         print("Machine", i, end='\r')
         if (not a.is_md_trivial()
             and not in_iso(a, res)
-            and mealy.mass_decide(a, max_nb_states_mass)):
+                and mealy.mass_decide(a, max_nb_states_mass)):
             count_not_finite += 1
 
     print("Not md-trivial neither mdc-trivial {}.".format(count_not_finite))
@@ -192,9 +201,21 @@ def conjecture_mass():
 
     plt.show()
 
+
 def truc(m):
     print(m)
 
-if __name__ == "__main__":
+def main():
+    threads = []
+    cans = read_canonics(sys.argv[1])
     for i in range(4):
-        SomeThread(i, truc).start()
+        thread = SomeThread(i, truc, cans)
+        thread.start()
+        threads.append(thread)
+    for t in threads:
+        t.join()
+    print("Exiting Main Thread")
+
+if __name__ == "__main__":
+    readLock = threading.Lock()
+    main()
