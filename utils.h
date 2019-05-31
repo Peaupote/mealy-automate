@@ -4,7 +4,7 @@ typedef struct mealy_machine {
 } mealy_t;
 
 
-mealy_t *mealy(u_int8_t nb_states, u_int8_t nb_letters);
+mealy_t *mealy(unsigned int nb_states, unsigned int nb_letters);
 
 char mealy_eq(mealy_t *m1, mealy_t *m2);
 

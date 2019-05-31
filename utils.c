@@ -4,7 +4,7 @@
 
 #include "utils.h"
 
-mealy_t *mealy(u_int8_t nb_states, u_int8_t nb_letters) {
+mealy_t *mealy(unsigned int nb_states, unsigned int nb_letters) {
     mealy_t *machine = malloc(sizeof(mealy_t));
     if (machine) {
         machine->nb_states = nb_states;
@@ -37,6 +37,7 @@ char mealy_eq(mealy_t *m1, mealy_t *m2) {
 }
 
 void free_mealy(mealy_t *m) {
+    if (!m) return;
     free(m->delta);
     free(m->rho);
     free(m);
@@ -60,11 +61,12 @@ mealy_t *dual(const mealy_t *m) {
 }
 
 mealy_t *min(const mealy_t *m) {
-    u_int8_t i, j, k, count;
+    unsigned int i, j, k, count;
     u_int8_t *part = calloc(m->nb_states, 1),
         *part2 = calloc(m->nb_states, 1);
 
-    if (!part || !part2) return 0;
+    if (!part || !part2)
+        return 0;
 
     for (i = 0; i < m->nb_states; i++) {
         for (j = 0; j < i; j++) {
@@ -190,6 +192,10 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
     mealy_t *prod = mealy(nbs, nbl);
     if (!prod) return 0;
 
+    printf("===\nnb %u\n", nbs);
+    printf("m1 %u %u\n", m1->nb_states, m1->nb_letters);
+    printf("m2 %u %u\n", m2->nb_states, m2->nb_letters);
+
     for (p = 0; p < m1->nb_states; p++) {
         for (x = 0; x < m2->nb_letters; x++) {
             i = p * m1->nb_letters + x;
@@ -199,7 +205,7 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
                 i = (p * m2->nb_states + r) * prod->nb_letters + x;
                 prod->delta[i] = q * m2->nb_states
                     + m2->delta[r * m2->nb_letters + y];
-                prod->rho[i] = m2->rho[r * m2->nb_states + y];
+                prod->rho[i] = m2->rho[r * m2->nb_letters + y];
             }
         }
     }
@@ -208,20 +214,20 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
 }
 
 // bug here
-unsigned int mexp(mealy_t *m, unsigned int bound) {
+unsigned int mexp(mealy_t *machine, unsigned int bound) {
     unsigned int i;
-    mealy_t *tmp, *prev;
+    mealy_t *m, *tmp, *prev;
 
-    if (!m) return -1;
+    if (!machine) return -1;
 
-    prev = m;
-    m = min(m);
+    prev = 0;
+    m = min(machine);
 
     for (i = 0; i < bound && !mealy_eq(prev, m); i++) {
         printf("exp nb states %u\n", m->nb_states);
         free_mealy(prev);
         prev = m;
-        tmp = product(m, m);
+        tmp = product(m, machine);
         m = min(tmp);
         free_mealy(tmp);
     }

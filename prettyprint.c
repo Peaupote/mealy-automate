@@ -67,7 +67,8 @@ int main (int argc, char *argv[]) {
         //printf("rho:\n");
         memcpy(machine->rho, buffer, size);
 
-        printf("%u\n", mexp(machine, 2));
+        printf("%u\n", mexp(machine, 5));
+        free_mealy(machine);
         if (count > 15) return 0;
 
     }
