@@ -62,12 +62,16 @@ mealy_t *dual(const mealy_t *m) {
 
 mealy_t *min(const mealy_t *m) {
     unsigned int i, j, k, count;
-    u_int8_t *part = calloc(m->nb_states, 1),
-        *part2 = calloc(m->nb_states, 1);
+    unsigned int
+        *part = calloc(m->nb_states, sizeof(unsigned int)),
+        *part2 = calloc(m->nb_states, sizeof(unsigned int));
 
     if (!part || !part2)
         return 0;
 
+    printf("min %u\n", m->nb_states);
+
+    count = 0;
     for (i = 0; i < m->nb_states; i++) {
         for (j = 0; j < i; j++) {
             for (k = 0; k < m->nb_letters; k++) {
@@ -79,6 +83,7 @@ mealy_t *min(const mealy_t *m) {
                 break;
         }
 
+        j = ((j == i) ? count++ : part[j]);
         part[i] = j;
     }
 
@@ -97,18 +102,18 @@ mealy_t *min(const mealy_t *m) {
                     break;
             }
 
-            if (j == i) {
-                j = count++;
-            }
+            j = ((j == i) ? count++ : part2[j]);
 
             part2[i] = j;
         }
 
-        if (memcmp(part2, part, m->nb_states) == 0)
+        if (memcmp(part2, part, m->nb_states) == 0) {
+            memcpy(part, part2, m->nb_states * sizeof(unsigned int));
             break;
+        }
 
-        memcpy(part, part2, m->nb_states);
-        memset(part2, 0, m->nb_states); //useless
+        memcpy(part, part2, m->nb_states * sizeof(unsigned int));
+        memset(part2, 0, m->nb_states * sizeof(unsigned int)); //useless
     }
 
     mealy_t *mm = mealy(count, m->nb_letters);
