@@ -6,7 +6,7 @@ typedef struct mealy_machine {
 
 mealy_t *mealy(unsigned int nb_states, unsigned int nb_letters);
 
-char mealy_eq(mealy_t *m1, mealy_t *m2);
+char mealy_eq(const mealy_t *m1, const mealy_t *m2);
 
 void free_mealy(mealy_t *m);
 
@@ -14,12 +14,12 @@ mealy_t *dual(const mealy_t *m);
 
 mealy_t *min(const mealy_t *m);
 
-mealy_t *md_reduce(mealy_t *a);
+mealy_t *md_reduce(const mealy_t *a);
 
-char is_trivial(mealy_t *m);
+char is_trivial(const mealy_t *m);
 
-char is_md_trivial(mealy_t *m);
+char is_md_trivial(const mealy_t *m);
 
-mealy_t *product(mealy_t *m1, mealy_t *m2);
+mealy_t *product(const mealy_t *m1, const mealy_t *m2);
 
-unsigned int mexp(mealy_t *m, unsigned int bound);
+unsigned int mexp(const mealy_t *m, unsigned int bound);

@@ -132,12 +132,12 @@ def conjecture():
         mdc = mdc_reduce(m)
         if md:
             countmd += 1
-        if mdc:
-            countmdc += 1
-        if mdc and not md:
-            t.add(m)
-        if not mdc and not md:
-            countelse += 1
+        # if mdc:
+        #     countmdc += 1
+        # if mdc and not md:
+        #     t.add(m)
+        # if not mdc and not md:
+        #     countelse += 1
 
     i += 1
     print("Total count {}.".format(i))
@@ -195,7 +195,7 @@ def split_file(fname, nb):
 
         frags.append(frag_name)
 
-if __name__ == "__main__":
+def main():
     print("n", n)
     print("frag size", size)
 
@@ -238,3 +238,7 @@ if __name__ == "__main__":
 
         os.remove(fname + ".out")
     out.close()
+
+if __name__ == "__main__":
+    conjecture()
+    # main()

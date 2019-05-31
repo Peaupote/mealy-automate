@@ -56,12 +56,10 @@ int main (int argc, char *argv[]) {
 
         printf("Machine %lu\n", ++count);
         //printf("delta:\n");
-        unsigned char c;
-        unsigned int k;
+        unsigned int c;
         for(unsigned int i = 0; i < size; i++) {
-            c = buffer[i];
-            k = (unsigned int) c;
-            memcpy(machine->delta+i, &k, sizeof(unsigned int));
+            c = (unsigned int)buffer[i];
+            memcpy(machine->delta+i, &c, sizeof(unsigned int));
         }
 
         rc = read(fd, buffer, size);
@@ -72,15 +70,17 @@ int main (int argc, char *argv[]) {
 
         //printf("rho:\n");
         for(unsigned int i = 0; i < size; i++) {
-            c = buffer[i];
-            k = (unsigned int) c;
-            memcpy(machine->rho+i, &k, sizeof(unsigned int));
+            c = (unsigned int)buffer[i];
+            memcpy(machine->rho+i, &c, sizeof(unsigned int));
         }
 
-        // if(is_md_trivial(machine))
-        printf("%u\n", mexp(machine, 7));
+        if(is_md_trivial(machine)) {
+            trivial_count++;
+            printf("%u\n", mexp(machine, 7));
+        }
+
         free_mealy(machine);
-        if (count >= 1000) return 0;
+        // if (count >= 1000) return 0;
 
     }
 
