@@ -22,4 +22,4 @@ char is_md_trivial(const mealy_t *m);
 
 mealy_t *product(const mealy_t *m1, const mealy_t *m2);
 
-unsigned int mexp(const mealy_t *m, unsigned int bound);
+unsigned int mexp(const mealy_t *m, unsigned int bound, unsigned int max);

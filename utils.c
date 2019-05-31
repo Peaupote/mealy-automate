@@ -219,7 +219,8 @@ mealy_t *product(const mealy_t *m1, const mealy_t *m2) {
 }
 
 
-unsigned int mexp(const mealy_t *machine, unsigned int bound) {
+unsigned int
+mexp(const mealy_t *machine, unsigned int bound, unsigned int upbound) {
     unsigned int i, max;
     mealy_t *m, *tmp, *prev;
 
@@ -228,7 +229,9 @@ unsigned int mexp(const mealy_t *machine, unsigned int bound) {
     prev = 0;
     m = min(machine);
 
-    for (i = 0; i < bound && !mealy_eq(prev, m) && m->nb_states < 5000; i++) {
+    for (i = 0; i < bound
+             && !mealy_eq(prev, m)
+             && m->nb_states < upbound; i++) {
         free_mealy(prev);
         prev = m;
         tmp = product(m, machine);
