@@ -11,7 +11,7 @@
 #include "utils.h"
 #include "frags.h"
 
-#define POWER 7
+#define POWER 100
 #define MAX_FORK 2
 
 int fd;

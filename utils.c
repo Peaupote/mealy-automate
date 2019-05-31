@@ -224,11 +224,11 @@ mexp(const mealy_t *machine, unsigned int bound, unsigned int upbound) {
 
     if (!machine) return -1;
 
-    prev = 0;
+    prev = NULL;
     m = min(machine);
 
     for (i = 0; i < bound
-             && !mealy_eq(prev, m)
+             && (prev == NULL || prev->nb_states != m->nb_states)
              && m->nb_states < upbound; i++) {
         free_mealy(prev);
         prev = m;
