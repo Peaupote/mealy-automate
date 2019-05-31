@@ -5,7 +5,7 @@
 #include "utils.h"
 
 mealy_t *mealy(u_int8_t nb_states, u_int8_t nb_letters) {
-    mealy_t *machine = malloc(sizeof(mealy_t*));
+    mealy_t *machine = malloc(sizeof(mealy_t));
     if (machine) {
         machine->nb_states = nb_states;
         machine->nb_letters = nb_letters;
@@ -95,8 +95,9 @@ mealy_t *min(const mealy_t *m) {
                     break;
             }
 
-            if (j == i)
-                count++;
+            if (j == i) {
+                j = count++;
+            }
 
             part2[i] = j;
         }
@@ -116,7 +117,7 @@ mealy_t *min(const mealy_t *m) {
             if (part[j] == i) break;
 
         for (k = 0; k < m->nb_letters; k++) {
-            mm->delta[i * m->nb_letters + k] = part[m->delta[j] * m->nb_letters + k];
+            mm->delta[i * m->nb_letters + k] = part[m->delta[j * m->nb_letters + k]];
             mm->rho[i * m->nb_letters + k] = m->rho[j * m->nb_letters + k];
         }
     }
@@ -132,8 +133,10 @@ mealy_t *md_reduce(mealy_t *a) {
     mealy_t *b = 0, *c;
 
     while (!mealy_eq(a, b)) {
-        if (b)
+        if (b) {
             free_mealy(b);
+        }
+
         b = a;
         a = min(a);
         if (mealy_eq(a, b)) {
@@ -146,7 +149,6 @@ mealy_t *md_reduce(mealy_t *a) {
         }
     }
 
-    free_mealy(a);
     free_mealy(b);
 
     return a;
@@ -159,13 +161,34 @@ char is_trivial (mealy_t *m) {
     return 1;
 }
 
+char is_md_trivial (mealy_t *m) {
+    mealy_t *red, *d;
+    char ret = 0;
+
+    red = md_reduce(m);
+    if (is_trivial(red)) {
+        ret = 1;
+    } else {
+        d = dual(red);
+        if (is_trivial(d)) {
+            ret = 1;
+        }
+
+        free_mealy(d);
+    }
+
+    free_mealy(red);
+
+    return ret;
+}
+
 mealy_t *product(mealy_t *m1, mealy_t *m2) {
     unsigned int nbl = m1->nb_letters,
         nbs = m1->nb_letters * m2->nb_states,
         p, x, r, q, y, i;
 
     mealy_t *prod = mealy(nbs, nbl);
-    if (!p) return 0;
+    if (!prod) return 0;
 
     for (p = 0; p < m1->nb_states; p++) {
         for (x = 0; x < m2->nb_letters; x++) {
@@ -187,7 +210,7 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
 // bug here
 unsigned int mexp(mealy_t *m, unsigned int bound) {
     unsigned int i;
-    mealy_t *tmp, *prev;
+    mealy_t *tmp, *prev = m;
 
     if (!m) return -1;
     tmp = m;
