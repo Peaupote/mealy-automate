@@ -69,8 +69,6 @@ mealy_t *min(const mealy_t *m) {
     if (!part || !part2)
         return 0;
 
-    printf("min %u\n", m->nb_states);
-
     count = 0;
     for (i = 0; i < m->nb_states; i++) {
         for (j = 0; j < i; j++) {
@@ -237,6 +235,7 @@ mexp(const mealy_t *machine, unsigned int bound, unsigned int upbound) {
         tmp = product(m, machine);
         m = min(tmp);
         free_mealy(tmp);
+        printf("mass %u\n", m->nb_states);
     }
 
     max = m->nb_states;

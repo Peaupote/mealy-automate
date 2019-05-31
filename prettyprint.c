@@ -17,6 +17,13 @@ unsigned long count = 0, trivial_count = 0;
 unsigned char *buffer, *delta, *rho;
 mealy_t *machine, *red;
 
+typedef struct index_list {
+    unsigned long index;
+    struct index_list *next;
+} list_t;
+
+list_t *not_md_trivial_lst = 0;
+
 unsigned int max_md_trivial () {
     int rc;
     unsigned int mass, trivial_mass_max = 0;
@@ -57,6 +64,13 @@ unsigned int max_md_trivial () {
             if (mass > trivial_mass_max) {
                 trivial_mass_max = mass;
             }
+        } else {
+            list_t *node = malloc(sizeof(list_t));
+            if (!node) exit(42);
+
+            node->index = count;
+            node->next = not_md_trivial_lst;
+            not_md_trivial_lst = node;
         }
 
         free_mealy(machine);
@@ -69,16 +83,28 @@ unsigned int max_md_trivial () {
 mealy_t *check_not_trivial (unsigned int trivial_mass_max) {
     int rc;
     unsigned int mass;
+    list_t *node;
 
-    while ((rc = read(fd, buffer, size)) > 0) {
-        if (rc < size) {
+    while (not_md_trivial_lst) {
+        node = not_md_trivial_lst;
+        not_md_trivial_lst = not_md_trivial_lst->next;
+        printf("Machine %lu\n", node->index);
+
+        rc = lseek(fd, 2 + size * 2 * (node->index - 1), SEEK_SET);
+        if (rc < 0) {
+            perror("lseek");
+            exit(42);
+        }
+
+        free(node);
+
+        if (read(fd, buffer, size) < size) {
             fprintf(stderr, "Corrupted file\n");
             exit(42);
         }
 
         machine = mealy(nb_states, nb_letters);
 
-        printf("Machine %lu\n", ++count);
         //printf("delta:\n");
         unsigned int c;
         for(unsigned int i = 0; i < size; i++) {
@@ -98,16 +124,15 @@ mealy_t *check_not_trivial (unsigned int trivial_mass_max) {
             memcpy(machine->rho+i, &c, sizeof(unsigned int));
         }
 
-        if(!is_md_trivial(machine)) {
-            mass = mexp(machine, POWER, trivial_mass_max);
+        mass = mexp(machine, POWER * 10, trivial_mass_max);
 
-            if (mass < trivial_mass_max) {
-                printf("problem here %u < %u\n", mass, trivial_mass_max);
-                return machine;
-            }
-
-            printf("mass %u > %u\n", mass, trivial_mass_max);
+        if (mass < trivial_mass_max) {
+            printf("problem here %u < %u\n", mass, trivial_mass_max);
+            return machine;
         }
+
+        printf("mass %u > %u\n", mass, trivial_mass_max);
+
 
         free_mealy(machine);
     }
@@ -152,9 +177,6 @@ int main (int argc, char *argv[]) {
     printf("Total count %lu.\n", count);
     printf("Max mass upper bound found: %u\n", trivial_mass_max);
     printf("Look for non-md-trivial.\n");
-
-    // back to beginning of file
-    lseek(fd, 2, SEEK_SET);
 
     mealy_t *res = check_not_trivial(trivial_mass_max);
     if (!res) {
