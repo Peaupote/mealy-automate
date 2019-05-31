@@ -23,9 +23,9 @@ generator_sparse: utils.o generator_sparse.o
 	@$(CC) $(FLAGS) utils.o $(DEPS_SPARSE) \
 		generator_sparse.o -o generator_sparse $(LIBS)
 
-prettyprint: utils.o prettyprint.o
+prettyprint: utils.o frags.o prettyprint.o
 	@echo "Generate executable prettyprint"
-	@$(CC) $(FLAGS) utils.o $(DEPS) prettyprint.o -o prettyprint $(LIBS)
+	@$(CC) $(FLAGS) utils.o frags.o $(DEPS) prettyprint.o -o prettyprint $(LIBS)
 
 report:
 	$(MAKE) -C rapport

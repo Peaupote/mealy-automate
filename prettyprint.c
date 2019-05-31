@@ -5,11 +5,14 @@
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
+#include <wait.h>
 
 #include "nauty.h"
 #include "utils.h"
+#include "frags.h"
 
 #define POWER 7
+#define MAX_FORK 2
 
 int fd;
 u_int8_t nb_states, nb_letters, size;
@@ -66,7 +69,10 @@ unsigned int max_md_trivial () {
             }
         } else {
             list_t *node = malloc(sizeof(list_t));
-            if (!node) exit(42);
+            if (!node) {
+                perror("malloc");
+                exit(42);
+            }
 
             node->index = count;
             node->next = not_md_trivial_lst;
@@ -141,6 +147,25 @@ mealy_t *check_not_trivial (unsigned int trivial_mass_max) {
 }
 
 
+int work() {
+    unsigned int trivial_mass_max = max_md_trivial();
+
+    printf("md trivial %lu.\n", trivial_count);
+    printf("Total count %lu.\n", count);
+    printf("Max mass upper bound found: %u\n", trivial_mass_max);
+    printf("Look for non-md-trivial.\n");
+
+    mealy_t *res = check_not_trivial(trivial_mass_max);
+    if (!res) {
+        printf("Seems to work !\n");
+    } else {
+        printf("This one seems to be a counter example.\n");
+    }
+
+    free_mealy(res);
+    return 0;
+}
+
 int main (int argc, char *argv[]) {
     if (argc < 2) {
         printf("usage: %s <file>\n", argv[0]);
@@ -171,21 +196,42 @@ int main (int argc, char *argv[]) {
     size = nb_states * nb_letters;
     buffer = malloc(size);
 
-    unsigned int trivial_mass_max = max_md_trivial();
+    int nb, forkcount = 0;
+    frag_t *p, *frags = fragment_file(fd, &nb);
+    close(fd);
 
-    printf("md trivial %lu.\n", trivial_count);
-    printf("Total count %lu.\n", count);
-    printf("Max mass upper bound found: %u\n", trivial_mass_max);
-    printf("Look for non-md-trivial.\n");
+    printf("Number of fragments %d\n", nb);
 
-    mealy_t *res = check_not_trivial(trivial_mass_max);
-    if (!res) {
-        printf("Seems to work !\n");
-    } else {
-        printf("This one seems to be a counter example.\n");
+    for (p = frags; p; p = p->next) {
+        if (forkcount >= MAX_FORK) wait(0);
+
+        if (fork() == 0) {
+            printf("start file %s\n", p->fragname);
+            fd = open(p->fragname, O_RDONLY);
+            if (fd < 0) {
+                perror("open");
+                exit(42);
+            }
+
+            work();
+
+            printf("remove file %s\n", p->fragname);
+            rc = remove(p->fragname);
+            if (rc < 0) {
+                perror("remove");
+                exit(42);
+            }
+
+            exit(0);
+        } else {
+            forkcount++;
+        }
     }
 
-    free_mealy(res);
-    close(fd);
+    while (forkcount > 0) {
+        wait(0);
+        forkcount--;
+    }
+
     return 0;
 }
