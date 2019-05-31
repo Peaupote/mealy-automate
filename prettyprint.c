@@ -9,7 +9,7 @@
 #include "nauty.h"
 #include "utils.h"
 
-#define POWER 7
+#define POWER 100
 
 int fd;
 u_int8_t nb_states, nb_letters, size;
