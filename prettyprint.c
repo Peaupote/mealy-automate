@@ -96,7 +96,7 @@ mealy_t *check_not_trivial (unsigned int trivial_mass_max) {
         not_md_trivial_lst = not_md_trivial_lst->next;
         printf("Machine %lu\n", node->index);
 
-        rc = lseek(fd, 2 + size * 2 * (node->index - 1), SEEK_SET);
+        rc = lseek(fd, size * 2 * (node->index - 1), SEEK_SET);
         if (rc < 0) {
             perror("lseek");
             exit(42);
@@ -119,7 +119,7 @@ mealy_t *check_not_trivial (unsigned int trivial_mass_max) {
         }
 
         rc = read(fd, buffer, size);
-        if (rc < size) {
+        if (rc < size) { // bug
             fprintf(stderr, "Corrupted file\n");
             exit(42);
         }
@@ -162,8 +162,25 @@ int work() {
         printf("This one seems to be a counter example.\n");
     }
 
+    // write in file
+
     free_mealy(res);
     return 0;
+}
+
+void process(int st) {
+    switch (WEXITSTATUS(st)) {
+    case 0:
+        printf("Fork done. Found no counter examples\n");
+        break;
+    case 1:
+        printf("Fork done. Counter example founded !!!\n");
+        break;
+
+    default:
+        printf("Something terrible happend !!\n");
+        exit(42);
+    }
 }
 
 int main (int argc, char *argv[]) {
@@ -196,14 +213,17 @@ int main (int argc, char *argv[]) {
     size = nb_states * nb_letters;
     buffer = malloc(size);
 
-    int nb, forkcount = 0;
+    int nb, st, forkcount = 0;
     frag_t *p, *frags = fragment_file(fd, &nb);
     close(fd);
 
     printf("Number of fragments %d\n", nb);
 
     for (p = frags; p; p = p->next) {
-        if (forkcount >= MAX_FORK) wait(0);
+        if (forkcount >= MAX_FORK) {
+            wait(&st);
+            process(st);
+        }
 
         if (fork() == 0) {
             printf("start file %s\n", p->fragname);
@@ -229,8 +249,9 @@ int main (int argc, char *argv[]) {
     }
 
     while (forkcount > 0) {
-        wait(0);
+        wait(&st);
         forkcount--;
+        process(st);
     }
 
     return 0;
