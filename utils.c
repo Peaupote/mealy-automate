@@ -9,13 +9,13 @@ mealy_t *mealy(unsigned int nb_states, unsigned int nb_letters) {
     if (machine) {
         machine->nb_states = nb_states;
         machine->nb_letters = nb_letters;
-        machine->delta = malloc(nb_states * nb_letters);
+        machine->delta = malloc(nb_states * nb_letters * sizeof(unsigned int));
         if (!machine->delta) {
             free(machine);
             return 0;
         }
 
-        machine->rho = malloc(nb_states * nb_letters);
+        machine->rho = malloc(nb_states * nb_letters * sizeof(unsigned int));
         if (!machine->rho) {
             free(machine->delta);
             free(machine);
@@ -31,7 +31,7 @@ char mealy_eq(mealy_t *m1, mealy_t *m2) {
     if (m1->nb_letters != m2->nb_letters || m1->nb_states != m2->nb_states)
         return 0;
 
-    unsigned int size = m1->nb_states * m1->nb_letters;
+    unsigned int size = m1->nb_states * m1->nb_letters * sizeof(unsigned int);
     return memcmp(m1->delta, m2->delta, size) == 0
         && memcmp(m1->rho, m2->rho, size) == 0;
 }
@@ -107,7 +107,7 @@ mealy_t *min(const mealy_t *m) {
             part2[i] = j;
         }
 
-        if (memcmp(part2, part, m->nb_states) == 0) {
+        if (memcmp(part2, part, m->nb_states * sizeof(unsigned int)) == 0) {
             memcpy(part, part2, m->nb_states * sizeof(unsigned int));
             break;
         }
@@ -197,9 +197,9 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
     mealy_t *prod = mealy(nbs, nbl);
     if (!prod) return 0;
 
-    printf("===\nnb %u\n", nbs);
-    printf("m1 %u %u\n", m1->nb_states, m1->nb_letters);
-    printf("m2 %u %u\n", m2->nb_states, m2->nb_letters);
+    // printf("===\nnb %u\n", nbs);
+    // printf("m1 %u %u\n", m1->nb_states, m1->nb_letters);
+    // printf("m2 %u %u\n", m2->nb_states, m2->nb_letters);
 
     for (p = 0; p < m1->nb_states; p++) {
         for (x = 0; x < m2->nb_letters; x++) {
@@ -228,7 +228,7 @@ unsigned int mexp(mealy_t *machine, unsigned int bound) {
     prev = 0;
     m = min(machine);
 
-    for (i = 0; i < bound && !mealy_eq(prev, m); i++) {
+    for (i = 0; i < bound && !mealy_eq(prev, m) && m->nb_states < 5000; i++) {
         printf("exp nb states %u\n", m->nb_states);
         free_mealy(prev);
         prev = m;
@@ -236,9 +236,9 @@ unsigned int mexp(mealy_t *machine, unsigned int bound) {
         m = min(tmp);
         free_mealy(tmp);
     }
-
+    unsigned int max = m->nb_states;
     free_mealy(prev);
     free_mealy(m);
 
-    return i;
+    return max;
 }
