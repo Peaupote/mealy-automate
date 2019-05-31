@@ -1,5 +1,5 @@
 typedef struct mealy_machine {
-    u_int8_t nb_letters, nb_states;
+    unsigned int nb_letters, nb_states;
     u_int8_t *delta, *rho;
 } mealy_t;
 

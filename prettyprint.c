@@ -67,9 +67,8 @@ int main (int argc, char *argv[]) {
         //printf("rho:\n");
         memcpy(machine->rho, buffer, size);
 
-        if (is_md_trivial(machine)) {
-            trivial_count++;
-        }
+        printf("%u\n", mexp(machine, 2));
+        if (count > 15) return 0;
 
     }
 

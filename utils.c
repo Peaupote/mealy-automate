@@ -184,7 +184,7 @@ char is_md_trivial (mealy_t *m) {
 
 mealy_t *product(mealy_t *m1, mealy_t *m2) {
     unsigned int nbl = m1->nb_letters,
-        nbs = m1->nb_letters * m2->nb_states,
+        nbs = m1->nb_states * m2->nb_states,
         p, x, r, q, y, i;
 
     mealy_t *prod = mealy(nbs, nbl);
@@ -196,10 +196,10 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
             q = m1->delta[i];
             y = m1->rho[i];
             for (r = 0; r < m2->nb_states; r++) {
-                i = p * m2->nb_states + r;
-                prod->delta[i * prod->nb_letters + x] = q * m2->nb_states
+                i = (p * m2->nb_states + r) * prod->nb_letters + x;
+                prod->delta[i] = q * m2->nb_states
                     + m2->delta[r * m2->nb_letters + y];
-                prod->rho[i * prod->nb_letters + x] = m2->rho[r * m2->nb_states + y];
+                prod->rho[i] = m2->rho[r * m2->nb_states + y];
             }
         }
     }
@@ -210,19 +210,24 @@ mealy_t *product(mealy_t *m1, mealy_t *m2) {
 // bug here
 unsigned int mexp(mealy_t *m, unsigned int bound) {
     unsigned int i;
-    mealy_t *tmp, *prev = m;
+    mealy_t *tmp, *prev;
 
     if (!m) return -1;
-    tmp = m;
+
+    prev = m;
     m = min(m);
-    free_mealy(m);
 
     for (i = 0; i < bound && !mealy_eq(prev, m); i++) {
+        printf("exp nb states %u\n", m->nb_states);
+        free_mealy(prev);
         prev = m;
         tmp = product(m, m);
         m = min(tmp);
         free_mealy(tmp);
     }
+
+    free_mealy(prev);
+    free_mealy(m);
 
     return i;
 }
