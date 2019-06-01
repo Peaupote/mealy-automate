@@ -151,7 +151,7 @@ def factor_naive(m):
         tot_class = generator.helix_gen(i, m.nb_letters)
         for l in tot_class:
             for r in tot_class:
-                if product(l, r).ismorphic(m):
+                if product(l, r).isomorphic(m):
                     factors.add((l, r))
     return factors
 
