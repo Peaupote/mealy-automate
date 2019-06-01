@@ -12,7 +12,7 @@
 #include "utils.h"
 
 #define POWER 100
-#define MAX_FORK 2
+#define MAX_FORK 4
 #define TAMPON_SIZE 51200
 
 int fd, fd_max, fd_out, fd_not_trivial, fd_plot;
@@ -33,24 +33,29 @@ unsigned int max_md_trivial(int fd_in, int fd_out, int fd_not_trivial) {
 
         machine = mealy(nb_states, nb_letters);
 
-        printf("Machine %lu\n", ++count);
+        // printf("Machine %lu\n", ++count);
         // printf("delta:\n");
         unsigned int c;
         for (unsigned int i = 0; i < size; i++) {
             c = (unsigned int)buffer[i];
+            // printf("%u", c);
             memcpy(machine->delta + i, &c, sizeof(unsigned int));
         }
+        // printf("\n");
 
-        // printf("rho:\n");
+        // printf("rho:");
         for (unsigned int i = 0; i < size; i++) {
+            // printf("%u\n", size+i);
             c = (unsigned int)buffer[size+i];
+            // printf("%u", c);
             memcpy(machine->rho + i, &c, sizeof(unsigned int));
         }
+        // printf("\n");
 
         if (is_md_trivial(machine)) {
             trivial_count++;
             mass = mexp(machine, POWER, -1, fd_out);
-            printf("mass upper bound %u\n", mass);
+            // printf("mass upper bound %u\n", mass);
 
             if (mass > trivial_mass_max) {
                 trivial_mass_max = mass;
@@ -241,7 +246,8 @@ int main(int argc, char *argv[]) {
             forkcount--;
         }
 
-        if (fork() == 0) {
+        int pid = fork();
+        if (pid == 0) {
             printf("start file %s\n", p->fragname);
             fd = open(p->fragname, O_RDONLY);
             if (fd < 0) {
@@ -276,6 +282,7 @@ int main(int argc, char *argv[]) {
             close(fd_not_trivial);
             exit(res);
         } else {
+            printf("start fork trivial %d\n", pid);
             forkcount++;
         }
     }
@@ -344,7 +351,7 @@ int main(int argc, char *argv[]) {
             printf("Remove %s\n", not_trivial_str);
             exit(res);
         } else {
-            printf("start fork %d\n", pid);
+            printf("start fork not-trivial %d\n", pid);
             forkcount++;
         }
     }

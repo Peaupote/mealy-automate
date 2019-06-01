@@ -19,7 +19,7 @@ frag_t *fragment_file(int fd, int *nb) {
     *nb = 0;
 
     while ((rc = read(fd, buffer, sz)) > 0) {
-        if (rc < size) {
+        if (rc < 0 || rc % 2 * size != 0) {
             fprintf(stderr, "Corrupted file\n");
             exit(42);
         }
@@ -38,6 +38,7 @@ frag_t *fragment_file(int fd, int *nb) {
             exit(42);
         }
 
+        printf("fragment of size %d - %d\n", rc, rc/(2*size));
         rc = write(ffd, buffer, rc);
         if (rc < 0) {
             perror("write");

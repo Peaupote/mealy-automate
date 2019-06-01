@@ -252,6 +252,8 @@ mealy_t *product(const mealy_t *m1, const mealy_t *m2) {
             y = m1->rho[i];
             for (r = 0; r < m2->nb_states; r++) {
                 i = (p * m2->nb_states + r) * prod->nb_letters + x;
+
+                // printf("indice %u - r %u - y %u\n", r * m2->nb_letters + y, r, y);
                 prod->delta[i] =
                     q * m2->nb_states + m2->delta[r * m2->nb_letters + y];
                 prod->rho[i] = m2->rho[r * m2->nb_letters + y];
@@ -264,6 +266,7 @@ mealy_t *product(const mealy_t *m1, const mealy_t *m2) {
 
 unsigned int mexp(const mealy_t *machine, unsigned int bound,
                   unsigned int upbound, int fd_out) {
+    // printf("START MEXP\n");
     unsigned int i;
     unsigned int res[bound + 2]; // le premier entier indique si il s'agit d'un
                                  // réductible ou non
@@ -284,6 +287,7 @@ unsigned int mexp(const mealy_t *machine, unsigned int bound,
     for (i = 0; i < bound && (i == 0 || res[i] != m->nb_states) &&
                 m->nb_states < upbound;
          i++) {
+        // printf("MEXP %u\n", i);
         tmp = product(m, machine);
         m = min(tmp);
         free_mealy(tmp);
