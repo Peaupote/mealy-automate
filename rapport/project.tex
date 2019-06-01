@@ -616,21 +616,21 @@ On a rapidement constaté que le nombre d'automates à générer est très impor
 La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficaces. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un morphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permute sur tous les sommets du graphe en hélice.
 
 \begin{figure}[h]
-  \begin{subfigure}[b]{0.5\textwidth}
-    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-      \node[state] (q_0) {$a$};
-      \node[state] (q_1) [right=of q_0] {$b$};
-      \path[->]
-      (q_0) edge [loop left] node {$0|1$} (q_0)
-      (q_0) edge [bend left] node {$1|1$} (q_1)
-      (q_1) edge [bend left] node {$0|0$} (q_0)
-      (q_1) edge [loop right] node {$1|0$} (q_1);
-    \end{tikzpicture}
-  \end{subfigure}
-  ~
-  \begin{subfigure}[b]{0.5\textwidth}
-    \begin{center}
-      \begin{tikzpicture}[scale=0.7]
+  \begin{center}
+    \begin{tikzpicture}[scale=0.7]
+        \coordinate (A) at (-10, 0);
+        \coordinate (B) at (-7, 0);
+
+        \node[draw,circle,minimum width = 2.5em] (q_0) at (A) {$a$};
+        \node[draw,circle,minimum width = 2.5em] (q_1) at (B) {$b$};
+        \path[->]
+        (q_0) edge [loop left] node {$0|1$} (q_0)
+        (q_0) edge [bend left] node[midway, above] {$1|1$} (q_1)
+        (q_1) edge [bend left] node[midway, below] {$0|0$} (q_0)
+        (q_1) edge [loop right] node {$1|0$} (q_1);
+
+        %############################################
+
         \coordinate (A) at (-1,-1);
         \coordinate (B) at (1,-1);
         \coordinate (C) at (1,1);
@@ -661,13 +661,12 @@ La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficace
         \draw[->,>=latex] (F2) to[bend left] (QB);
         \draw[->,>=latex] (F2) to[bend right] (QC);
 
-        \draw[->,>=latex] (FA) to[bend right] (QB);
-        \draw[->,>=latex] (FA) to[bend left] (QA);
-        \draw[->,>=latex] (FB) to[bend left] (QC);
-        \draw[->,>=latex] (FB) to[bend right] (QD);
-      \end{tikzpicture}
-    \end{center}
-  \end{subfigure}
+      \draw[->,>=latex] (FA) to[bend right] (QB);
+      \draw[->,>=latex] (FA) to[bend left] (QA);
+      \draw[->,>=latex] (FB) to[bend left] (QC);
+      \draw[->,>=latex] (FB) to[bend right] (QD);
+    \end{tikzpicture}
+  \end{center}
   \caption{Une machine de Mealy et son graphe en hélice augmenté\label{fig:helix-aug}}
 \end{figure}
 
