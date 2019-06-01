@@ -70,7 +70,7 @@ unsigned int max_md_trivial(int fd_out, int fd_not_trivial) {
     return trivial_mass_max;
 }
 
-mealy_t *check_not_trivial(unsigned int trivial_mass_max, int fd_not_trivial) {
+mealy_t *check_not_trivial(unsigned int trivial_mass_max, int fd_out, int fd_not_trivial) {
     int rc;
     unsigned int mass;
 
@@ -102,7 +102,7 @@ mealy_t *check_not_trivial(unsigned int trivial_mass_max, int fd_not_trivial) {
             memcpy(machine->rho + i, &c, sizeof(unsigned int));
         }
 
-        mass = mexp(machine, POWER * 10, trivial_mass_max);
+        mass = mexp(machine, POWER * 10, trivial_mass_max, fd_out);
 
         if (mass < trivial_mass_max) {
             printf("problem here %u < %u\n", mass, trivial_mass_max);
@@ -125,12 +125,13 @@ int work_md_trivial(int fd_out, int fd_not_trivial) {
     printf("md trivial %lu.\n", trivial_count);
     printf("Total count %lu.\n", count);
     printf("Max mass upper bound found: %u\n", trivial_mass_max);
+    return 0;
 }
 
-int work_not_md_trivial(unsigned int trivial_mass_max, int fd_not_trivial) {
+int work_not_md_trivial(unsigned int trivial_mass_max, int fd_out, int fd_not_trivial) {
     printf("Look for non-md-trivial.\n");
 
-    mealy_t *res = check_not_trivial(trivial_mass_max, fd_not_trivial);
+    mealy_t *res = check_not_trivial(trivial_mass_max, fd_out, fd_not_trivial);
     if (!res) {
         printf("Seems to work !\n");
     } else {
@@ -146,7 +147,7 @@ int work_not_md_trivial(unsigned int trivial_mass_max, int fd_not_trivial) {
         }
         write(fd_res, "CONTRE EXEMPLE", 16);
         char *res_str = mealy_to_string(res);
-        write(fd_res, res_str, len(res_str));
+        write(fd_res, res_str, strlen(res_str));
         free(res_str);
         close(fd_res);
     }
@@ -170,7 +171,7 @@ void process(int st) {
 }
 
 unsigned int get_trivial_mass_max(int nb) {
-    unsigned int *buff[nb];
+    unsigned int buff[nb];
     lseek(fd_max, 0, SEEK_SET);
     if (read(fd_max, buff, nb * sizeof(unsigned int)) !=
         nb * sizeof(unsigned int)) {
@@ -250,22 +251,21 @@ int main(int argc, char *argv[]) {
             }
 
             int len = strlen(p->fragname);
-            char buff[len + 4];
-            memcpy(buff, p->fragname, len);
-            strcpy(buff + len, ".out");
+            char out[len + 4];
+            memcpy(out, p->fragname, len);
+            strcpy(out + len, ".out");
 
-            printf("create file %s\n", buff);
-            fd_out = open(buff, O_CREAT, O_WRONLY);
+            printf("create file %s\n", out);
+            fd_out = open(out, O_CREAT, O_WRONLY);
             if (fd_out < 0) {
                 perror("open");
                 exit(42);
             }
 
-            int len = strlen(p->fragname);
-            char buff2[len + 12];
-            memcpy(buff2, p->fragname, len);
-            strcpy(buff2 + len, ".not_trivial");
-            fd_not_trivial = open(buff2, O_CREAT, O_WRONLY);
+            char not_trivial[len + 12];
+            memcpy(not_trivial, p->fragname, len);
+            strcpy(not_trivial + len, ".not_trivial");
+            fd_not_trivial = open(not_trivial, O_CREAT, O_WRONLY);
             if (fd_out < 0) {
                 perror("open");
                 exit(42);
@@ -306,19 +306,17 @@ int main(int argc, char *argv[]) {
                 exit(42);
             }
 
-            int len = strlen(p->fragname);
-            char buff[len + 4];
-            memcpy(buff, p->fragname, len);
-            strcpy(buff + len, ".out");
-
-            printf("open file %s\n", buff);
-            fd_out = open(buff, O_WRONLY, O_APPEND);
+            char out[len + 4];
+            memcpy(out, p->fragname, len);
+            strcpy(out + len, ".out");
+            printf("open file %s\n", out);
+            fd_out = open(out, O_WRONLY, O_APPEND);
             if (fd_out < 0) {
                 perror("open");
                 exit(42);
             }
 
-            work_md_trivial(fd_out, fd_not_trivial);
+            work_not_md_trivial(trivial_mass_max, fd_out, fd_not_trivial);
 
             printf("remove file %s\n", p->fragname);
             rc = remove(p->fragname);
