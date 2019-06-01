@@ -281,7 +281,7 @@ unsigned int mexp(const mealy_t *machine, unsigned int bound,
     m = min(machine);
     res[1] = m->nb_states;
 
-    for (i = 0; i < bound && (i == 0 || res[i + 1] != m->nb_states) &&
+    for (i = 0; i < bound && (i == 0 || res[i] != m->nb_states) &&
                 m->nb_states < upbound;
          i++) {
         tmp = product(m, machine);

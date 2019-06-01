@@ -284,9 +284,11 @@ int main(int argc, char *argv[]) {
     }
 
     unsigned int trivial_mass_max = get_trivial_mass_max(nb);
+    
+    printf("MAX_TRIVIAL_MASS = %u\n", trivial_mass_max);
+    printf("######### BEGIN PART NOT-TRIVIAL #########\n");   
 
     for (p = frags; p; p = p->next) {
-        printf("666666666666666666666666666666666666666666666666666666\n");
         if (forkcount >= MAX_FORK) {
             wait(&st);
             process(st);
