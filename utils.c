@@ -40,33 +40,41 @@ char mealy_eq(const mealy_t *m1, const mealy_t *m2) {
 
 char *mealy_to_string(const mealy_t *m) {
     char *buff = malloc(4096);
+    memset(buff, 0, 4096);
     unsigned int pos = 0;
     buff[pos++] = '[';
-    for(unsigned int i = 0; i < m->nb_states; i++) {
+    for (unsigned int i = 0; i < m->nb_states; i++) {
         buff[pos++] = '[';
-        for(unsigned int j = 0; j < m->nb_letters; j++) {
-            pos += sprintf(buff, "%u", m->delta[i * m->nb_letters + j]);
-            if(j != m->nb_letters - 1) {
+        for (unsigned int j = 0; j < m->nb_letters; j++) {
+            pos += sprintf(buff + pos, "%u", m->delta[i * m->nb_letters + j]);
+            if (j != m->nb_letters - 1) {
                 buff[pos++] = ',';
             }
         }
         buff[pos++] = ']';
+        if (i != m->nb_states - 1) {
+            buff[pos++] = ',';
+        }
     }
     buff[pos++] = ']';
     buff[pos++] = ' ';
     buff[pos++] = '[';
-    for(unsigned int i = 0; i < m->nb_states; i++) {
+    for (unsigned int i = 0; i < m->nb_states; i++) {
         buff[pos++] = '[';
-        for(unsigned int j = 0; j < m->nb_letters; j++) {
-            pos += sprintf(buff, "%u", m->delta[i * m->nb_letters + j]);
-            if(j != m->nb_letters - 1) {
+        for (unsigned int j = 0; j < m->nb_letters; j++) {
+            pos += sprintf(buff + pos, "%u", m->delta[i * m->nb_letters + j]);
+            if (j != m->nb_letters - 1) {
                 buff[pos++] = ',';
             }
         }
         buff[pos++] = ']';
+        if (i != m->nb_states - 1) {
+            buff[pos++] = ',';
+        }
     }
     buff[pos++] = ']';
     buff[pos++] = '\n';
+    return buff;
 }
 
 void free_mealy(mealy_t *m) {
@@ -255,15 +263,16 @@ mealy_t *product(const mealy_t *m1, const mealy_t *m2) {
 }
 
 unsigned int mexp(const mealy_t *machine, unsigned int bound,
-                   unsigned int upbound, int fd_out) {
-    unsigned int i, max;
-    unsigned int res[bound + 2]; // le premier entier indique si il s'agit d'un réductible ou non
+                  unsigned int upbound, int fd_out) {
+    unsigned int i;
+    unsigned int res[bound + 2]; // le premier entier indique si il s'agit d'un
+                                 // réductible ou non
     mealy_t *m, *tmp;
 
     if (!machine)
         return -1;
 
-    if(upbound == -1) {
+    if (upbound == -1) {
         res[0] = 1; // c'est un md-trivial
     } else {
         res[0] = 0; // c'est un md-réduit
@@ -272,20 +281,22 @@ unsigned int mexp(const mealy_t *machine, unsigned int bound,
     m = min(machine);
     res[1] = m->nb_states;
 
-    for (i = 0; i < bound && (i == 0 || res[i+1] != m->nb_states) && m->nb_states < upbound; i++) {
+    for (i = 0; i < bound && (i == 0 || res[i + 1] != m->nb_states) &&
+                m->nb_states < upbound;
+         i++) {
         tmp = product(m, machine);
         m = min(tmp);
         free_mealy(tmp);
-        res[i+2] = m->nb_states;
+        res[i + 2] = m->nb_states;
     }
 
     free_mealy(m);
 
     unsigned int real_len = i + 2;
-    if(fd_out) {  
+    if (fd_out) {
         write(fd_out, &real_len, sizeof(unsigned int));
-        write(fd_out, &res, real_len*sizeof(unsigned int));
+        write(fd_out, &res, real_len * sizeof(unsigned int));
     }
 
-    return res[real_len-1];
+    return res[real_len - 1];
 }

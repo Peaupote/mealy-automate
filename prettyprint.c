@@ -140,8 +140,9 @@ int work_not_md_trivial(unsigned int trivial_mass_max, int fd_out,
             perror("open");
             exit(42);
         }
-        write(fd_res, "CONTRE EXEMPLE", 16);
+        write(fd_res, "CONTRE EXEMPLE ", 16);
         char *res_str = mealy_to_string(res);
+        printf("CONTRE EXEMPLE %s\n", res_str);
         write(fd_res, res_str, strlen(res_str));
         free(res_str);
         close(fd_res);
@@ -285,6 +286,7 @@ int main(int argc, char *argv[]) {
     unsigned int trivial_mass_max = get_trivial_mass_max(nb);
 
     for (p = frags; p; p = p->next) {
+        printf("666666666666666666666666666666666666666666666666666666\n");
         if (forkcount >= MAX_FORK) {
             wait(&st);
             process(st);
@@ -295,7 +297,7 @@ int main(int argc, char *argv[]) {
             char not_trivial_str[len + 13];
             memcpy(not_trivial_str, p->fragname, len);
             strcpy(not_trivial_str + len, ".not_trivial");
-            printf("start file %s\n", not_trivial_str);
+            printf("open file %s\n", not_trivial_str);
             fd_not_trivial = open(not_trivial_str, O_RDONLY);
             if (fd < 0) {
                 perror("open");
@@ -313,6 +315,9 @@ int main(int argc, char *argv[]) {
             }
 
             work_not_md_trivial(trivial_mass_max, fd_out, fd_not_trivial);
+ 
+            close(fd_out);
+            close(fd_not_trivial);
 
             printf("remove file %s\n", p->fragname);
             rc = remove(p->fragname);
@@ -328,6 +333,7 @@ int main(int argc, char *argv[]) {
                 exit(42);
             }
 
+            printf("Remove %s\n", not_trivial_str);
             exit(0);
         } else {
             forkcount++;
@@ -361,12 +367,12 @@ int main(int argc, char *argv[]) {
         char out[len + 4];
         memcpy(out, p->fragname, len);
         strcpy(out + len, ".out");
-        printf("open file %s\n", out);
         fd_out = open(out, O_RDONLY);
         if (fd_out < 0) {
             perror("open");
             exit(42);
         }
+        printf("copy file %s at the end of %s\n", out, plot);
         while((rc = read(fd_out, tampon, TAMPON_SIZE)) != 0) {
             if(rc < 0) {
                 perror("Erreur de lecture pendant la concaténation");
@@ -380,7 +386,8 @@ int main(int argc, char *argv[]) {
         }
         close(fd_out);
         remove(out);
+        remove(p->fragname);
     }
-
+    close(fd_plot);
     return 0;
 }
