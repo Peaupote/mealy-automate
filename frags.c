@@ -7,7 +7,7 @@
 
 #include "frags.h"
 
-#define FRAG_COUNT 5000
+#define FRAG_COUNT 200
 
 extern u_int8_t size, nb_states, nb_letters;
 

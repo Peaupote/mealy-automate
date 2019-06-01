@@ -62,7 +62,7 @@ char *mealy_to_string(const mealy_t *m) {
     for (unsigned int i = 0; i < m->nb_states; i++) {
         buff[pos++] = '[';
         for (unsigned int j = 0; j < m->nb_letters; j++) {
-            pos += sprintf(buff + pos, "%u", m->delta[i * m->nb_letters + j]);
+            pos += sprintf(buff + pos, "%u", m->rho[i * m->nb_letters + j]);
             if (j != m->nb_letters - 1) {
                 buff[pos++] = ',';
             }

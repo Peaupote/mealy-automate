@@ -12,7 +12,7 @@
 #include "utils.h"
 
 #define POWER 100
-#define MAX_FORK 4
+#define MAX_FORK 50
 #define TAMPON_SIZE 51200
 
 int fd, fd_max, fd_out, fd_not_trivial, fd_plot, fr_res;
@@ -33,8 +33,9 @@ unsigned int max_md_trivial(int fd_in, int fd_out, int fd_not_trivial) {
 
         machine = mealy(nb_states, nb_letters);
 
+        count++;
         if(count % 100 == 0) 
-            printf("Machine %lu\n", ++count);
+            printf("Machine %lu\n", count);
         // printf("delta:\n");
         unsigned int c;
         for (unsigned int i = 0; i < size; i++) {
@@ -88,8 +89,9 @@ mealy_t *check_not_trivial(unsigned int trivial_mass_max, int fd_out,
         }
 
         machine = mealy(nb_states, nb_letters);
+        count++;
         if(count % 100 == 0) 
-            printf("Machine %lu\n", ++count);
+            printf("Machine %lu\n", count);
 
         // printf("delta:\n");
         unsigned int c;
