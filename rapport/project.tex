@@ -615,7 +615,7 @@ On a rapidement constaté que le nombre d'automates à générer est très impor
 
 La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficaces. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un morphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permute sur tous les sommets du graphe en hélice.
 
-\begin{figure}[h]
+\begin{figure}[h]\label{fig:helix-aug}
   \begin{center}
     \begin{tikzpicture}[scale=0.7]
         \coordinate (A) at (-10, 0);
