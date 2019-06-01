@@ -103,7 +103,7 @@ mealy_t *check_not_trivial(unsigned int trivial_mass_max, int fd_out,
             return machine;
         }
 
-        printf("mass %u > %u\n", mass, trivial_mass_max);
+        // printf("mass %u > %u\n", mass, trivial_mass_max);
 
         free_mealy(machine);
     }
@@ -131,9 +131,7 @@ int work_not_md_trivial(unsigned int trivial_mass_max, int fd_out,
         printf("Seems to work !\n");
     } else {
         printf("This one seems to be a counter example.\n");
-    }
 
-    if (res != NULL) {
         printf("create file %s\n", "RES");
         int fd_res = open("RES", O_CREAT | O_WRONLY | O_APPEND, 0644);
         if (fd_res < 0) {
@@ -146,7 +144,10 @@ int work_not_md_trivial(unsigned int trivial_mass_max, int fd_out,
         write(fd_res, res_str, strlen(res_str));
         free(res_str);
         close(fd_res);
+
+        return 1;
     }
+
     free_mealy(res);
     return 0;
 }
@@ -181,10 +182,10 @@ unsigned int get_trivial_mass_max(int nb) {
         }
     }
     close(fd_max);
-    printf("Remove /tmp/max_list\n");
-    int rc = remove("/tmp/max_list");
+    printf("Remove /tmp/mealy_max_list\n");
+    int rc = remove("/tmp/mealy_max_list");
     if (rc != 0) {
-        perror("remove /tmp/max_list");
+        perror("remove /tmp/mealy_max_list");
         exit(42);
     }
     return trivial_mass_max;
@@ -226,17 +227,18 @@ int main(int argc, char *argv[]) {
 
     printf("Number of fragments %d\n", nb);
 
-    printf("create file /tmp/max_list\n");
-    fd_max = open("/tmp/max_list", O_CREAT|O_RDWR, 0644);
+    printf("create file /tmp/mealy_max_list\n");
+    fd_max = open("/tmp/mealy_max_list", O_CREAT|O_RDWR, 0644);
     if (fd_max < 0) {
-        perror("open /tmp/max_list");
+        perror("open /tmp/mealy_max_list");
         exit(42);
     }
 
     for (p = frags; p; p = p->next) {
         if (forkcount >= MAX_FORK) {
-            wait(&st);
-            process(st);
+            int pid = wait(&st);
+            printf("end fork trivial %d\n", pid);
+            forkcount--;
         }
 
         if (fork() == 0) {
@@ -268,18 +270,19 @@ int main(int argc, char *argv[]) {
                 exit(42);
             }
 
-            work_md_trivial(fd, fd_out, fd_not_trivial);
+            short res = work_md_trivial(fd, fd_out, fd_not_trivial);
 
             close(fd_out);
             close(fd_not_trivial);
-            exit(0);
+            exit(res);
         } else {
             forkcount++;
         }
     }
 
     while (forkcount > 0) {
-        wait(&st);
+        int pid = wait(&st);
+        printf("end fork trivial %d\n", pid);
         forkcount--;
     }
 
@@ -290,11 +293,14 @@ int main(int argc, char *argv[]) {
 
     for (p = frags; p; p = p->next) {
         if (forkcount >= MAX_FORK) {
-            wait(&st);
+            int pid = wait(&st);
+            printf("end fork not-trivial %d\n", pid);
+            forkcount--;
             process(st);
         }
 
-        if (fork() == 0) {
+        int pid = fork();
+        if (pid == 0) {
             int len = strlen(p->fragname);
             char not_trivial_str[len + 13];
             memcpy(not_trivial_str, p->fragname, len);
@@ -316,7 +322,7 @@ int main(int argc, char *argv[]) {
                 exit(42);
             }
 
-            work_not_md_trivial(trivial_mass_max, fd_out, fd_not_trivial);
+            short res = work_not_md_trivial(trivial_mass_max, fd_out, fd_not_trivial);
  
             close(fd_out);
             close(fd_not_trivial);
@@ -336,14 +342,16 @@ int main(int argc, char *argv[]) {
             }
 
             printf("Remove %s\n", not_trivial_str);
-            exit(0);
+            exit(res);
         } else {
+            printf("start fork %d\n", pid);
             forkcount++;
         }
     }
 
     while (forkcount > 0) {
-        wait(&st);
+        int pid = wait(&st);
+        printf("end fork not-trivial %d\n", pid);
         forkcount--;
         process(st);
     }
