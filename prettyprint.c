@@ -1,82 +1,71 @@
+#include <fcntl.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <string.h>
-#include <math.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include <wait.h>
 
+#include "frags.h"
 #include "nauty.h"
 #include "utils.h"
-#include "frags.h"
 
 #define POWER 100
-#define MAX_FORK 2
+#define MAX_FORK 4
+#define TAMPON_SIZE 51200
 
-int fd;
+int fd, fd_max, fd_out, fd_not_trivial, fd_plot, fr_res;
 u_int8_t nb_states, nb_letters, size;
 unsigned long count = 0, trivial_count = 0;
 unsigned char *buffer, *delta, *rho;
 mealy_t *machine, *red;
 
-typedef struct index_list {
-    unsigned long index;
-    struct index_list *next;
-} list_t;
-
-list_t *not_md_trivial_lst = 0;
-
-unsigned int max_md_trivial () {
+unsigned int max_md_trivial(int fd_in, int fd_out, int fd_not_trivial) {
     int rc;
     unsigned int mass, trivial_mass_max = 0;
 
-    while ((rc = read(fd, buffer, size)) > 0) {
-        if (rc < size) {
+    while ((rc = read(fd_in, buffer, 2 * size)) > 0) {
+        if (rc < 2 * size) {
             fprintf(stderr, "Corrupted file\n");
             exit(42);
         }
 
         machine = mealy(nb_states, nb_letters);
 
-        printf("Machine %lu\n", ++count);
-        //printf("delta:\n");
+        // printf("Machine %lu\n", ++count);
+        // printf("delta:\n");
         unsigned int c;
-        for(unsigned int i = 0; i < size; i++) {
+        for (unsigned int i = 0; i < size; i++) {
             c = (unsigned int)buffer[i];
-            memcpy(machine->delta+i, &c, sizeof(unsigned int));
+            // printf("%u", c);
+            memcpy(machine->delta + i, &c, sizeof(unsigned int));
         }
+        // printf("\n");
 
-        rc = read(fd, buffer, size);
-        if (rc < size) {
-            fprintf(stderr, "Corrupted file\n");
-            exit(42);
+        // printf("rho:");
+        for (unsigned int i = 0; i < size; i++) {
+            // printf("%u\n", size+i);
+            c = (unsigned int)buffer[size + i];
+            // printf("%u", c);
+            memcpy(machine->rho + i, &c, sizeof(unsigned int));
         }
+        // printf("\n");
 
-        //printf("rho:\n");
-        for(unsigned int i = 0; i < size; i++) {
-            c = (unsigned int)buffer[i];
-            memcpy(machine->rho+i, &c, sizeof(unsigned int));
-        }
-
-        if(is_md_trivial(machine)) {
+        if (is_md_trivial(machine)) {
             trivial_count++;
-            mass = mexp(machine, POWER, -1);
-            printf("mass upper bound %u\n", mass);
+            mass = mexp(machine, POWER, -1, fd_out);
+            // printf("mass upper bound %u\n", mass);
 
             if (mass > trivial_mass_max) {
                 trivial_mass_max = mass;
             }
         } else {
-            list_t *node = malloc(sizeof(list_t));
-            if (!node) {
-                perror("malloc");
+            rc = write(fd_not_trivial, buffer, 2 * size);
+            if (rc != 2 * size) {
+                fprintf(stderr, "Erreur de copie dans not_trivial\n");
                 exit(42);
             }
-
-            node->index = count;
-            node->next = not_md_trivial_lst;
-            not_md_trivial_lst = node;
         }
 
         free_mealy(machine);
@@ -85,60 +74,41 @@ unsigned int max_md_trivial () {
     return trivial_mass_max;
 }
 
-
-mealy_t *check_not_trivial (unsigned int trivial_mass_max) {
+mealy_t *check_not_trivial(unsigned int trivial_mass_max, int fd_out,
+                           int fd_not_trivial) {
     int rc;
     unsigned int mass;
-    list_t *node;
 
-    while (not_md_trivial_lst) {
-        node = not_md_trivial_lst;
-        not_md_trivial_lst = not_md_trivial_lst->next;
-        printf("Machine %lu\n", node->index);
+    while ((rc = read(fd_not_trivial, buffer, 2 * size)) > 0) {
 
-        rc = lseek(fd, size * 2 * (node->index - 1), SEEK_SET);
-        if (rc < 0) {
-            perror("lseek");
-            exit(42);
-        }
-
-        free(node);
-
-        if (read(fd, buffer, size) < size) {
+        if (rc < 2 * size) {
             fprintf(stderr, "Corrupted file\n");
             exit(42);
         }
 
         machine = mealy(nb_states, nb_letters);
 
-        //printf("delta:\n");
+        // printf("delta:\n");
         unsigned int c;
-        for(unsigned int i = 0; i < size; i++) {
+        for (unsigned int i = 0; i < size; i++) {
             c = (unsigned int)buffer[i];
-            memcpy(machine->delta+i, &c, sizeof(unsigned int));
+            memcpy(machine->delta + i, &c, sizeof(unsigned int));
         }
 
-        rc = read(fd, buffer, size);
-        if (rc < size) { // bug
-            fprintf(stderr, "Corrupted file\n");
-            exit(42);
+        // printf("rho:\n");
+        for (unsigned int i = 0; i < size; i++) {
+            c = (unsigned int)buffer[size + i];
+            memcpy(machine->rho + i, &c, sizeof(unsigned int));
         }
 
-        //printf("rho:\n");
-        for(unsigned int i = 0; i < size; i++) {
-            c = (unsigned int)buffer[i];
-            memcpy(machine->rho+i, &c, sizeof(unsigned int));
-        }
-
-        mass = mexp(machine, POWER * 10, trivial_mass_max);
+        mass = mexp(machine, POWER * 10, trivial_mass_max, fd_out);
 
         if (mass < trivial_mass_max) {
             printf("problem here %u < %u\n", mass, trivial_mass_max);
             return machine;
         }
 
-        printf("mass %u > %u\n", mass, trivial_mass_max);
-
+        // printf("mass %u > %u\n", mass, trivial_mass_max);
 
         free_mealy(machine);
     }
@@ -146,23 +116,36 @@ mealy_t *check_not_trivial (unsigned int trivial_mass_max) {
     return 0;
 }
 
+int work_md_trivial(int fd_in, int fd_out, int fd_not_trivial) {
+    unsigned int trivial_mass_max =
+        max_md_trivial(fd_in, fd_out, fd_not_trivial);
 
-int work() {
-    unsigned int trivial_mass_max = max_md_trivial();
+    write(fd_max, &trivial_mass_max, sizeof(unsigned int));
 
     printf("md trivial %lu.\n", trivial_count);
     printf("Total count %lu.\n", count);
     printf("Max mass upper bound found: %u\n", trivial_mass_max);
+    return 0;
+}
+
+int work_not_md_trivial(unsigned int trivial_mass_max, int fd_out,
+                        int fd_not_trivial, int fd_res) {
     printf("Look for non-md-trivial.\n");
 
-    mealy_t *res = check_not_trivial(trivial_mass_max);
+    mealy_t *res = check_not_trivial(trivial_mass_max, fd_out, fd_not_trivial);
     if (!res) {
         printf("Seems to work !\n");
     } else {
         printf("This one seems to be a counter example.\n");
-    }
 
-    // write in file
+        char *res_str = mealy_to_string(res);
+        printf("CONTRE EXEMPLE %s\n", res_str);
+        write(fd_res, "CONTRE EXEMPLE ", 16);
+        write(fd_res, res_str, strlen(res_str));
+        free(res_str);
+
+        return 1;
+    }
 
     free_mealy(res);
     return 0;
@@ -183,7 +166,31 @@ void process(int st) {
     }
 }
 
-int main (int argc, char *argv[]) {
+unsigned int get_trivial_mass_max(int nb) {
+    unsigned int buff[nb];
+    lseek(fd_max, 0, SEEK_SET);
+    if (read(fd_max, buff, nb * sizeof(unsigned int)) !=
+        nb * sizeof(unsigned int)) {
+        perror("fraglent trivial mass");
+        exit(42);
+    }
+    unsigned int trivial_mass_max = buff[0];
+    for (unsigned int i = 0; i < nb; i++) {
+        if (buff[i] > trivial_mass_max) {
+            trivial_mass_max = buff[i];
+        }
+    }
+    close(fd_max);
+    printf("Remove /tmp/mealy_max_list\n");
+    int rc = remove("/tmp/mealy_max_list");
+    if (rc != 0) {
+        perror("remove /tmp/mealy_max_list");
+        exit(42);
+    }
+    return trivial_mass_max;
+}
+
+int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("usage: %s <file>\n", argv[0]);
         return 1;
@@ -211,7 +218,7 @@ int main (int argc, char *argv[]) {
     printf("Dimesion %u, %u\n", nb_states, nb_letters);
 
     size = nb_states * nb_letters;
-    buffer = malloc(size);
+    buffer = malloc(2 * size);
 
     int nb, st, forkcount = 0;
     frag_t *p, *frags = fragment_file(fd, &nb);
@@ -219,13 +226,33 @@ int main (int argc, char *argv[]) {
 
     printf("Number of fragments %d\n", nb);
 
+    printf("create file /tmp/mealy_max_list\n");
+    fd_max = open("/tmp/mealy_max_list", O_CREAT | O_RDWR, 0644);
+    if (fd_max < 0) {
+        perror("open /tmp/mealy_max_list");
+        exit(42);
+    }
+
+    int len = strlen(argv[1]);
+    char res[+5];
+    memcpy(res, argv[1], len);
+    strcpy(res + len, ".res");
+    printf("create file %s\n", res);
+    int fd_res = open(res, O_CREAT | O_WRONLY, 0644);
+    if (fd_res < 0) {
+        perror("open");
+        exit(42);
+    }
+
     for (p = frags; p; p = p->next) {
         if (forkcount >= MAX_FORK) {
-            wait(&st);
-            process(st);
+            int pid = wait(&st);
+            printf("end fork trivial %d\n", pid);
+            forkcount--;
         }
 
-        if (fork() == 0) {
+        int pid = fork();
+        if (pid == 0) {
             printf("start file %s\n", p->fragname);
             fd = open(p->fragname, O_RDONLY);
             if (fd < 0) {
@@ -233,7 +260,85 @@ int main (int argc, char *argv[]) {
                 exit(42);
             }
 
-            work();
+            len = strlen(p->fragname);
+            char out[len + 5];
+            memcpy(out, p->fragname, len);
+            strcpy(out + len, ".out");
+
+            printf("create file %s\n", out);
+            fd_out = open(out, O_CREAT | O_WRONLY, 0644);
+            if (fd_out < 0) {
+                perror("open");
+                exit(42);
+            }
+
+            char not_trivial[len + 13];
+            memcpy(not_trivial, p->fragname, len);
+            strcpy(not_trivial + len, ".not_trivial");
+            fd_not_trivial = open(not_trivial, O_CREAT | O_WRONLY, 0644);
+            if (fd_out < 0) {
+                perror("open");
+                exit(42);
+            }
+
+            short res = work_md_trivial(fd, fd_out, fd_not_trivial);
+
+            close(fd_out);
+            close(fd_not_trivial);
+            exit(res);
+        } else {
+            printf("start fork trivial %d\n", pid);
+            forkcount++;
+        }
+    }
+
+    while (forkcount > 0) {
+        int pid = wait(&st);
+        printf("end fork trivial %d\n", pid);
+        forkcount--;
+    }
+
+    unsigned int trivial_mass_max = get_trivial_mass_max(nb);
+
+    printf("MAX_TRIVIAL_MASS = %u\n", trivial_mass_max);
+    printf("######### BEGIN PART NOT-TRIVIAL #########\n");
+
+    for (p = frags; p; p = p->next) {
+        if (forkcount >= MAX_FORK) {
+            int pid = wait(&st);
+            printf("end fork not-trivial %d\n", pid);
+            forkcount--;
+            process(st);
+        }
+
+        int pid = fork();
+        if (pid == 0) {
+            int len = strlen(p->fragname);
+            char not_trivial_str[len + 13];
+            memcpy(not_trivial_str, p->fragname, len);
+            strcpy(not_trivial_str + len, ".not_trivial");
+            printf("open file %s\n", not_trivial_str);
+            fd_not_trivial = open(not_trivial_str, O_RDONLY);
+            if (fd < 0) {
+                perror("open");
+                exit(42);
+            }
+
+            char out[len + 5];
+            memcpy(out, p->fragname, len);
+            strcpy(out + len, ".out");
+            printf("open file %s\n", out);
+            fd_out = open(out, O_WRONLY | O_APPEND);
+            if (fd_out < 0) {
+                perror("open");
+                exit(42);
+            }
+
+            short res =
+                work_not_md_trivial(trivial_mass_max, fd_out, fd_not_trivial, fd_res);
+
+            close(fd_out);
+            close(fd_not_trivial);
 
             printf("remove file %s\n", p->fragname);
             rc = remove(p->fragname);
@@ -242,17 +347,74 @@ int main (int argc, char *argv[]) {
                 exit(42);
             }
 
-            exit(0);
+            printf("remove file %s\n", not_trivial_str);
+            rc = remove(not_trivial_str);
+            if (rc < 0) {
+                perror("remove");
+                exit(42);
+            }
+
+            printf("Remove %s\n", not_trivial_str);
+            exit(res);
         } else {
+            printf("start fork not-trivial %d\n", pid);
             forkcount++;
         }
     }
 
     while (forkcount > 0) {
-        wait(&st);
+        int pid = wait(&st);
+        printf("end fork not-trivial %d\n", pid);
         forkcount--;
         process(st);
     }
 
+    // On concatène les fichiers de sorties
+
+    len = strlen(argv[1]);
+    char plot[len + 6];
+    memcpy(plot, argv[1], len);
+    strcpy(plot + len, ".plot");
+    printf("Create file %s\n", plot);
+    fd_plot = open(plot, O_CREAT | O_WRONLY, 0644);
+    if (fd_plot < 0) {
+        perror("open fd_plot");
+        exit(42);
+    }
+
+    char tampon[TAMPON_SIZE];
+    ssize_t cpy;
+
+    for (p = frags; p; p = p->next) {
+        len = strlen(p->fragname);
+        char out[len + 4];
+        memcpy(out, p->fragname, len);
+        strcpy(out + len, ".out");
+        fd_out = open(out, O_RDONLY);
+        if (fd_out < 0) {
+            perror("open");
+            exit(42);
+        }
+        printf("copy file %s at the end of %s\n", out, plot);
+        while ((rc = read(fd_out, tampon, TAMPON_SIZE)) != 0) {
+            if (rc < 0) {
+                perror("Erreur de lecture pendant la concaténation");
+                exit(42);
+            }
+            cpy = write(fd_plot, tampon, rc);
+            if (cpy != rc) {
+                printf("ERREUR PENDANT LA CONCATENATION : ECRITURE PARTIELLE");
+                exit(42);
+            }
+        }
+        close(fd_out);
+        remove(out);
+        remove(p->fragname);
+    }
+
+    free(buffer);
+    free_frag_t(frags);
+    close(fd_plot);
+    close(fd_res);
     return 0;
 }

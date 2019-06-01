@@ -3,6 +3,7 @@ outputs/
 .vscode/
 nauty26r11
 data
+RES
 
 # executable
 prettyprint
