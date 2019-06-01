@@ -51,7 +51,7 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
   Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexées par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexées par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
 \end{definition}
 
-La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entier écrit en binaire. Une flèche du type $p\overset{x|y}{\rightarrow}q$ indique que quand on est dans l'état $p$ et qu'on lit la lettre $x$, on se déplace dans l'état $q$ et on écrit la lettre $y$.
+La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entier écrit en binaire. Une flèche du type $p\overset{x|y}{\longrightarrow}q$ indique que quand on est dans l'état $p$ et qu'on lit la lettre $x$, on se déplace dans l'état $q$ et on écrit la lettre $y$.
 
 \begin{figure}[h]
   \begin{center}
@@ -63,7 +63,7 @@ La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entie
       edge node {$0|1$} (q_1)
       (q_1) edge [loop above] node {$0|0~1|1$} (q_1);
     \end{tikzpicture}
-    \caption{une machine de Mealy $\mathcal{A}$\label{fig:example}}
+    \caption{une machine de Mealy $\mathcal{A}$ \label{fig:example}}
   \end{center}
 \end{figure}
 
@@ -85,7 +85,7 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
   \end{center}
 \end{figure}
 
-Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquettés par des couples états lettres. Pour chaque flèche du type $p\overset{x|y}{\rightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t'on que de chaque sommets du graphe en hélice part exactement une flèche.
+Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquettés par des couples états lettres. Pour chaque flèche du type $p\overset{x|y}{\longrightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t'on que de chaque sommets du graphe en hélice part exactement une flèche.
 
 \begin{figure}[h]
   \begin{center}
@@ -113,7 +113,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
 \end{definition}
 
 \begin{definition}
-  Si un machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire sont \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplacant les flèches $p\overset{x|y}{\rightarrow}q$ par $p^{-1}\overset{y|x}{\rightarrow}q^{-1}$.
+  Si un machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire sont \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplacant les flèches $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
 \end{definition}
 
 
@@ -148,7 +148,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
 
 
 \begin{definition}
-  Si une machine de Mealy est réversible, alors on peut construire sont \textbf{\textir{dual}}, noté $\mathfrak{d}\mathcal{M}$, en remplacant les flèches $p\overset{x|y}{\rightarrow}q$ par $x\overset{p|q}{\rightarrow}y$.
+  Si une machine de Mealy est réversible, alors on peut construire sont \textbf{\textir{dual}}, noté $\mathfrak{d}\mathcal{M}$, en remplacant les flèches $p\overset{x|y}{\longrightarrow}q$ par $x\overset{p|q}{\longrightarrow}y$.
 \end{definition}
 
 

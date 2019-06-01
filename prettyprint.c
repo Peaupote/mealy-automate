@@ -33,7 +33,8 @@ unsigned int max_md_trivial(int fd_in, int fd_out, int fd_not_trivial) {
 
         machine = mealy(nb_states, nb_letters);
 
-        // printf("Machine %lu\n", ++count);
+        if(count % 100 == 0) 
+            printf("Machine %lu\n", ++count);
         // printf("delta:\n");
         unsigned int c;
         for (unsigned int i = 0; i < size; i++) {
@@ -87,6 +88,8 @@ mealy_t *check_not_trivial(unsigned int trivial_mass_max, int fd_out,
         }
 
         machine = mealy(nb_states, nb_letters);
+        if(count % 100 == 0) 
+            printf("Machine %lu\n", ++count);
 
         // printf("delta:\n");
         unsigned int c;
