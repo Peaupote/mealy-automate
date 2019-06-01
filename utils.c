@@ -289,6 +289,7 @@ unsigned int mexp(const mealy_t *machine, unsigned int bound,
          i++) {
         // printf("MEXP %u\n", i);
         tmp = product(m, machine);
+        free_mealy(m);
         m = min(tmp);
         free_mealy(tmp);
         res[i + 2] = m->nb_states;

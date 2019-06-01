@@ -405,6 +405,9 @@ int main(int argc, char *argv[]) {
         remove(out);
         remove(p->fragname);
     }
+
+    free(buffer);
+    free_frag_t(frags);
     close(fd_plot);
     return 0;
 }

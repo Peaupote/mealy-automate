@@ -48,7 +48,19 @@ frag_t *fragment_file(int fd, int *nb) {
         close(ffd);
     }
 
+    free(buffer);
     return ret;
+}
+
+void free_frag_t(frag_t *frags) {
+    frag_t *curr = frags;
+    frag_t *next;
+    while(curr->next != NULL) {
+        next = curr->next;
+        free(curr);
+        curr = next;
+    }
+    free(curr);
 }
 
 void reassemble_files(frag_t *frags) {
