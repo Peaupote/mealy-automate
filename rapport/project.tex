@@ -97,7 +97,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
       \node[state] (q_01) [above=of q_00] {$p, 1$};
       \path[->,>=latex]
       (q_00) edge node {} (q_11)
-      (q_10) edge node {} (q_01)
+      (q_10) edge [loop right] node {} (q_10)
       (q_11) edge [loop right] node {} (q_11)
       (q_01) edge node {} (q_00);
     \end{tikzpicture}
