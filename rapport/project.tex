@@ -459,8 +459,8 @@ Ce théorème n'est pas valide pout les automates biréversibles en général.
 
 \begin{definition}
   \label{def:mdc-red}
-  Une paire d'automates duaux est $\mathfrak{mdc}$-réduite si elle est $\mathfrak{md}$-réduite et que les deux automates ne sont irréductibles.
-  La $\mathfrak{mdc}$-réduction consiste à répéter la $\mathfrak{md}$-réduction de l'automate et de ses conjugés jusqu'à touver des paires $\mathfrak{mdc}$-réduite.
+  Une paire d'automates duaux est $\mathfrak{mdc}$-réduite si elle est $\mathfrak{md}$-réduite et que les deux automates sont irréductibles.
+  La $\mathfrak{mdc}$-réduction consiste à répéter la $\mathfrak{md}$-réduction de l'automate et de ses conjugués jusqu'à trouver des paires $\mathfrak{mdc}$-réduite.
 \end{definition}
 
 On remarque qu'il n'existe pas une unique $\mathfrak{mdc}$-réduction, contrairement à la $\mathfrak{md}$-réduction.
@@ -829,9 +829,9 @@ Notre algorithme procède donc à la recherche exhaustive de toutes les machines
 
 Nous maintenons une liste de \textit{sources} et de \textit{cibles} qui représentent les sommets du graphe en hélice desquels encore aucune flèche ne part et les sommets du graphe en hélice vers lesquels encore aucune flèche ne pointe. En choisissant nos sommets dans ces ensembles nous nous assuront que le graphe en hélice obtenu est bien une union de cycles disjoints. À chaque fois que nous modifions \textrm{delta} ou \textrm{rho}, nous vérifions que la machine est bien inversible-réversible.
 
-Ainsi, les automates trouvés -- en vertu de la proposition \ref{thm:ir-helix} -- sont bien biréversibles. La structure globale du programme est représentée sur la figure~\ref{fig:gen-pseudo-code}
+Ainsi, les automates trouvés -- en vertu de la proposition \ref{thm:ir-helix} -- sont bien biréversibles. La structure globale du programme est représentée sur la figure~\ref{fig:gen-pseudo-code}.
 
-\begin{figure}
+\begin{figure}[h]
 \begin{verbatim}
 def rec(start, prev, sources, targets, delta, rho):
     if not sources and not targets:
@@ -940,9 +940,11 @@ Nous avions commencé par implémenter la génération en \textrm{Python} mais n
 \item \textrm{Nauty} ne dispose pas d'interface efficace en Python.
 \end{itemize}
 
-Nous avons donc décidé d'implémenter une version C beaucoup plus efficace. Nous avons pu augmenter l'efficacité de notre programme en le parallélisant.
+Nous avons donc décidé d'implémenter une version C beaucoup plus efficace. Nous avons également pu augmenter l'efficacité de notre programme en le parallélisant.
 
 \subsubsection*{Quelques benchmarks}
+
+Les tests ont été réalisés sur une machine à 40 cœurs physiques, 80 virtuels, avec à chaque fois un nombre de processus parallèles égal à $|\mathcal{Q}|\times|\Sigma|$. 
 
 \begin{table}[h!]
   \begin{center}
@@ -1056,13 +1058,13 @@ Le problème est indécidable en général mais pour tester notre conjecture nou
   Si la fonction de masse d'une machine de Mealy $\mathcal{A}$ est bornée, alors $\left<\mathcal{A}\right>_+$ est fini.
 \end{prop}
 
-La proposition \ref{prop:mass} nous donne donc un critère de semi-décidabilité sur la finitude du (semi-)groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états sucessifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations coûteuses (de complexités respectives $\mathcal{O}\left(\Sigma\mathcal{Q}\log\mathcal{Q}\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répéter de nombreuses fois.
+La proposition \ref{prop:mass} nous donne donc un critère de semi-décidabilité sur la finitude du (semi-)groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états successifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations coûteuses (de complexités respectives $\mathcal{O}\left(\Sigma\mathcal{Q}\log\mathcal{Q}\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répéter de nombreuses fois.
 
 \subsection{$\mathfrak{md}$-triviaux dans des classes d'automates irréductibles}
 
-Comme dit dans la section \ref{sec:action} la $\mathfrak{md}$-réduction résout le problème de finitude pour les automates biréversibles à deux états/lettres. La figure \ref{fig:fantastiques} montre les quatres automates qui ne se $\mathfrak{md}$-trivialisent pas mais engendre du fini pour les biréversibles à 4 états et 3 lettres. Ces automates se factorisent, et en permutant l'ordre de leurs facteurs on trouve des automates $\mathfrak{md}$-triviaux.
+Comme dit dans la section \ref{sec:action} la $\mathfrak{md}$-réduction résout le problème de finitude pour les automates biréversibles à deux états/lettres. La figure \ref{fig:fantastiques} montre les quatre automates qui ne se $\mathfrak{md}$-trivialisent pas mais engendrent du fini pour les biréversibles à 4 états et 3 lettres. Ces automates se factorisent, et en permutant l'ordre de leurs facteurs on trouve des automates $\mathfrak{md}$-triviaux.
 
-Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction suffit pour décider de la finitude dans des cas où la factorisation est impossible -- \emph{i.e.} quand les nombres d'états et de lettres sont premiers.
+Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction suffit pour décider de la finitude dans des cas où la factorisation est impossible -- \emph{i.e.} quand le nombre d'états est premier.
 
 Nous avons donc procédé de la manière suivante:
 
@@ -1072,11 +1074,39 @@ Nous avons donc procédé de la manière suivante:
 \item vérifier que la fonction de croissance de tous les automates $\mathfrak{md}$-trivaux dépasse cette borne.
 \end{enumerate}
 
-Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contres exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 752 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis parralèliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contres exemples.
+Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contres exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 752 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis paralléliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contres exemples.
 
 \begin{figure}[h]
-  CONTRE EXEMPLE
+\begin{center}
+  \begin{tikzpicture}
+  	\coordinate (A) at (-5, 0);
+  	\coordinate (B) at (-2, -2);
+  	\coordinate (C) at (2, 2);
+	\coordinate (D) at (-2, 2);
+	\coordinate (E) at (2, -2);
+	
+	\node[draw,circle,minimum width = 2.5em] (QA) at (A) {$a$};
+	\node[draw,circle,minimum width = 2.5em] (QB) at (B) {$b$};
+	\node[draw,circle,minimum width = 2.5em] (QC) at (C) {$c$};
+	\node[draw,circle,minimum width = 2.5em] (QD) at (D) {$d$};
+	\node[draw,circle,minimum width = 2.5em] (QE) at (E) {$e$};
+	
+	\draw[->,>=latex] (QA) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA);
+	\draw[->,>=latex] (QB) to[out=205,in=245,looseness=6] node[midway, below left] {$2|0$} (QB);
+	\draw[->,>=latex] (QB) to[bend left] node[midway, left] {$0|2$} (QD);
+	\draw[->,>=latex] (QB) to[bend left] node[midway, above] {$1|1$} (QE);
+	\draw[->,>=latex] (QC) to[out=25,in=65,looseness=6] node[midway, above right]{$1|0$} (QC);
+	\draw[->,>=latex] (QC) to[bend left] node[midway, below] {$2|1$} (QD);
+	\draw[->,>=latex] (QC) to[bend left] node[midway, right] {$0|2$} (QE);
+	\draw[->,>=latex] (QD) to[out=115,in=155,looseness=6] node[midway, above left]{$1|0$} (QD);
+	\draw[->,>=latex] (QD) to[bend left] node[midway, right] {$0|1$} (QB);
+	\draw[->,>=latex] (QD) to[bend left] node[midway, above] {$2|2$} (QC);
+	\draw[->,>=latex] (QE) to[out=295,in=335,looseness=6] node[midway, below right]{$2|0$} (QE);
+	\draw[->,>=latex] (QE) to[bend left] node[midway, below] {$1|2$} (QB);
+	\draw[->,>=latex] (QE) to[bend left] node[midway, left] {$0|1$} (QC);
+  \end{tikzpicture}
   \caption{Contre exemple à la conjecture \ref{conj:birev-mdc}}
+\end{center}
 \end{figure}
 
 \subsection{Automates fantastiques}
