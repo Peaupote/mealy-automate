@@ -239,8 +239,85 @@ et
 \end{definition}
 
 \begin{figure}[h!]
-  TODO schema md-red...
-  \caption{$\mathfrak{md}$-réduction de l'automate xx}
+  \centering
+  \scalebox{0.8}{
+    \begin{tikzpicture}
+      \coordinate (A2) at (-2,-7);
+      \coordinate (B2) at (-2,-11);
+      \coordinate (C2) at (2,-7);
+      \coordinate (D2) at (2,-11);
+      \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$b$};
+      \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$a$};
+      \node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$c$};
+      \node[draw,thick,circle,minimum width = 2.5em] (QD2) at (D2) {$d$};
+      \draw[thick,->,>=latex] (QA2) to[out=115,in=155,looseness=6] node[midway, above left]{$1|2$} (QA2);
+      \draw[thick,->,>=latex] (QA2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QC2);
+      \draw[thick,->,>=latex] (QB2) to[out=205,in=245,looseness=6] node[midway, below left]{$1|2$} (QB2);
+      \draw[thick,->,>=latex] (QB2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QD2);
+      \draw[thick,->,>=latex] (QC2) to[out=25,in=65,looseness=6] node[midway, above right]{$1|2$} (QC2);
+      \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
+      \draw[thick,->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
+      \draw[thick,->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
+
+      % minization
+      \draw[thick,->,>=latex] (0, -13) to node[midway, right] {$\mathfrak{m}$} (0, -14);
+
+      % minimisé du conjugué
+
+      \coordinate (A2) at (2,-17);
+      \coordinate (B2) at (-2,-17);
+      \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$bc$};
+      \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$ad$};
+      \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA2);
+      \draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $1|2$ \\ $2|0$ \end{tabular}} (QB2);
+
+      % dualisation
+
+      \draw[thick,<->,>=latex] (3.5, -16) to node[midway, above] {$\mathfrak{d}$} (4.5, -16);
+
+
+
+    \coordinate (A2) at (6.5,-17);
+    \coordinate (B2) at (9.5,-17);
+    \coordinate (C2) at ($(A2) + (60:3)$);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$0$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$2$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$1$};
+
+    \draw[thick,->,>=latex] (QA2) to[out=190,in=230,looseness=6] node[midway, below left]{$ad|ad$} (QA2);
+    \draw[thick,->,>=latex] (QA2) to node[midway, above left] {$bc|bc$} (QC2);
+    \draw[thick,->,>=latex] (QB2) to node[midway, below] {$bc|bc$} (QA2);
+    \draw[thick,->,>=latex] (QB2) to[bend left] node[midway, below left] {$ad|ad$} (QC2);
+    \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, above right] {\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QB2);
+
+    %minimisation
+    \draw[thick,->,>=latex] (8, -19) to node[midway, right] {$\mathfrak{m}$} (8, -20);
+
+    \coordinate (A2) at (8, -23);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$012$};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QA2);
+
+    %dualisation
+
+    \draw[thick,<->,>=latex] (3.5, -22) to node[midway, above] {$\mathfrak{d}$} (4.5, -22);
+
+    \coordinate (A2) at (-1.5, -22);
+    \coordinate (B2) at (1.5, -22);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$ad$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$bc$};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
+    \draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QB2);
+
+    %minimisation
+    \draw[thick,->,>=latex] (0, -23) to node[midway, right] {$\mathfrak{m}$} (0, -24);
+
+    \coordinate (A2) at (0, -26);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$adbc$};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
+
+  \end{tikzpicture}
+  }
+  \caption{Exemple de $\mathfrak{md}$-réduction}
 \end{figure}
 
 \subsection{Action sur les mots et (semi-)groupes engendrés\label{sec:action}}
@@ -301,8 +378,8 @@ Ce théorème n'est pas valide pout les automates biréversibles en général.
 
 \begin{center}
   \begin{figure}[h]
-  	\begin{center}
-  	\scalebox{.6}{
+    \begin{center}
+    \scalebox{.6}{
       \begin{tikzpicture}[scale=0.9]
 
         \coordinate (A) at (-10,-2);
@@ -369,8 +446,8 @@ Ce théorème n'est pas valide pout les automates biréversibles en général.
         \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|2$} (QC);
         \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
       \end{tikzpicture}
-	}
-	\end{center}
+    }
+    \end{center}
     \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier.\label{fig:fantastiques}}
   \end{figure}
 \end{center}
@@ -394,165 +471,165 @@ Ces contre-exemples sont pourtant factorisables, et en conjugant leur factorisat
 \begin{center}
   \scalebox{0.7}{
   \begin{tikzpicture}
-  
-  	% Automate de départ : fantastique2
-  	
-  	\coordinate (A1) at (0,0);
-  	\coordinate (B1) at (0:3);
-  	\coordinate (C1) at (120:3);
-  	\coordinate (D1) at (240:3);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA1) at (A1) {};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB1) at (B1) {};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QC1) at (C1) {};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QD1) at (D1) {};
-  	\draw[thick,->,>=latex] (QA1) to[bend right] node[midway, below]{$1|0$} (QB1);
-  	\draw[thick,->,>=latex] (QB1) to[bend right] node[midway, above]{$2|0$} (QA1);
-  	\draw[thick,->,>=latex] (QA1) to[bend right] node[midway, above right]{$0|1$} (QC1);
-  	\draw[thick,->,>=latex] (QC1) to[bend right] node[midway, below left]{$0|2$} (QA1);
-  	\draw[thick,->,>=latex] (QA1) to[bend right] node[midway, above left]{$2|2$} (QD1);
-  	\draw[thick,->,>=latex] (QD1) to[bend right] node[midway, below right]{$1|1$} (QA1);
-  	\draw[thick,->,>=latex] (QB1) to[bend right] node[midway, below]{$1|2$} (QC1);
-  	\draw[thick,->,>=latex] (QC1) to[bend left=40] node[midway, above]{$2|1$} (QB1);
-  	\draw[thick,->,>=latex] (QC1) to[bend right] node[midway, right]{$1|0$} (QD1);
-  	\draw[thick,->,>=latex] (QD1) to[bend left=40] node[midway, left]{$2|0$} (QC1);
-  	\draw[thick,->,>=latex] (QD1) to[bend right] node[midway, above]{$0|2$} (QB1);
-  	\draw[thick,->,>=latex] (QB1) to[bend left=40] node[midway, below]{$0|1$} (QD1);
-  	
-  	% égal
-  	
-  	\draw (4,0) node {$=$};
-  	
-  	% Décomposition en produit
-  	
-  	\coordinate (A2) at (6,2);
-  	\coordinate (B2) at (6,-2);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {};
-  	\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$0|2$} (QA2);
-  	\draw[thick,->,>=latex] (QA2) to[bend right] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|0$ \end{tabular}} (QB2);
-  	\draw[thick,->,>=latex] (QB2) to[out=250,in=290,looseness=6] node[midway, below]{$0|2$} (QB2);
-  	\draw[thick,->,>=latex] (QB2) to[bend right] node[midway, right]{\begin{tabular}{c} $1|0$ \\ $2|1$ \end{tabular}} (QA2);
-  	
-  	\draw (8,0) node {$\times$};
-  	
-  	\coordinate (A3) at (10,2);
-  	\coordinate (B4) at (10,-2);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA3) at (A3) {};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB4) at (B4) {};
-  	\draw[thick,->,>=latex] (QA3) to[out=70,in=110,looseness=6] node[midway, above]{$1|0$} (QA3);
-  	\draw[thick,->,>=latex] (QA3) to[bend right] node[midway, left]{\begin{tabular}{c} $0|2$ \\ $2|1$ \end{tabular}} (QB4);
-  	\draw[thick,->,>=latex] (QB4) to[out=250,in=290,looseness=6] node[midway, below]{$1|0$} (QB4);
-  	\draw[thick,->,>=latex] (QB4) to[bend right] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $2|2$ \end{tabular}} (QA3);
-  	
-  	% conjugaison
-  	
-  	\draw[thick,->,>=latex] (8, -4) to node[midway, left] {$\mathfrak{c}$} (8, -5);
-  	
-  	% produit conjugué
-  	
-  	\coordinate (A3) at (6,-7);
-  	\coordinate (B4) at (6,-11);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA3) at (A3) {};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB4) at (B4) {};
-  	\draw[thick,->,>=latex] (QA3) to[out=70,in=110,looseness=6] node[midway, above]{$1|0$} (QA3);
-  	\draw[thick,->,>=latex] (QA3) to[bend right] node[midway, left]{\begin{tabular}{c} $0|2$ \\ $2|1$ \end{tabular}} (QB4);
-  	\draw[thick,->,>=latex] (QB4) to[out=250,in=290,looseness=6] node[midway, below]{$1|0$} (QB4);
-  	\draw[thick,->,>=latex] (QB4) to[bend right] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $2|2$ \end{tabular}} (QA3);
-  	
-  	\draw (8,-9) node {$\times$};
-  	
-  	\coordinate (A2) at (10,-7);
-  	\coordinate (B2) at (10,-11);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {};
-  	\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$0|2$} (QA2);
-  	\draw[thick,->,>=latex] (QA2) to[bend right] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|0$ \end{tabular}} (QB2);
-  	\draw[thick,->,>=latex] (QB2) to[out=250,in=290,looseness=6] node[midway, below]{$0|2$} (QB2);
-  	\draw[thick,->,>=latex] (QB2) to[bend right] node[midway, right]{\begin{tabular}{c} $1|0$ \\ $2|1$ \end{tabular}} (QA2);
-  	
-  	%égalité 
-  	
-  	\draw (4,-9) node {$=$};
-  	
-  	%conjugué
-  	
-  	\coordinate (A2) at (-2,-7);
-  	\coordinate (B2) at (-2,-11);
-  	\coordinate (C2) at (2,-7);
-  	\coordinate (D2) at (2,-11);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$b$};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$a$};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$c$};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QD2) at (D2) {$d$};
-  	\draw[thick,->,>=latex] (QA2) to[out=115,in=155,looseness=6] node[midway, above left]{$1|2$} (QA2);
-  	\draw[thick,->,>=latex] (QA2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QC2);
-  	\draw[thick,->,>=latex] (QB2) to[out=205,in=245,looseness=6] node[midway, below left]{$1|2$} (QB2);
-  	\draw[thick,->,>=latex] (QB2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QD2);
-  	\draw[thick,->,>=latex] (QC2) to[out=25,in=65,looseness=6] node[midway, above right]{$1|2$} (QC2);
-  	\draw[thick,->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
-  	\draw[thick,->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
-  	\draw[thick,->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
-  	
-  	%minization
-  	\draw[thick,->,>=latex] (0, -13) to node[midway, right] {$\mathfrak{m}$} (0, -14);
-  	
-  	%minimisé du conjugué
-  	
-  	\coordinate (A2) at (2,-17);
-  	\coordinate (B2) at (-2,-17);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$bc$};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$ad$};
-  	\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA2);
-  	\draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $1|2$ \\ $2|0$ \end{tabular}} (QB2);
-  	
-  	%dualisation
-  	
-  	\draw[thick,<->,>=latex] (3.5, -16) to node[midway, above] {$\mathfrak{d}$} (4.5, -16);
-  	
-  	% dual du minimisé du conjugué
-  	
-  	\coordinate (A2) at (6.5,-17);
-  	\coordinate (B2) at (9.5,-17);
-  	\coordinate (C2) at ($(A2) + (60:3)$);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$0$};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$2$};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$1$};
-  	
-  	\draw[thick,->,>=latex] (QA2) to[out=190,in=230,looseness=6] node[midway, below left]{$ad|ad$} (QA2);
-  	\draw[thick,->,>=latex] (QA2) to node[midway, above left] {$bc|bc$} (QC2);
-  	\draw[thick,->,>=latex] (QB2) to node[midway, below] {$bc|bc$} (QA2);
-  	\draw[thick,->,>=latex] (QB2) to[bend left] node[midway, below left] {$ad|ad$} (QC2);
-  	\draw[thick,->,>=latex] (QC2) to[bend left] node[midway, above right] {\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QB2);
-  	
-  	%minimisation
-  	\draw[thick,->,>=latex] (8, -19) to node[midway, right] {$\mathfrak{m}$} (8, -20);
-  	
-  	\coordinate (A2) at (8, -23);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$012$};
-  	\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QA2);
-  	
-  	%dualisation
-  	
-  	\draw[thick,<->,>=latex] (3.5, -22) to node[midway, above] {$\mathfrak{d}$} (4.5, -22);
-  	
-  	\coordinate (A2) at (-1.5, -22);
-  	\coordinate (B2) at (1.5, -22);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$ad$};
-  	\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$bc$};
-  	\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
-  	\draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QB2);
-  	
-  	%minimisation
-  	\draw[thick,->,>=latex] (0, -23) to node[midway, right] {$\mathfrak{m}$} (0, -24);
-  	
-  	\coordinate (A2) at (0, -26);
-  	\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$adbc$};
-  	\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
-  	
-  	
-  	
-  	
-  	
+
+    % Automate de départ : fantastique2
+
+    \coordinate (A1) at (0,0);
+    \coordinate (B1) at (0:3);
+    \coordinate (C1) at (120:3);
+    \coordinate (D1) at (240:3);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA1) at (A1) {};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB1) at (B1) {};
+    \node[draw,thick,circle,minimum width = 2.5em] (QC1) at (C1) {};
+    \node[draw,thick,circle,minimum width = 2.5em] (QD1) at (D1) {};
+    \draw[thick,->,>=latex] (QA1) to[bend right] node[midway, below]{$1|0$} (QB1);
+    \draw[thick,->,>=latex] (QB1) to[bend right] node[midway, above]{$2|0$} (QA1);
+    \draw[thick,->,>=latex] (QA1) to[bend right] node[midway, above right]{$0|1$} (QC1);
+    \draw[thick,->,>=latex] (QC1) to[bend right] node[midway, below left]{$0|2$} (QA1);
+    \draw[thick,->,>=latex] (QA1) to[bend right] node[midway, above left]{$2|2$} (QD1);
+    \draw[thick,->,>=latex] (QD1) to[bend right] node[midway, below right]{$1|1$} (QA1);
+    \draw[thick,->,>=latex] (QB1) to[bend right] node[midway, below]{$1|2$} (QC1);
+    \draw[thick,->,>=latex] (QC1) to[bend left=40] node[midway, above]{$2|1$} (QB1);
+    \draw[thick,->,>=latex] (QC1) to[bend right] node[midway, right]{$1|0$} (QD1);
+    \draw[thick,->,>=latex] (QD1) to[bend left=40] node[midway, left]{$2|0$} (QC1);
+    \draw[thick,->,>=latex] (QD1) to[bend right] node[midway, above]{$0|2$} (QB1);
+    \draw[thick,->,>=latex] (QB1) to[bend left=40] node[midway, below]{$0|1$} (QD1);
+
+    % égal
+
+    \draw (4,0) node {$=$};
+
+    % Décomposition en produit
+
+    \coordinate (A2) at (6,2);
+    \coordinate (B2) at (6,-2);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$0|2$} (QA2);
+    \draw[thick,->,>=latex] (QA2) to[bend right] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|0$ \end{tabular}} (QB2);
+    \draw[thick,->,>=latex] (QB2) to[out=250,in=290,looseness=6] node[midway, below]{$0|2$} (QB2);
+    \draw[thick,->,>=latex] (QB2) to[bend right] node[midway, right]{\begin{tabular}{c} $1|0$ \\ $2|1$ \end{tabular}} (QA2);
+
+    \draw (8,0) node {$\times$};
+
+    \coordinate (A3) at (10,2);
+    \coordinate (B4) at (10,-2);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA3) at (A3) {};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB4) at (B4) {};
+    \draw[thick,->,>=latex] (QA3) to[out=70,in=110,looseness=6] node[midway, above]{$1|0$} (QA3);
+    \draw[thick,->,>=latex] (QA3) to[bend right] node[midway, left]{\begin{tabular}{c} $0|2$ \\ $2|1$ \end{tabular}} (QB4);
+    \draw[thick,->,>=latex] (QB4) to[out=250,in=290,looseness=6] node[midway, below]{$1|0$} (QB4);
+    \draw[thick,->,>=latex] (QB4) to[bend right] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $2|2$ \end{tabular}} (QA3);
+
+    % conjugaison
+
+    \draw[thick,->,>=latex] (8, -4) to node[midway, left] {$\mathfrak{c}$} (8, -5);
+
+    % produit conjugué
+
+    \coordinate (A3) at (6,-7);
+    \coordinate (B4) at (6,-11);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA3) at (A3) {};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB4) at (B4) {};
+    \draw[thick,->,>=latex] (QA3) to[out=70,in=110,looseness=6] node[midway, above]{$1|0$} (QA3);
+    \draw[thick,->,>=latex] (QA3) to[bend right] node[midway, left]{\begin{tabular}{c} $0|2$ \\ $2|1$ \end{tabular}} (QB4);
+    \draw[thick,->,>=latex] (QB4) to[out=250,in=290,looseness=6] node[midway, below]{$1|0$} (QB4);
+    \draw[thick,->,>=latex] (QB4) to[bend right] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $2|2$ \end{tabular}} (QA3);
+
+    \draw (8,-9) node {$\times$};
+
+    \coordinate (A2) at (10,-7);
+    \coordinate (B2) at (10,-11);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$0|2$} (QA2);
+    \draw[thick,->,>=latex] (QA2) to[bend right] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|0$ \end{tabular}} (QB2);
+    \draw[thick,->,>=latex] (QB2) to[out=250,in=290,looseness=6] node[midway, below]{$0|2$} (QB2);
+    \draw[thick,->,>=latex] (QB2) to[bend right] node[midway, right]{\begin{tabular}{c} $1|0$ \\ $2|1$ \end{tabular}} (QA2);
+
+    %égalité
+
+    \draw (4,-9) node {$=$};
+
+    %conjugué
+
+    \coordinate (A2) at (-2,-7);
+    \coordinate (B2) at (-2,-11);
+    \coordinate (C2) at (2,-7);
+    \coordinate (D2) at (2,-11);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$b$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$a$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$c$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QD2) at (D2) {$d$};
+    \draw[thick,->,>=latex] (QA2) to[out=115,in=155,looseness=6] node[midway, above left]{$1|2$} (QA2);
+    \draw[thick,->,>=latex] (QA2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QC2);
+    \draw[thick,->,>=latex] (QB2) to[out=205,in=245,looseness=6] node[midway, below left]{$1|2$} (QB2);
+    \draw[thick,->,>=latex] (QB2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QD2);
+    \draw[thick,->,>=latex] (QC2) to[out=25,in=65,looseness=6] node[midway, above right]{$1|2$} (QC2);
+    \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
+    \draw[thick,->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
+    \draw[thick,->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
+
+    %minization
+    \draw[thick,->,>=latex] (0, -13) to node[midway, right] {$\mathfrak{m}$} (0, -14);
+
+    %minimisé du conjugué
+
+    \coordinate (A2) at (2,-17);
+    \coordinate (B2) at (-2,-17);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$bc$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$ad$};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA2);
+    \draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $1|2$ \\ $2|0$ \end{tabular}} (QB2);
+
+    %dualisation
+
+    \draw[thick,<->,>=latex] (3.5, -16) to node[midway, above] {$\mathfrak{d}$} (4.5, -16);
+
+    % dual du minimisé du conjugué
+
+    \coordinate (A2) at (6.5,-17);
+    \coordinate (B2) at (9.5,-17);
+    \coordinate (C2) at ($(A2) + (60:3)$);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$0$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$2$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$1$};
+
+    \draw[thick,->,>=latex] (QA2) to[out=190,in=230,looseness=6] node[midway, below left]{$ad|ad$} (QA2);
+    \draw[thick,->,>=latex] (QA2) to node[midway, above left] {$bc|bc$} (QC2);
+    \draw[thick,->,>=latex] (QB2) to node[midway, below] {$bc|bc$} (QA2);
+    \draw[thick,->,>=latex] (QB2) to[bend left] node[midway, below left] {$ad|ad$} (QC2);
+    \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, above right] {\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QB2);
+
+    %minimisation
+    \draw[thick,->,>=latex] (8, -19) to node[midway, right] {$\mathfrak{m}$} (8, -20);
+
+    \coordinate (A2) at (8, -23);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$012$};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QA2);
+
+    %dualisation
+
+    \draw[thick,<->,>=latex] (3.5, -22) to node[midway, above] {$\mathfrak{d}$} (4.5, -22);
+
+    \coordinate (A2) at (-1.5, -22);
+    \coordinate (B2) at (1.5, -22);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$ad$};
+    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$bc$};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
+    \draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QB2);
+
+    %minimisation
+    \draw[thick,->,>=latex] (0, -23) to node[midway, right] {$\mathfrak{m}$} (0, -24);
+
+    \coordinate (A2) at (0, -26);
+    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$adbc$};
+    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
+
+
+
+
+
   \end{tikzpicture}
   }
 \end{center}
