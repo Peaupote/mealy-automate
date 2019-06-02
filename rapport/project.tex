@@ -625,32 +625,32 @@ On remarque toutefois que cette proposition n'est pas vraie pour les produits $\
 
 \begin{figure}[h!]
   \begin{center}
-  	\begin{tikzpicture}
-  		\coordinate (A) at (-4,-1);
-  		\coordinate (B) at (-4,1);
-  		\coordinate (C) at (0,-1);
-  		\coordinate (D) at (0,1);
-  		\coordinate (E) at (4,-1);
-  		\coordinate (F) at (4,1);
-  		
-  		\node[draw,thick,circle,minimum width = 2.5em] (QA) at (A) {$a$};
-  		\node[draw,thick,circle,minimum width = 2.5em] (QB) at (B) {$b$};
-  		\node[draw,thick,circle,minimum width = 2.5em] (QC) at (C) {$c$};
-  		\node[draw,thick,circle,minimum width = 2.5em] (QD) at (D) {$d$};
-  		\node[draw,thick,circle,minimum width = 2.5em] (QE) at (E) {$e$};
-  		\node[draw,thick,circle,minimum width = 2.5em] (QF) at (F) {$f$};
-  		
-  		 \draw[thick,->,>=latex] (QA) to[bend left] node[midway, left]{\begin{tabular}{c} $0|0$ \\ $1|1$ \\ $2|2$ \end{tabular}} (QB);
-  		\draw[thick,->,>=latex] (QB) to[bend left] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $1|0$ \\ $2|2$ \end{tabular}} (QA);
-  		\draw[thick,->,>=latex] (QC) to[out=250,in=290,looseness=6] node[midway, below]{$0|0$} (QC);
-  		\draw[thick,->,>=latex] (QC) to[bend left] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|2$ \end{tabular}} (QD);
-  		\draw[thick,->,>=latex] (QD) to[out=70,in=110,looseness=6] node[midway, above]{$0|0$} (QD);
-  		\draw[thick,->,>=latex] (QD) to[bend left] node[midway, right]{\begin{tabular}{c} $1|2$ \\ $2|1$ \end{tabular}} (QC);
-  		\draw[thick,->,>=latex] (QE) to[out=250,in=290,looseness=6] node[midway, below]{\begin{tabular}{c} $1|0$ \\ $2|2$ \end{tabular}} (QE);
-  		\draw[thick,->,>=latex] (QE) to[bend left] node[midway, left]{$0|1$} (QF);
-  		\draw[thick,->,>=latex] (QF) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $1|2$ \\ $2|0$ \end{tabular}} (QF);
-  		\draw[thick,->,>=latex] (QF) to[bend left] node[midway, right]{$0|1$} (QE);
-  	\end{tikzpicture}
+    \begin{tikzpicture}
+        \coordinate (A) at (-4,-1);
+        \coordinate (B) at (-4,1);
+        \coordinate (C) at (0,-1);
+        \coordinate (D) at (0,1);
+        \coordinate (E) at (4,-1);
+        \coordinate (F) at (4,1);
+
+        \node[draw,thick,circle,minimum width = 2.5em] (QA) at (A) {$a$};
+        \node[draw,thick,circle,minimum width = 2.5em] (QB) at (B) {$b$};
+        \node[draw,thick,circle,minimum width = 2.5em] (QC) at (C) {$c$};
+        \node[draw,thick,circle,minimum width = 2.5em] (QD) at (D) {$d$};
+        \node[draw,thick,circle,minimum width = 2.5em] (QE) at (E) {$e$};
+        \node[draw,thick,circle,minimum width = 2.5em] (QF) at (F) {$f$};
+
+         \draw[thick,->,>=latex] (QA) to[bend left] node[midway, left]{\begin{tabular}{c} $0|0$ \\ $1|1$ \\ $2|2$ \end{tabular}} (QB);
+        \draw[thick,->,>=latex] (QB) to[bend left] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $1|0$ \\ $2|2$ \end{tabular}} (QA);
+        \draw[thick,->,>=latex] (QC) to[out=250,in=290,looseness=6] node[midway, below]{$0|0$} (QC);
+        \draw[thick,->,>=latex] (QC) to[bend left] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|2$ \end{tabular}} (QD);
+        \draw[thick,->,>=latex] (QD) to[out=70,in=110,looseness=6] node[midway, above]{$0|0$} (QD);
+        \draw[thick,->,>=latex] (QD) to[bend left] node[midway, right]{\begin{tabular}{c} $1|2$ \\ $2|1$ \end{tabular}} (QC);
+        \draw[thick,->,>=latex] (QE) to[out=250,in=290,looseness=6] node[midway, below]{\begin{tabular}{c} $1|0$ \\ $2|2$ \end{tabular}} (QE);
+        \draw[thick,->,>=latex] (QE) to[bend left] node[midway, left]{$0|1$} (QF);
+        \draw[thick,->,>=latex] (QF) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $1|2$ \\ $2|0$ \end{tabular}} (QF);
+        \draw[thick,->,>=latex] (QF) to[bend left] node[midway, right]{$0|1$} (QE);
+    \end{tikzpicture}
   \end{center}
   \caption{Si on nomme $\mathcal{A}$ l'automate de gauche, $\mathcal{B}$ l'automate central et $\mathcal{C}$ l'automate de droite, alors $\mathcal{ABC}$ engendre un groupe fini, et $\mathcal{BAC}$ un groupe infini.}
 \end{figure}
@@ -1025,7 +1025,7 @@ On peut borner grossièrement la complexité en temps de l'algorithme par $\math
 
 \subsection{Décider de la finitude du groupe engendré}
 
-Le problème est indécidable en général mais pour tester notre conjecture nous avons besoin d'être capable de savoir si un groupe engendre du fini. Un critère simple pour étudier la finitude d'un automate est d'étudier sa fonction de croissance.
+Le problème est indécidable en général, mais pour tester notre conjecture nous avons besoin d'être capable de savoir si un groupe engendre du fini. Un critère simple pour étudier la finitude d'un automate est d'étudier sa fonction de croissance.
 
 \begin{definition}
   Soit $\mathcal{A}$ une machine de Mealy. On appelle \textbf{\textit{sa fonction de croissance}} la fonction $\pi:\mathbb{N}\rightarrow\mathbb{N}$ qui à un $n$ associe le nombre d'états de $\mathfrak{m}\left(\mathcal{A}^n\right)$.
@@ -1036,11 +1036,11 @@ Le problème est indécidable en général mais pour tester notre conjecture nou
   Si la fonction de masse d'une machine de Mealy $\mathcal{A}$ est bornée, alors $\left<\mathcal{A}\right>_+$ est fini.
 \end{prop}
 
-La proposition \ref{prop:mass} nous donne donc un critère de semi-décidabilité sur la finitude du (semi-)groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états successifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations coûteuses (de complexités respectives $\mathcal{O}\left(\Sigma\mathcal{Q}\log\mathcal{Q}\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répéter de nombreuses fois.
+La proposition \ref{prop:mass} nous donne donc un critère de semi-décidabilité sur la finitude du (semi-)groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états successifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre se stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations coûteuses (de complexités respectives $\mathcal{O}\left(\Sigma\mathcal{Q}\log\mathcal{Q}\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répéter de nombreuses fois.
 
 \subsection{$\mathfrak{md}$-triviaux dans des classes d'automates irréductibles}
 
-Comme dit dans la section \ref{sec:action} la $\mathfrak{md}$-réduction résout le problème de finitude pour les automates biréversibles à deux états/lettres. La figure \ref{fig:fantastiques} montre les quatre automates qui ne se $\mathfrak{md}$-trivialisent pas mais engendrent du fini pour les biréversibles à 4 états et 3 lettres. Ces automates se factorisent, et en permutant l'ordre de leurs facteurs on trouve des automates $\mathfrak{md}$-triviaux.
+Comme dit dans la section \ref{sec:action} la $\mathfrak{md}$-réduction résout le problème de finitude pour les automates biréversibles à deux états/lettres. La figure \ref{fig:fantastiques} montre les quatre automates qui ne se $\mathfrak{md}$-trivialisent pas, mais engendrent du fini pour les biréversibles à 4 états et 3 lettres. Ces automates se factorisent, et en permutant l'ordre de leurs facteurs, on trouve des automates $\mathfrak{md}$-triviaux.
 
 Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction suffit pour décider de la finitude dans des cas où la factorisation est impossible -- \emph{i.e.} quand le nombre d'états est premier.
 
@@ -1052,7 +1052,7 @@ Nous avons donc procédé de la manière suivante:
 \item vérifier que la fonction de croissance de tous les automates $\mathfrak{md}$-trivaux dépasse cette borne.
 \end{enumerate}
 
-Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contres exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 752 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis paralléliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contres exemples.
+Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contres exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 752 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis paralléliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contre-exemples.
 
 \begin{figure}[!ht]
   \begin{center}
@@ -1114,19 +1114,18 @@ La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-r
         6 & 3 & 0 \\
         \hline
       \end{tabular}
-      \caption{Nombre d'automates fantastiques pour des classes d'automates biréversibles}
+      \caption{Nombre d'automates fantastiques pour des classes d'automates biréversibles.}
     \end{threeparttable}
   \end{center}
 \end{table}
 
 \section{Conclusions}
 
-La $\mathfrak{mdc}$-réduction ne fournit pas un critère suffisant pour résoudre le problème de finitude des groupes engendrés par des automates biréversibles (contre exemple figure \ref{fig:contre-exemple}).
+La $\mathfrak{mdc}$-réduction ne fournit pas un critère suffisant pour résoudre le problème de finitude des groupes engendrés par des automates biréversibles (contre-exemple figure \ref{fig:contre-exemple}).
 
 On pourrait se demander s'il y a des points communs entre les fantastiques et les contre-exemples irréductibles que nous avons trouvé. Nous pourrions alors peut-être ajouter une opération à la $\mathfrak{mdc}$-réduction qui résolve le problème de finitude pour les groupes d'automates biréversibles.
 
-Les contre-exemples que nous avons trouvé fournissent une nouvelle source d'information sur les limites de la $\mathfrak{md}$-réduction. Aussi, permetteront'il peut être d'envisager le problème de finitude sous de nouvelles perspectives.
-
+Les contre-exemples que nous avons trouvés fournissent une nouvelle source d'information sur les limites de la $\mathfrak{md}$-réduction. Aussi, permettront-ils peut être d'envisager le problème de finitude sous de nouvelles perspectives.
 
 \newpage
 \bibliography{project}{
