@@ -27,7 +27,7 @@
 \newtheorem{conj}{Conjecture}
 \newtheorem*{rem*}{Remarque}
 
-\title{À propos du problème de finitude des groupes d'automates biréversibles}
+\title{À propos du problème de finitude\\ des groupes d'automates biréversibles}
 \author{Maxime Flin \& Tristan François}
 
 \begin{document}
@@ -36,7 +36,7 @@
 \section*{Introduction}
 Les automates de Mealy sont une extension des automates qui écrivent des mots dans un alphabet en même temps qu'ils en lisent dans ce même alphabet. À partir de l'action de ces automates sur l'ensemble des mots, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes, on peut travailler sur des constructions spécifiques à la structure sous-jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
 
-Le problème de théorie des groupes auquel nous nous intéressons ici est le problème de finitude, c’est-à-dire savoir si le groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Picantin et Klimann~\cite{DBLP:journals/corr/abs-1105-4725} ont proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles (définition \ref{def:birev}) à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
+Le problème de théorie des groupes auquel nous nous intéressons ici est le problème de finitude, c’est-à-dire savoir si le (semi-)groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Akhavi \emph{et al}~\cite{DBLP:journals/corr/abs-1105-4725} ont proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles (définition \ref{def:birev}) à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
 
 Notre projet consistait à essayer d'étendre ce résultat à tous les automates biréversibles de plus de deux états/lettres. Cependant,  le critère de $\mathfrak{md}$-réduction n'est pas suffisant pour les automates à 4 états et 3 lettres (voir les quatre contres-exemples figure \ref{fig:fantastiques}). Picantin a toutefois remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quant à lui $\mathfrak{md}$-trivial. Nous nous sommes basés sur ces exemples pour ajouter l'opération de conjugaison (définition \ref{def:conj}) à la $\mathfrak{md}$-réduction afin de l'étendre en $\mathfrak{mdc}$-réduction (définition \ref{def:mdc-red}). Nous avons émis l'hypothèse que ce nouveau critère résoudrait le problème de finitude pour les classes d'automates biréversibles à plus de deux états/lettres.
 
@@ -52,7 +52,7 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
   Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexées par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexées par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
 \end{definition}
 
-La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entier écrit en binaire. Une flèche du type $p\overset{x|y}{\longrightarrow}q$ indique que quand on est dans l'état $p$ et qu'on lit la lettre $x$, on se déplace dans l'état $q$ et on écrit la lettre $y$.
+La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entier écrit en binaire. Une flèche du type $p\overset{x|y}{\longrightarrow}q$ indique que quand on est dans l'état~$p$ et qu'on lit la lettre $x$, on se déplace dans l'état $q$ et on écrit la lettre $y$.
 
 \begin{figure}[!ht]
   \begin{center}
@@ -64,7 +64,7 @@ La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entie
       edge node {$0|1$} (q_1)
       (q_1) edge [loop above] node {$0|0~1|1$} (q_1);
     \end{tikzpicture}
-    \caption{une machine de Mealy $\mathcal{A}$ \label{fig:example}}
+    \caption{une machine de Mealy $\mathcal{A}$.\label{fig:example}}
   \end{center}
 \end{figure}
 
@@ -77,32 +77,32 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
       \coordinate (P2) at (2,0);
       \coordinate (Q1) at (4,0);
       \coordinate (Q2) at (6,0);
-      
+
       \coordinate (00) at (1,1);
       \coordinate (01) at (3,1);
       \coordinate (02) at (5,1);
-      
+
       \coordinate (10) at (1,-1);
       \coordinate (11) at (3,-1);
       \coordinate (12) at (5,-1);
-      
+
       \node (PP1) at (P1) {$p$};
       \node (PP2) at (P2) {$p$};
       \node (QQ1) at (Q1) {$q$};
       \node (QQ2) at (Q2) {$q$};
-      
+
       \node (L00) at (00) {$1$};
       \node (L01) at (01) {$0$};
       \node (L02) at (02) {$1$};
-      
+
       \node (L10) at (10) {$0$};
       \node (L11) at (11) {$1$};
       \node (L12) at (12) {$1$};
-      
+
       \draw[->,>=latex] (PP1) -- (PP2);
       \draw[->,>=latex] (PP2) -- (QQ1);
       \draw[->,>=latex] (QQ1) -- (QQ2);
-      
+
       \draw[->,>=latex] (L00) -- (L10);
       \draw[->,>=latex] (L01) -- (L11);
       \draw[->,>=latex] (L02) -- (L12);
@@ -111,7 +111,7 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
   \end{center}
 \end{figure}
 
-Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquetés par des couples états lettres. Pour chaque flèche du type $p\overset{x|y}{\longrightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t-on que de chaque sommet du graphe en hélice part exactement une flèche.
+Une autre représentation qui sera commode dans la partie \ref{sec:gen} est le graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquetés par des couples état-lettre. Pour chaque flèche du type $p\overset{x|y}{\longrightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t-on que de chaque sommet du graphe en hélice part exactement une flèche.
 
 \begin{figure}[!ht]
   \begin{center}
@@ -139,7 +139,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
 \end{definition}
 
 \begin{definition}
-  Si un machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire sont \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplacant les flèches $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
+  Si une machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire son \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplaçant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
 \end{definition}
 
 
@@ -172,12 +172,12 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
     \end{tikzpicture}
   \end{subfigure}
   }
-  \caption{Automate et son inverse}
+  \caption{Automate et son inverse.}
 \end{figure}
 
 
 \begin{definition}
-  Si une machine de Mealy est réversible, alors on peut construire sont \textbf{\textit{dual}}, noté $\mathfrak{d}\mathcal{M}$, en remplacant les flèches $p\overset{x|y}{\longrightarrow}q$ par $x\overset{p|q}{\longrightarrow}y$.
+  Si une machine de Mealy est réversible, alors on peut construire son \textbf{\textit{dual}}, noté $\mathfrak{d}\mathcal{M}$, en remplacant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $x\overset{p|q}{\longrightarrow}y$.
 \end{definition}
 
 
@@ -205,8 +205,8 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
       \path[->,>=latex]
       (p) edge [loop left] node {$q|p$} (p)
       (p) edge [bend left] node {$p|q$} (q)
-      (q) edge [bend left] node {$q|q$} (p)
-      (q) edge [loop right] node {$p|p$} (q);
+      (q) edge [bend left] node {$p|p$} (p)
+      (q) edge [loop right] node {$q|q$} (q);
     \end{tikzpicture}
   \end{subfigure}
   }
@@ -224,7 +224,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
   \begin{align*}
     \forall p, q \in Q,\\
     p \equiv_0 q &\iff \rho_p = \rho_q \\
-    \forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right)
+    \forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right).
   \end{align*}
 
   Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x([p]) = [\delta_x(p)]$ et $\bar{\rho}_{[p]} =  \rho_p$.
@@ -249,7 +249,7 @@ et
       \draw [->,>=latex] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
       \draw [->,>=latex] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
     \end{tikzpicture}
-    \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$}
+    \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$.}
   \end{subfigure}
   ~
   \begin{subfigure}[b]{0.5\textwidth}
@@ -258,9 +258,9 @@ et
       \draw [->,>=latex] (-0.5, 0) node[left] {$p_0p_1$} to (0.5, 0) node[right] {$q_0q_1$};
       \draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
     \end{tikzpicture}
-    \caption{Une flèche de l'automate $\mathcal{AB}$}
+    \caption{Une flèche de l'automate $\mathcal{AB}$.}
   \end{subfigure}
-  \caption{Correspondance entre les flèches dans $\mathcal{AB}$ et celles de $\mathcal{A}$ et de $\mathcal{B}$}
+  \caption{Correspondance entre les flèches dans $\mathcal{AB}$ et celles de $\mathcal{A}$ et de $\mathcal{B}$.}
 \end{figure}
 
 \begin{definition}{\cite{DBLP:journals/corr/abs-1105-4725}}
@@ -377,9 +377,9 @@ Soit $\Sigma$ un alphabet. On note $\Sigma^*$ l'ensemble des mots sur cet alphab
 \end{definition}
 
 \begin{prop}
-	\label{prop:finitude-m}
-	Soit $\mathcal{A}$ un automate de Mealy, alors on a :
-	\[ \left<\mathfrak{m}\mathcal{A}\right> = \left<\mathcal{A}\right>. \]
+    \label{prop:finitude-m}
+    Soit $\mathcal{A}$ un automate de Mealy, alors on a :
+    \[ \left<\mathfrak{m}\mathcal{A}\right> = \left<\mathcal{A}\right>. \]
 \end{prop}
 
 \begin{prop}{\cite{DBLP:journals/corr/abs-1105-4725}}
@@ -480,7 +480,7 @@ Ce théorème n'est toutefois pas valide pour les automates biréversibles en g�
       \end{tikzpicture}
     }
   \end{center}
-  \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier.\label{fig:fantastiques}
+  \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier. Dans la suite, nous appelons ces automates $\mathfrak{c}$-faible.\label{fig:fantastiques}
   }
 \end{figure}
 
@@ -844,15 +844,15 @@ On peut borner grossièrement la complexité en temps de l'algorithme par $\math
 \subsection{Algorithme de génération des biréversibles\label{sec:gen}}
 
 \subsubsection*{Représentation des machines de Mealy en mémoire}
-Les machines de Mealy sont représentées en mémoire par deux matrices \lstinline$delta$ et \lstinline{rho}, l'une représentant les $(\delta_x)_{x\in\Sigma}$ et l'autre les $(\rho_p)_{p\in\mathcal{Q}}$. Dans les deux cas, les lignes des matrices sont indexées par les états et les colonnes par les lettres.
+Les machines de Mealy sont représentées en mémoire par deux matrices \texttt{delta} et \texttt{rho}, l'une représentant les $(\delta_x)_{x\in\Sigma}$ et l'autre les $(\rho_p)_{p\in\mathcal{Q}}$. Dans les deux cas, les lignes des matrices sont indexées par les états et les colonnes par les lettres.
 
 \begin{enumerate}[(i)]
-\item On reconnaît une machine réversible en vérifiant que les colonnes de \textrm{delta}  sont des permutations.
-\item On reconnaît une machine inversible en vérifiant que les lignes dans \textrm{rho} sont des permutations.
+\item On reconnaît une machine réversible en vérifiant que les colonnes de \texttt{delta}  sont des permutations.
+\item On reconnaît une machine inversible en vérifiant que les lignes dans \texttt{rho} sont des permutations.
 \end{enumerate}
 
 \subsubsection*{L'algorithme}
-Notre algorithme de génération se base sur le résultat suivant
+Notre algorithme de génération se base sur le résultat suivant:
 
 \begin{prop}{\cite{DBLP:journals/corr/abs-1105-4725}}
   \label{thm:ir-helix}
@@ -866,7 +866,7 @@ Notre algorithme de génération se base sur le résultat suivant
 
 Notre algorithme procède donc à la recherche exhaustive de toutes les machines de Mealy inversibles réversibles en maintenant la contrainte que le graphe en hélice est une union de cycles disjoints.
 
-Nous maintenons une liste de \textit{sources} et de \textit{cibles} qui représentent les sommets du graphe en hélice desquels encore aucune flèche ne part et les sommets du graphe en hélice vers lesquels encore aucune flèche ne pointe. En choisissant nos sommets dans ces ensembles nous nous assurons que le graphe en hélice obtenu est bien une union de cycles disjoints. À chaque fois que nous modifions \textrm{delta} ou \textrm{rho}, nous vérifions que la machine est bien inversible-réversible.
+Nous maintenons une liste de \texttt{sources} et de \texttt{cibles} qui représentent les sommets du graphe en hélice desquels encore aucune flèche ne part et les sommets du graphe en hélice vers lesquels encore aucune flèche ne pointe. En choisissant nos sommets dans ces ensembles nous nous assurons que le graphe en hélice obtenu est bien une union de cycles disjoints. À chaque fois que nous modifions \texttt{delta} ou \texttt{rho}, nous vérifions que la machine est bien inversible-réversible.
 
 Ainsi, les automates trouvés -- en vertu de la proposition \ref{thm:ir-helix} -- sont bien biréversibles. La structure globale du programme est représentée sur la figure~\ref{fig:gen-pseudo-code}.
 
@@ -909,7 +909,7 @@ def rec(start, prev, sources, targets, delta, rho):
 
 \subsubsection*{À isomorphisme près}
 
-On a rapidement constaté que le nombre d'automates à générer est très important. Aussi, il ne semble pas réaliste de tester la $\mathfrak{mdc}$-réduction sur tous ceux-ci. On a donc cherché à extraire seulement les classes d'isomorphismes au sens de Nérode de notre génération.
+On a rapidement constaté que le nombre d'automates à engendrer est très important. Aussi, il ne semble pas réaliste de tester la $\mathfrak{mdc}$-réduction sur tous ceux-ci. On a donc cherché à extraire seulement les classes d'isomorphismes au sens de Nérode de notre génération.
 
 La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficaces. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appelons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un morphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permute sur tous les sommets du graphe en hélice.
 
@@ -1027,11 +1027,11 @@ Les tests ont été réalisés sur une machine à 40 cœurs physiques, 80 virtue
         \hline
         3 & 3 & 0.011s & 335  \\
         \hline
-        4 & 3 & 2.59s & 8 605 \\
+        4 & 3 & 2.59s & 8 606 \\
         \hline
-        5 & 3 & 12m34s    & 347 752 \\
+        5 & 3 & 12m34s    & 347 753 \\
         \hline
-        4 & 4 & 56min34s  & 1 831 488 \\
+        4 & 4 & 56min34s  & 1 831 489 \\
         \hline
         6 & 3 & $\infty$  &  \\
         \hline
@@ -1042,7 +1042,7 @@ Les tests ont été réalisés sur une machine à 40 cœurs physiques, 80 virtue
   \end{center}
 \end{table}
 
-On constate que Nauty ralentit très significativement le temps d'exécution.
+On constate que l'utilisation de Nauty ralentit très significativement le temps d'exécution.
 
 \section{Avancées sur le problème de finitude\label{sec:finitude}}
 
@@ -1051,31 +1051,31 @@ On constate que Nauty ralentit très significativement le temps d'exécution.
 Le problème est indécidable en général, mais pour tester notre conjecture nous avons besoin d'être capable de savoir si un groupe engendre du fini. Un critère simple pour étudier la finitude d'un automate est d'étudier sa fonction de croissance.
 
 \begin{definition}
-  Soit $\mathcal{A}$ une machine de Mealy. On appelle \textbf{\textit{sa fonction de croissance}} la fonction $\pi:\mathbb{N}\rightarrow\mathbb{N}$ qui à un $n$ associe le nombre d'états de $\mathfrak{m}\left(\mathcal{A}^n\right)$.
+  Soit $\mathcal{A}$ une machine de Mealy. On appelle \textbf{\textit{sa fonction de croissance}} la fonction $\pi:\mathbb{N}\rightarrow\mathbb{N}$ qui à un entier $n$ associe le nombre d'états de~$\mathfrak{m}\left(\mathcal{A}^n\right)$.
 \end{definition}
 
 \begin{prop}
   \label{prop:mass}
-  Si la fonction de masse d'une machine de Mealy $\mathcal{A}$ est bornée, alors $\left<\mathcal{A}\right>_+$ est fini.
+  Si la fonction de croissance d'une machine de Mealy $\mathcal{A}$ est bornée, alors $\left<\mathcal{A}\right>_+$ est fini.
 \end{prop}
 
 La proposition \ref{prop:mass} nous donne donc un critère de semi-décidabilité sur la finitude du (semi-)groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états successifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre se stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations coûteuses (de complexités respectives $\mathcal{O}\left(\Sigma\mathcal{Q}\log\mathcal{Q}\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répéter de nombreuses fois.
 
 \subsection{$\mathfrak{md}$-triviaux dans des classes d'automates irréductibles}
 
-Comme dit dans la section \ref{sec:action} la $\mathfrak{md}$-réduction résout le problème de finitude pour les automates biréversibles à deux états/lettres. La figure \ref{fig:fantastiques} montre les quatre automates qui ne se $\mathfrak{md}$-trivialisent pas, mais engendrent du fini pour les biréversibles à 4 états et 3 lettres. Ces automates se factorisent, et en permutant l'ordre de leurs facteurs, on trouve des automates $\mathfrak{md}$-triviaux.
+Comme dit dans la section \ref{sec:action}, la $\mathfrak{md}$-réduction résout le problème de finitude pour les automates biréversibles à deux états/lettres. La figure \ref{fig:fantastiques} montre, pour les biréversibles à 4 états et 3 lettres, les quatre automates qui ne se $\mathfrak{md}$-trivialisent pas, mais engendrent du fini. Ces automates se factorisent, et en permutant l'ordre de leurs facteurs, on trouve des automates $\mathfrak{md}$-triviaux.
 
 Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction suffit pour décider de la finitude dans des cas où la factorisation est impossible -- \emph{i.e.} quand le nombre d'états est premier.
 
 Nous avons donc procédé de la manière suivante:
 
 \begin{enumerate}
-\item engendrer une classe d'automates biréversibles irréductibles à isomorphismes près
-\item calculer la borne supérieure des fonctions de croissance des automates $\mathfrak{md}$-triviaux
+\item engendrer une classe d'automates biréversibles irréductibles à isomorphismes près;
+\item calculer la borne supérieure des fonctions de croissance des automates $\mathfrak{md}$-triviaux;
 \item vérifier que la fonction de croissance de tous les automates $\mathfrak{md}$-trivaux dépasse cette borne.
 \end{enumerate}
 
-Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contres exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 752 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis paralléliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contre-exemples.
+Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contre-exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 753 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis paralléliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contre-exemples.
 
 \begin{figure}[!ht]
   \begin{center}
@@ -1108,26 +1108,26 @@ Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne
         \draw[thick,->,>=latex] (QE) to node[midway, below right]{$1|1$} (QC);
       \end{tikzpicture}
   }
-  \caption{Contre exemple à la conjecture \ref{conj:birev-mdc}.\label{fig:contre-exemple}}
+  \caption{Contre-exemple à la conjecture \ref{conj:birev-mdc}.\label{fig:contre-exemple}}
 \end{center}
 \end{figure}
 
-\subsection{Automates fantastiques}
+\subsection{Automates $\mathfrak{c}$-faible}
 
-Nous avons ensuite cherché dans des classes plus grandes que celles abordées jusqu'alors pour trouver des automates \textit{fantastiques}.
+Nous avons ensuite cherché dans des classes plus grandes que celles abordées jusqu'alors pour trouver des automates \textit{$\mathfrak{c}$-faible}.
 
 \begin{definition}
-  Un automate est \textbf{\textit{fantastique}} s'il est $\mathfrak{mdc}$-trivial mais pas $\mathfrak{md}$-trivial.
+  Un automate est \textbf{\textit{$\mathfrak{c}$-faible}} s'il est $\mathfrak{mdc}$-trivial mais pas $\mathfrak{md}$-trivial.
 \end{definition}
 
-La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-réduction il est donc préférable d'énumérer les classes de diviseurs et de faire tous les produits. On trouve ainsi tous les automates fantastiques d'une classe à isomorphisme près.
+La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-réduction il est donc préférable d'énumérer les classes de diviseurs et de faire tous les produits. On trouve ainsi tous les automates $\mathfrak{c}$-faible d'une classe à isomorphisme près.
 
 \begin{table}[h!]
   \begin{center}
     \begin{threeparttable}
       \begin{tabular}{|rrr|}
         \hline
-        \#états & \#lettres & \#fantastiques \\ [0.5ex]
+        \#états & \#lettres & \#$\mathfrak{c}$-faibles \\ [0.5ex]
         \hline\hline
         \hline
         4 & 3 & 4 \\
@@ -1137,7 +1137,7 @@ La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-r
         6 & 3 & 0 \\
         \hline
       \end{tabular}
-      \caption{Nombre d'automates fantastiques pour des classes d'automates biréversibles.}
+      \caption{Nombre d'automates $\mathfrak{c}$-faibles pour des classes d'automates biréversibles.}
     \end{threeparttable}
   \end{center}
 \end{table}
@@ -1147,9 +1147,9 @@ La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-r
 
 La $\mathfrak{mdc}$-réduction ne fournit pas un critère suffisant pour résoudre le problème de finitude des groupes engendrés par des automates biréversibles (contre-exemple figure \ref{fig:contre-exemple}).
 
-On pourrait se demander s'il y a des points communs entre les fantastiques et les contre-exemples irréductibles que nous avons trouvé. Nous pourrions alors peut-être ajouter une opération à la $\mathfrak{mdc}$-réduction qui résolve le problème de finitude pour les groupes d'automates biréversibles.
+On pourrait se demander s'il y a des points communs entre les $\mathfrak{c}$-faible et les contre-exemples irréductibles que nous avons trouvé. Nous pourrions alors peut-être ajouter une opération à la $\mathfrak{mdc}$-réduction qui résolve le problème de finitude pour les groupes d'automates biréversibles.
 
-Les contre-exemples que nous avons trouvés fournissent une nouvelle source d'information sur les limites de la $\mathfrak{md}$-réduction. Aussi, permettront-ils peut être d'envisager le problème de finitude sous de nouvelles perspectives.
+Les contre-exemples que nous avons trouvés fournissent une nouvelle source d'information sur les limites de la $\mathfrak{md}$-réduction. Aussi, permettront-ils peut-être d'envisager le problème de finitude sous de nouvelles perspectives.
 
 \newpage
 \bibliography{project}{
