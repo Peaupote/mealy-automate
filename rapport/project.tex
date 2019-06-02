@@ -40,9 +40,7 @@ Le problème de théorie des groupes auquel nous nous intéressons ici est le pr
 
 Notre projet consistait à essayer d'étendre ce résultat à tous les automates biréversibles de plus de deux états/lettres. Cependant,  le critère de $\mathfrak{md}$-réduction n'est pas suffisant pour les automates à 4 états et 3 lettres (voir les quatre contres-exemples figure \ref{fig:fantastiques}). Picantin a toutefois remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quant à lui $\mathfrak{md}$-trivial. Nous nous sommes basés sur ces exemples pour ajouter l'opération de conjugaison (définition \ref{def:conj}) à la $\mathfrak{md}$-réduction afin de l'étendre en $\mathfrak{mdc}$-réduction (définition \ref{def:mdc-red}). Nous avons émis l'hypothèse que ce nouveau critère résoudrait le problème de finitude pour les classes d'automates biréversibles à plus de deux états/lettres.
 
-Nous avons mené un travail théorique pour se convaincre du bien-fondé de notre hypothèse (sections \ref{sec:action} et \ref{sec:cloture}). Parallèlement à cela, nous avons été amenés à imaginer et implémenter des techniques efficaces, notamment pour engendrer des classes d'automates qui nous intéressent (section \ref{sec:gen}) et les factoriser (section \ref{sec:facto}) -- question sur laquelle aucun vrai résultat n'existe encore -- afin de tester empiriquement notre hypothèse. Grâce à cela, nous avons finalement pu réfuter notre hypothèse en exhibant un contre-exemple.
-
-La $\mathfrak{mdc}$-réduction ne fournit donc pas un critère suffisant pour résoudre le problème de finitude des groupes engendré par des automates biréversibles (section \ref{sec:finitude}).
+Nous avons mené un travail théorique pour se convaincre du bien-fondé de notre hypothèse (sections \ref{sec:action} et \ref{sec:cloture}). Parallèlement à cela, nous avons été amenés à imaginer et implémenter des techniques efficaces, notamment pour engendrer des classes d'automates qui nous intéressent (section \ref{sec:gen}) et les factoriser (section \ref{sec:facto}) -- question sur laquelle aucun vrai résultat n'existe encore -- afin de tester empiriquement notre hypothèse. Grâce à cela, nous avons finalement pu réfuter notre hypothèse en exhibant un contre-exemple (figure \ref{fig:contre-exemple}).
 
 \section{Automates de Mealy}
 
@@ -236,7 +234,9 @@ et
 
 \begin{definition}{\cite{DBLP:journals/corr/abs-1105-4725}}
   \label{def:md-red}
-  Une paire d'automates duaux est $\mathfrak{md}$-réduite si les deux automates sont minimaux. La $\mathfrak{md}$-réduction d'un automate consiste à minimiser cet automate et son dual jusqu'à avoir une paire $\mathfrak{md}$-réduite.
+  Une paire d'automates duaux est \textbf{$\mathfrak{md}$-réduite} si les deux automates sont minimaux. La \textbf{$\mathfrak{md}$-réduction} d'un automate consiste à minimiser cet automate et son dual jusqu'à avoir une paire $\mathfrak{md}$-réduite.
+
+  On dit qu'un automate est \textbf{$\mathfrak{md}$-trivial} si son $\mathfrak{md}$-réduit est l'automate trivial.
 \end{definition}
 
 \begin{figure}[h!]
@@ -1043,7 +1043,7 @@ Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne
     \draw[->,>=latex] (QE) to[bend left] node[midway, left] {$0|1$} (QC);
   \end{tikzpicture}
   }
-  \caption{Contre exemple à la conjecture \ref{conj:birev-mdc}}
+  \caption{Contre exemple à la conjecture \ref{conj:birev-mdc}.\label{fig:contre-exemple}}
 \end{center}
 \end{figure}
 
@@ -1079,9 +1079,12 @@ La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-r
 
 \section{Conclusions}
 
-Nous n'avons pas réussi à décider si la $\mathfrak{mdc}$-réduction est un bon critère de finitude pour des classes d'automates plus grande qu'à 2 états ou 2 lettres.
+La $\mathfrak{mdc}$-réduction ne fournit pas un critère suffisant pour résoudre le problème de finitude des groupes engendrés par des automates biréversibles (contre exemple figure \ref{fig:contre-exemple}).
 
-Nous manquons encore d’outils pour pouvoir affirmer qu’un groupe engendre du fini ou non. Le problème étant indécidable en général cela n’est pas surprenant. La prochaine étape serait de chercher des critères de finitude analogues à la fonction de masse qui seraient plus efficaces, ou qui permettraient de réduire le nombre d'automates à traiter. L’étude de la fonction de masse seule est trop longue pour traiter des quantités d’automates comme celles que nous avons.
+On pourrait se demander s'il y a des points communs entre les fantastiques et les contre-exemples irréductibles que nous avons trouvé. Nous pourrions alors peut-être ajouter une opération à la $\mathfrak{mdc}$-réduction qui résolve le problème de finitude pour les groupes d'automates biréversibles.
+
+Les contre-exemples que nous avons trouvé fournissent une nouvelle source d'information sur les limites de la $\mathfrak{md}$-réduction. Aussi, permetteront'il peut être d'envisager le problème de finitude sous de nouvelles perspectives.
+
 
 \newpage
 \bibliography{project}{
