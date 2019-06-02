@@ -35,11 +35,11 @@
 \section*{Introduction}
 Les automates de Mealy sont une extension des automates qui écrivent des mots dans un alphabet en même temps qu'ils en lisent dans ce même alphabet. À partir de l'action de ces automates sur l'ensemble des mots, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes on peut travailler sur des constructions spécifiques à la structure sous-jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
 
-Le problème de théorie des groupes auquel nous nous intéressons ici le problème de finitude, c’est-à-dire savoir si le groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Picantin et Klimann~\cite{DBLP:journals/corr/abs-1105-4725} on proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate pour décider de la finitude du groupe qu'il engendre et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
+Le problème de théorie des groupes auquel nous nous intéressons ici est le problème de finitude, c’est-à-dire savoir si le groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Picantin et Klimann~\cite{DBLP:journals/corr/abs-1105-4725} on proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate pour décider de la finitude du groupe qu'il engendre et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles (définition \ref{def:birev})à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
 
-Notre projet consistait à essayer d'étendre ce résultat à tous les automates biréversibles de plus de deux états/lettres. Cependant,  le critère de $\mathfrak{md}$-réduction n'est pas suffisant pour les automates à 4 états et 3 lettres (voir les quatres contres-exemples figure \ref{fig:fantastiques}). Cependant Picantin a remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quant à lui $\mathfrak{md}$-trivial. Nous nous sommes basés sur ces exemples pour ajouter l'opération de conjugaison (définition \ref{def:conj}) à la $\mathfrak{md}$-réduction afin de l'étendre en $\mathfrak{mdc}$-réduction (définition \ref{def:mdc-red}). Nous avons émis l'hypothèse que ce nouveau critère résoudrait le problème de finitude pour les classes d'automates biréversibles à plus de deux états/lettres.
+Notre projet consistait à essayer d'étendre ce résultat à tous les automates biréversibles de plus de deux états/lettres. Cependant,  le critère de $\mathfrak{md}$-réduction n'est pas suffisant pour les automates à 4 états et 3 lettres (voir les quatres contres-exemples figure \ref{fig:fantastiques}). Picantin a toutefois remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quant à lui $\mathfrak{md}$-trivial. Nous nous sommes basés sur ces exemples pour ajouter l'opération de conjugaison (définition \ref{def:conj}) à la $\mathfrak{md}$-réduction afin de l'étendre en $\mathfrak{mdc}$-réduction (définition \ref{def:mdc-red}). Nous avons émis l'hypothèse que ce nouveau critère résoudrait le problème de finitude pour les classes d'automates biréversibles à plus de deux états/lettres.
 
-Pour tenter d'infirmer ou de se convaincre de la justesse de cette conjecture nous avons mené un travail théorique pour se convaincre de son bien fondé (sections \ref{sec:action} et \ref{sec:cloture}). Dans le même temps avons été amenés à imaginer et implémenter des techniques efficaces, notamment pour engendrer des classes d'automates qui nous intéressent (section \ref{sec:gen}) et les factoriser (section \ref{sec:facto}) -- question sur laquelle aucun vrai résultat n'existe encore -- afin de tester empiriquement notre hypothèse. Grâce à cela, nous avons pu réfuter notre hypothèse en exhibant un contre-exemple.
+Nous avons mené un travail théorique pour se convaincre du bien fondé de notre hypothèse (sections \ref{sec:action} et \ref{sec:cloture}). Parallèlement à cela, nous avons été amenés à imaginer et implémenter des techniques efficaces, notamment pour engendrer des classes d'automates qui nous intéressent (section \ref{sec:gen}) et les factoriser (section \ref{sec:facto}) -- question sur laquelle aucun vrai résultat n'existe encore -- afin de tester empiriquement notre hypothèse. Grâce à cela, nous avons finalement pu réfuter notre hypothèse en exhibant un contre-exemple.
 
 La $\mathfrak{mdc}$-réduction ne fournit donc pas un critère suffisant pour résoudre le problème de finitude des groupe engendré par des automates biréversibles (section \ref{sec:finitude}).
 
@@ -184,7 +184,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
 \end{figure}
 
 
-\begin{definition}
+\begin{definition} \label{def:birev}
   On dit que $\mathcal{A}$ est \textbf{biréversible} s'il est inversible, réversible et que son inverse est réversible.
 \end{definition}
 
@@ -1076,7 +1076,7 @@ Nous avons donc procédé de la manière suivante:
 
 Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contres exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 752 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis paralléliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contres exemples.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \begin{center}
   \begin{tikzpicture}
   	\coordinate (A) at (-5, 0);
