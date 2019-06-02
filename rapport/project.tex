@@ -55,7 +55,7 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
 
 La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entier écrit en binaire. Une flèche du type $p\overset{x|y}{\longrightarrow}q$ indique que quand on est dans l'état $p$ et qu'on lit la lettre $x$, on se déplace dans l'état $q$ et on écrit la lettre $y$.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
   \begin{center}
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
       \node[state] (q_0) {$0$};
@@ -71,7 +71,7 @@ La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entie
 
 On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
 
-\begin{figure}[h]
+\begin{figure}[!ht]
   \begin{center}
     \begin{tikzpicture}
       \draw[->,>=latex] (-1.25, 0.5) node[above] {1} to (-1.25, -0.5) node[below] {0};
@@ -89,7 +89,7 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
 
 Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquettés par des couples états lettres. Pour chaque flèche du type $p\overset{x|y}{\longrightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t'on que de chaque sommets du graphe en hélice part exactement une flèche.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
   \begin{center}
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
       \node[state] (q_00) {$0, 0$};
@@ -317,7 +317,7 @@ et
 
   \end{tikzpicture}
   }
-  \caption{Exemple de $\mathfrak{md}$-réduction}
+  \caption{$\mathfrak{md}$-réduction de l'automate $\mathcal{B}$.\label{fid:md-red-ex}}
 \end{figure}
 
 \subsection{Action sur les mots et (semi-)groupes engendrés\label{sec:action}}
@@ -377,7 +377,7 @@ Il semble pourtant que dans la classe particulière des automates biréversibles
 Ce théorème n'est pas valide pout les automates biréversibles en général.
 
 \begin{center}
-  \begin{figure}[h]
+  \begin{figure}[!ht]
     \begin{center}
     \scalebox{.6}{
       \begin{tikzpicture}[scale=0.9]
@@ -569,71 +569,10 @@ Ces contre-exemples sont pourtant factorisables, et en conjugant leur factorisat
     \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
     \draw[thick,->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
     \draw[thick,->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
-
-    %minization
-    \draw[thick,->,>=latex] (0, -13) to node[midway, right] {$\mathfrak{m}$} (0, -14);
-
-    %minimisé du conjugué
-
-    \coordinate (A2) at (2,-17);
-    \coordinate (B2) at (-2,-17);
-    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$bc$};
-    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$ad$};
-    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA2);
-    \draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $1|2$ \\ $2|0$ \end{tabular}} (QB2);
-
-    %dualisation
-
-    \draw[thick,<->,>=latex] (3.5, -16) to node[midway, above] {$\mathfrak{d}$} (4.5, -16);
-
-    % dual du minimisé du conjugué
-
-    \coordinate (A2) at (6.5,-17);
-    \coordinate (B2) at (9.5,-17);
-    \coordinate (C2) at ($(A2) + (60:3)$);
-    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$0$};
-    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$2$};
-    \node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$1$};
-
-    \draw[thick,->,>=latex] (QA2) to[out=190,in=230,looseness=6] node[midway, below left]{$ad|ad$} (QA2);
-    \draw[thick,->,>=latex] (QA2) to node[midway, above left] {$bc|bc$} (QC2);
-    \draw[thick,->,>=latex] (QB2) to node[midway, below] {$bc|bc$} (QA2);
-    \draw[thick,->,>=latex] (QB2) to[bend left] node[midway, below left] {$ad|ad$} (QC2);
-    \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, above right] {\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QB2);
-
-    %minimisation
-    \draw[thick,->,>=latex] (8, -19) to node[midway, right] {$\mathfrak{m}$} (8, -20);
-
-    \coordinate (A2) at (8, -23);
-    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$012$};
-    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QA2);
-
-    %dualisation
-
-    \draw[thick,<->,>=latex] (3.5, -22) to node[midway, above] {$\mathfrak{d}$} (4.5, -22);
-
-    \coordinate (A2) at (-1.5, -22);
-    \coordinate (B2) at (1.5, -22);
-    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$ad$};
-    \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$bc$};
-    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
-    \draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QB2);
-
-    %minimisation
-    \draw[thick,->,>=latex] (0, -23) to node[midway, right] {$\mathfrak{m}$} (0, -24);
-
-    \coordinate (A2) at (0, -26);
-    \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$adbc$};
-    \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
-
-
-
-
-
   \end{tikzpicture}
   }
 \end{center}
-  \caption{$\mathfrak{mdc}$-réduction du deuxième contre-exemple}
+  \caption{$\mathfrak{mdc}$-réduction du deuxième contre-exemple. Il est conjugé avec l'automate $\mathcal{B}$ de la figure \ref{fid:md-red-ex} qui est $\mathfrak{md}$-trvial}
 \end{figure}
 
 \begin{conj}
@@ -831,7 +770,7 @@ Nous maintenons une liste de \textit{sources} et de \textit{cibles} qui représe
 
 Ainsi, les automates trouvés -- en vertu de la proposition \ref{thm:ir-helix} -- sont bien biréversibles. La structure globale du programme est représentée sur la figure~\ref{fig:gen-pseudo-code}.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \begin{verbatim}
 def rec(start, prev, sources, targets, delta, rho):
     if not sources and not targets:
@@ -874,7 +813,7 @@ On a rapidement constaté que le nombre d'automates à générer est très impor
 
 La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficaces. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un morphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permute sur tous les sommets du graphe en hélice.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
   \begin{center}
     \begin{tikzpicture}[scale=0.7]
         \coordinate (A) at (-10, 0);
@@ -944,7 +883,7 @@ Nous avons donc décidé d'implémenter une version C beaucoup plus efficace. No
 
 \subsubsection*{Quelques benchmarks}
 
-Les tests ont été réalisés sur une machine à 40 cœurs physiques, 80 virtuels, avec à chaque fois un nombre de processus parallèles égal à $|\mathcal{Q}|\times|\Sigma|$. 
+Les tests ont été réalisés sur une machine à 40 cœurs physiques, 80 virtuels, avec à chaque fois un nombre de processus parallèles égal à $|\mathcal{Q}|\times|\Sigma|$.
 
 \begin{table}[h!]
   \begin{center}
@@ -1005,7 +944,6 @@ Les tests ont été réalisés sur une machine à 40 cœurs physiques, 80 virtue
 
 On constate que Nauty ralentit très significativement le temps d'exécution.
 
-\newpage
 \subsection{Algorithme de factorisation\label{sec:facto}}
 
   Notons $\mathcal{Q}$ les états de $\mathcal{A}$, $\mathcal{Q'}$ les états de $\mathcal{B}$ et $\mathcal{Q''}$ les états de $\mathcal{M}$. On remarque que tel qu'a été défini le produit (définition \ref{def:produit}) les états de $\mathcal{AB}$ sont des éléments de $\mathcal{Q}\times\mathcal{Q'}$.
@@ -1076,35 +1014,37 @@ Nous avons donc procédé de la manière suivante:
 
 Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contres exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 752 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis paralléliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contres exemples.
 
-\begin{figure}[h]
-\begin{center}
+\begin{figure}[!ht]
+  \begin{center}
+    \scalebox{0.8}{
   \begin{tikzpicture}
-  	\coordinate (A) at (-5, 0);
-  	\coordinate (B) at (-2, -2);
-  	\coordinate (C) at (2, 2);
-	\coordinate (D) at (-2, 2);
-	\coordinate (E) at (2, -2);
-	
-	\node[draw,circle,minimum width = 2.5em] (QA) at (A) {$a$};
-	\node[draw,circle,minimum width = 2.5em] (QB) at (B) {$b$};
-	\node[draw,circle,minimum width = 2.5em] (QC) at (C) {$c$};
-	\node[draw,circle,minimum width = 2.5em] (QD) at (D) {$d$};
-	\node[draw,circle,minimum width = 2.5em] (QE) at (E) {$e$};
-	
-	\draw[->,>=latex] (QA) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA);
-	\draw[->,>=latex] (QB) to[out=205,in=245,looseness=6] node[midway, below left] {$2|0$} (QB);
-	\draw[->,>=latex] (QB) to[bend left] node[midway, left] {$0|2$} (QD);
-	\draw[->,>=latex] (QB) to[bend left] node[midway, above] {$1|1$} (QE);
-	\draw[->,>=latex] (QC) to[out=25,in=65,looseness=6] node[midway, above right]{$1|0$} (QC);
-	\draw[->,>=latex] (QC) to[bend left] node[midway, below] {$2|1$} (QD);
-	\draw[->,>=latex] (QC) to[bend left] node[midway, right] {$0|2$} (QE);
-	\draw[->,>=latex] (QD) to[out=115,in=155,looseness=6] node[midway, above left]{$1|0$} (QD);
-	\draw[->,>=latex] (QD) to[bend left] node[midway, right] {$0|1$} (QB);
-	\draw[->,>=latex] (QD) to[bend left] node[midway, above] {$2|2$} (QC);
-	\draw[->,>=latex] (QE) to[out=295,in=335,looseness=6] node[midway, below right]{$2|0$} (QE);
-	\draw[->,>=latex] (QE) to[bend left] node[midway, below] {$1|2$} (QB);
-	\draw[->,>=latex] (QE) to[bend left] node[midway, left] {$0|1$} (QC);
+    \coordinate (A) at (-5, 0);
+    \coordinate (B) at (-2, -2);
+    \coordinate (C) at (2, 2);
+    \coordinate (D) at (-2, 2);
+    \coordinate (E) at (2, -2);
+
+    \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$a$};
+    \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$b$};
+    \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$c$};
+    \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$d$};
+    \node[draw,circle,minimum width = 2.5em] (QE) at (E) {$e$};
+
+    \draw[->,>=latex] (QA) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA);
+    \draw[->,>=latex] (QB) to[out=205,in=245,looseness=6] node[midway, below left] {$2|0$} (QB);
+    \draw[->,>=latex] (QB) to[bend left] node[midway, left] {$0|2$} (QD);
+    \draw[->,>=latex] (QB) to[bend left] node[midway, above] {$1|1$} (QE);
+    \draw[->,>=latex] (QC) to[out=25,in=65,looseness=6] node[midway, above right]{$1|0$} (QC);
+    \draw[->,>=latex] (QC) to[bend left] node[midway, below] {$2|1$} (QD);
+    \draw[->,>=latex] (QC) to[bend left] node[midway, right] {$0|2$} (QE);
+    \draw[->,>=latex] (QD) to[out=115,in=155,looseness=6] node[midway, above left]{$1|0$} (QD);
+    \draw[->,>=latex] (QD) to[bend left] node[midway, right] {$0|1$} (QB);
+    \draw[->,>=latex] (QD) to[bend left] node[midway, above] {$2|2$} (QC);
+    \draw[->,>=latex] (QE) to[out=295,in=335,looseness=6] node[midway, below right]{$2|0$} (QE);
+    \draw[->,>=latex] (QE) to[bend left] node[midway, below] {$1|2$} (QB);
+    \draw[->,>=latex] (QE) to[bend left] node[midway, left] {$0|1$} (QC);
   \end{tikzpicture}
+  }
   \caption{Contre exemple à la conjecture \ref{conj:birev-mdc}}
 \end{center}
 \end{figure}
