@@ -36,7 +36,7 @@
 \section*{Introduction}
 Les automates de Mealy sont une extension des automates qui écrivent des mots dans un alphabet en même temps qu'ils en lisent dans ce même alphabet. À partir de l'action de ces automates sur l'ensemble des mots, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes, on peut travailler sur des constructions spécifiques à la structure sous-jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
 
-Le problème de théorie des groupes auquel nous nous intéressons ici est le problème de finitude, c’est-à-dire savoir si le groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Picantin et Klimann~\cite{DBLP:journals/corr/abs-1105-4725} on proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate pour décider de la finitude du groupe qu'il engendre et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles (définition \ref{def:birev})à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
+Le problème de théorie des groupes auquel nous nous intéressons ici est le problème de finitude, c’est-à-dire savoir si le groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Picantin et Klimann~\cite{DBLP:journals/corr/abs-1105-4725} ont proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles (définition \ref{def:birev}) à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
 
 Notre projet consistait à essayer d'étendre ce résultat à tous les automates biréversibles de plus de deux états/lettres. Cependant,  le critère de $\mathfrak{md}$-réduction n'est pas suffisant pour les automates à 4 états et 3 lettres (voir les quatre contres-exemples figure \ref{fig:fantastiques}). Picantin a toutefois remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quant à lui $\mathfrak{md}$-trivial. Nous nous sommes basés sur ces exemples pour ajouter l'opération de conjugaison (définition \ref{def:conj}) à la $\mathfrak{md}$-réduction afin de l'étendre en $\mathfrak{mdc}$-réduction (définition \ref{def:mdc-red}). Nous avons émis l'hypothèse que ce nouveau critère résoudrait le problème de finitude pour les classes d'automates biréversibles à plus de deux états/lettres.
 
@@ -86,7 +86,7 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
   \end{center}
 \end{figure}
 
-Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquettés par des couples états lettres. Pour chaque flèche du type $p\overset{x|y}{\longrightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t'on que de chaque sommets du graphe en hélice part exactement une flèche.
+Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquetés par des couples états lettres. Pour chaque flèche du type $p\overset{x|y}{\longrightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t-on que de chaque sommet du graphe en hélice part exactement une flèche.
 
 \begin{figure}[!ht]
   \begin{center}
@@ -119,6 +119,8 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
 
 
 \begin{figure}[h!]
+  \centering
+  \scalebox{.9} {
   \begin{subfigure}[b]{0.5\textwidth}
     \centering
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
@@ -144,6 +146,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
       (q) edge [loop right] node {$1|1$} (q);
     \end{tikzpicture}
   \end{subfigure}
+  }
   \caption{Automate et son inverse}
 \end{figure}
 
@@ -154,6 +157,8 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
 
 
 \begin{figure}[h!]
+  \centering
+  \scalebox{.9}{
   \begin{subfigure}[b]{0.5\textwidth}
     \centering
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
@@ -179,6 +184,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
       (q) edge [loop right] node {$p|p$} (q);
     \end{tikzpicture}
   \end{subfigure}
+  }
   \caption{Automate et son dual}
 \end{figure}
 
@@ -196,7 +202,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
     \forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right)
   \end{align*}
 
-  Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x(\bar{p}) = \bar{\delta_x(p)}$ et $\bar{\rho}_{\bar{p}} =  \rho_p$.
+  Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x([p]) = [\delta_x(p)]$ et $\bar{\rho}_{[p]} =  \rho_p$.
 \end{definition}
 
 \begin{definition}
@@ -239,7 +245,7 @@ et
   On dit qu'un automate est \textbf{$\mathfrak{md}$-trivial} si son $\mathfrak{md}$-réduit est l'automate trivial.
 \end{definition}
 
-\begin{figure}[h!]
+\begin{figure}[!ht]
   \centering
   \scalebox{0.8}{
     \begin{tikzpicture}
@@ -318,8 +324,9 @@ et
 
   \end{tikzpicture}
   }
-  \caption{$\mathfrak{md}$-réduction de l'automate $\mathcal{B}$.\label{fid:md-red-ex}}
+  \caption{$\mathfrak{md}$-réduction de l'automate $\mathcal{B}$.\label{fig:md-red-ex}}
 \end{figure}
+
 
 \subsection{Action sur les mots et (semi-)groupes engendrés\label{sec:action}}
 
@@ -375,83 +382,84 @@ Il semble pourtant que dans la classe particulière des automates biréversibles
   Tout automate à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
 \end{thm}
 
-Ce théorème n'est pas valide pout les automates biréversibles en général.
+Ce théorème n'est pas valide pour les automates biréversibles en général.
+\newpage
 
-\begin{center}
-	\begin{figure}[!h]
-		\begin{center}
-			\scalebox{.6}{
-				\begin{tikzpicture}[scale=0.9]
-				
-				\coordinate (A) at (-10,-2);
-				\coordinate (B) at (-6,-2);
-				\coordinate (C) at (-6,2);
-				\coordinate (D) at (-10,2);
-				\node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
-				\node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
-				\node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
-				\node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
-				\draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|2$} (QA);
-				\draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|1$} (QB);
-				\draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|0$} (QD);
-				\draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|0$} (QA);
-				\draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|2$} (QB);
-				\draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|1$} (QC);
-				\draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
-				\draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|2$} (QC);
-				\draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|1$} (QD);
-				\draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
-				\draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|0$} (QC);
-				\draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|2$} (QD);
-				
-				
-				\coordinate (A) at (0,0);
-				\coordinate (B) at (0:3);
-				\coordinate (C) at (120:3);
-				\coordinate (D) at (240:3);
-				\node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
-				\node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
-				\node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
-				\node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
-				\draw[->,>=latex] (QA) to[bend right] node[midway, below]{$1|0$} (QB);
-				\draw[->,>=latex] (QB) to[bend right] node[midway, above]{$2|0$} (QA);
-				\draw[->,>=latex] (QA) to[bend right] node[midway, above right]{$0|1$} (QC);
-				\draw[->,>=latex] (QC) to[bend right] node[midway, below left]{$0|2$} (QA);
-				\draw[->,>=latex] (QA) to[bend right] node[midway, above left]{$2|2$} (QD);
-				\draw[->,>=latex] (QD) to[bend right] node[midway, below right]{$1|1$} (QA);
-				\draw[->,>=latex] (QB) to[bend right] node[midway, below]{$1|2$} (QC);
-				\draw[->,>=latex] (QC) to[bend left=40] node[midway, above]{$2|1$} (QB);
-				\draw[->,>=latex] (QC) to[bend right] node[midway, right]{$1|0$} (QD);
-				\draw[->,>=latex] (QD) to[bend left=40] node[midway, left]{$2|0$} (QC);
-				\draw[->,>=latex] (QD) to[bend right] node[midway, above]{$0|2$} (QB);
-				\draw[->,>=latex] (QB) to[bend left=40] node[midway, below]{$0|1$} (QD);
-				
-				\coordinate (A) at (6,-2);
-				\coordinate (B) at (10,-2);
-				\coordinate (C) at (10,2);
-				\coordinate (D) at (6,2);
-				\node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
-				\node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
-				\node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
-				\node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
-				\draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|0$} (QA);
-				\draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|2$} (QB);
-				\draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|1$} (QD);
-				\draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|2$} (QA);
-				\draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|1$} (QB);
-				\draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|0$} (QC);
-				\draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
-				\draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|1$} (QC);
-				\draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|2$} (QD);
-				\draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
-				\draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|2$} (QC);
-				\draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
-				\end{tikzpicture}
-			}
-		\end{center}
-		\caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier.\label{fig:fantastiques}}
-	\end{figure}
-\end{center}
+\begin{figure}[!ht]
+  \begin{center}
+    \scalebox{.6}{
+      \begin{tikzpicture}[scale=0.9]
+        \coordinate (A) at (-10,-2);
+        \coordinate (B) at (-6,-2);
+        \coordinate (C) at (-6,2);
+        \coordinate (D) at (-10,2);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|2$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|1$} (QB);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|0$} (QD);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|0$} (QA);
+        \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|2$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
+        \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|2$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|1$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|0$} (QC);
+        \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|2$} (QD);
+
+
+        \coordinate (A) at (0,0);
+        \coordinate (B) at (0:3);
+        \coordinate (C) at (120:3);
+        \coordinate (D) at (240:3);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$1|0$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$2|0$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, above right]{$0|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, below left]{$0|2$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, above left]{$2|2$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below right]{$1|1$} (QA);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, below]{$1|2$} (QC);
+        \draw[->,>=latex] (QC) to[bend left=40] node[midway, above]{$2|1$} (QB);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, right]{$1|0$} (QD);
+        \draw[->,>=latex] (QD) to[bend left=40] node[midway, left]{$2|0$} (QC);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, above]{$0|2$} (QB);
+        \draw[->,>=latex] (QB) to[bend left=40] node[midway, below]{$0|1$} (QD);
+
+        \coordinate (A) at (6,-2);
+        \coordinate (B) at (10,-2);
+        \coordinate (C) at (10,2);
+        \coordinate (D) at (6,2);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|0$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|2$} (QB);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|1$} (QD);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|2$} (QA);
+        \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|1$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|0$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
+        \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|2$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|2$} (QC);
+        \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
+      \end{tikzpicture}
+    }
+  \end{center}
+  \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier.\label{fig:fantastiques}
+  }
+\end{figure}
+
+On observe cependant que les contre-exemples de la figure \ref{fig:fantastiques} sont factorisables et qu'en permutant leurs facteurs on trouve un automate $\mathfrak{md}$-trivial (figure \ref{fig:mdc-red-ex}). Ce qui conduit à introduire les opérations suivantes.
 
 \begin{definition}
   \label{def:conj}
@@ -466,9 +474,7 @@ Ce théorème n'est pas valide pout les automates biréversibles en général.
 
 On remarque qu'il n'existe pas une unique $\mathfrak{mdc}$-réduction, contrairement à la $\mathfrak{md}$-réduction.
 
-Les contre-exemples de la figure \ref{fig:fantastiques} sont pourtant factorisables, et en conjuguant leur factorisation, on trouve un automate $\mathfrak{md}$-trivial. Ce qui conduit à la conjecture suivante.
-
-\begin{figure}
+\begin{figure}[!ht]
 \begin{center}
   \scalebox{0.7}{
   \begin{tikzpicture}
@@ -573,8 +579,9 @@ Les contre-exemples de la figure \ref{fig:fantastiques} sont pourtant factorisab
   \end{tikzpicture}
   }
 \end{center}
-  \caption{$\mathfrak{mdc}$-réduction du deuxième contre-exemple. Il est conjugé avec l'automate $\mathcal{B}$ de la figure \ref{fid:md-red-ex} qui est $\mathfrak{md}$-trvial}
+  \caption{$\mathfrak{mdc}$-réduction du deuxième contre-exemple. Il est conjugé avec l'automate $\mathcal{B}$ de la figure \ref{fig:md-red-ex} qui est $\mathfrak{md}$-trvial.\label{fig:mdc-red-ex}}
 \end{figure}
+\newpage
 
 \begin{conj}
   \label{conj:birev-mdc}
@@ -646,14 +653,20 @@ On remarque toutefois que cette proposition n'est pas vraie pour les produits $\
   \caption{Si on nomme $\mathcal{A}$ l'automate de gauche, $\mathcal{B}$ l'automate central et $\mathcal{C}$ l'automate de droite, alors $\mathcal{ABC}$ engendre un groupe fini, et $\mathcal{BAC}$ un groupe infini.}
 \end{figure}
 
-On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref{prop:finitude-c} une des implications de la conjecture~\ref{conj:birev-mdc}.
+On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref{prop:finitude-c} la proposition suivante.
 
 \begin{prop}
-  Tout automate de Mealy engendre un (semi)groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un (semi)groupe fini.
+  Toute machine de Mealy engendre un (semi)groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un (semi)groupe fini.
 \end{prop}
 
+\begin{prop}
+  Toute machine de Mealy $\mathfrak{mdc}$-trivial engendre un (semi)groupe fini.
+\end{prop}
+
+Nous avons donc prouvé une des implications de la conjecture~\ref{conj:birev-mdc}.
+
 \section{Génération et factorisation d'automates de Mealy}
-La génération de biréversibles et la factorisation d'automates de Mealy sont des problèmes pour lesquels aucune solution efficace n'existe pour l'instant. Dans le but de pouvoir infirmer ou consolider la conjecture \ref{conj:birev-mdc}, une partie de notre travail a été d'essayer de trouver et d'implémenter des méthodes de génération et de factorisation efficaces pour les automates de Mealy biréversibles.
+La génération de biréversibles et la factorisation d'automates de Mealy sont des problèmes pour lesquels aucune solution efficace n'existe pour l'instant. Dans le but de pouvoir infirmer ou consolider la conjecture \ref{conj:birev-mdc}, une partie de notre travail a été d'essayer de trouver et d'implémenter des méthodes de génération et de factorisations efficaces pour les automates de Mealy biréversibles.
 
 
 \subsection{Clôture de classes d'automates\label{sec:cloture}}
@@ -688,7 +701,7 @@ Puisque nous nous interéssons à la classe des automates biréversibles, montro
 \end{proof}
 
 \begin{rem*}
-	Les biréversibles ne sont pas clôs par produit.	
+    Les biréversibles ne sont pas clôs par produit.
 \end{rem*}
 
 \begin{prop}[Clôture des inversibles par facteur]\label{prop_cloture_inv_facteurs}
