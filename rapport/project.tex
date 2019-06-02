@@ -803,7 +803,7 @@ Avant de faire la démonstration, rappelons un résultat élémentaire qui nous 
     Ainsi, $\mathcal{A}_1$ et $\mathcal{A}_2$ sont bien biréversibles.
 \end{proof}
 
-La propriétés \ref{prop:clot_birev} nous permet de connaître la structure des facteurs d'un automate biréversible, aidant ainsi à l'implémentation de l'algorithme suivant.
+La propriété \ref{prop:clot_birev} nous permet de connaître la structure des facteurs d'un automate biréversible, aidant ainsi à l'implémentation de l'algorithme suivant.
 
 \subsection{Algorithme de factorisation\label{sec:facto}}
 
@@ -815,27 +815,27 @@ Or, quand on factorise un automate, l'ensemble de ses états n'apparaît pas com
 On remarquera que toutes les bijections $\iota$ ne conduisent pas à une factorisation. Pour que l'automate soit factorisable, il doit seulement en exister une. On remarque aussi que si on fixe la bijection $\iota$ il existe au moins une permutation $\sigma_\iota\in\mathfrak{S}(\mathcal{Q})$ des états de l'automate tel que $\left(\sigma(\mathcal{Q}), \Sigma, \delta, \rho\right)$ soit factorisable selon la bijection $\iota$.
 
 \begin{figure}[h!]
-	\begin{subfigure}[b]{0.5\textwidth}
-		\centering
-		\begin{tikzpicture}
-		\draw [->,>=latex] (-0.5, 0) node[left] {$p$} to (0.5, 0) node[right] {$q$};
-		\draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
-		\end{tikzpicture}
-		\caption{Une flèche de l'automate $\mathcal{M}$}
-	\end{subfigure}
-	~
-	\begin{subfigure}[b]{0.5\textwidth}
-		\centering
-		\begin{tikzpicture}
-		\draw [->,>=latex] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
-		\draw [->,>=latex] (0, 1.5) node[above] {$x$} to (0, 0.5);
-		
-		\draw [->,>=latex] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
-		\draw [->,>=latex] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
-		\end{tikzpicture}
-		\caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$\label{fig:factor-ab}}
-	\end{subfigure}
-	\caption{Correspondance entre les flèches dans $\mathcal{M}$ et celles de $\mathcal{A}$ et $\mathcal{B}$. Ici on a que $\iota(p) = (p_0,~p_1)$ et $\iota(q)=(q_0, q_1)$\label{fig:facto}.}
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \begin{tikzpicture}
+        \draw [->,>=latex] (-0.5, 0) node[left] {$p$} to (0.5, 0) node[right] {$q$};
+        \draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
+        \end{tikzpicture}
+        \caption{Une flèche de l'automate $\mathcal{M}$}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \begin{tikzpicture}
+        \draw [->,>=latex] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
+        \draw [->,>=latex] (0, 1.5) node[above] {$x$} to (0, 0.5);
+
+        \draw [->,>=latex] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
+        \draw [->,>=latex] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
+        \end{tikzpicture}
+        \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$\label{fig:factor-ab}}
+    \end{subfigure}
+    \caption{Correspondance entre les flèches dans $\mathcal{M}$ et celles de $\mathcal{A}$ et $\mathcal{B}$. Ici on a que $\iota(p) = (p_0,~p_1)$ et $\iota(q)=(q_0, q_1)$\label{fig:facto}.}
 \end{figure}
 
 On remarque alors, que connaissant $\mathcal{M}$, la seule donnée inconnue de la figure \ref{fig:factor-ab} est le $z$. Notre algorithme de factorisation consiste donc à essayer tous les $z$ possibles pour chaque arête de $\mathcal{M}$ pour chaque couple de diviseurs du nombre d'états de $\mathcal{M}$. On construit ainsi toutes les flèches des facteurs.
@@ -918,7 +918,7 @@ La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficace
 
 \begin{figure}[!ht]
   \begin{center}
-  	\scalebox{1}{
+    \scalebox{1}{
     \begin{tikzpicture}[scale=0.7]
         \coordinate (A) at (-10, 0);
         \coordinate (B) at (-7, 0);
@@ -969,7 +969,7 @@ La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficace
       \draw[->,>=latex] (FB) to[bend right] (QD);
     \end{tikzpicture}
   }
-	\end{center}
+    \end{center}
   \caption{Une machine de Mealy et son graphe en hélice augmenté\label{fig:helix-aug}}
 \end{figure}
 
