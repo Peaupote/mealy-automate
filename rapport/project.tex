@@ -73,16 +73,41 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
 \begin{figure}[!ht]
   \begin{center}
     \begin{tikzpicture}
-      \draw[->,>=latex] (-1.25, 0.5) node[above] {1} to (-1.25, -0.5) node[below] {0};
-      \draw[->,>=latex] (-1.5, 0) node[left] {$p$} to (-1, 0) node[right] {$p$};
-
-      \draw[->,>=latex] (-0.25, 0.5) node[above] {0} to (-0.25, -0.5) node[below] {1};
-      \draw[->,>=latex] (-0.5, 0) to (0, 0) node[right] {$q$};
-
-      \draw[->,>=latex] (0.75, 0.5) node[above] {1} to (0.75, -0.5) node[below] {1};
-      \draw[->,>=latex] (0.5, 0) to (1, 0) node[right] {$q$};
+      \coordinate (P1) at (0,0);
+      \coordinate (P2) at (2,0);
+      \coordinate (Q1) at (4,0);
+      \coordinate (Q2) at (6,0);
+      
+      \coordinate (00) at (1,1);
+      \coordinate (01) at (3,1);
+      \coordinate (02) at (5,1);
+      
+      \coordinate (10) at (1,-1);
+      \coordinate (11) at (3,-1);
+      \coordinate (12) at (5,-1);
+      
+      \node (PP1) at (P1) {$p$};
+      \node (PP2) at (P2) {$p$};
+      \node (QQ1) at (Q1) {$q$};
+      \node (QQ2) at (Q2) {$q$};
+      
+      \node (L00) at (00) {$1$};
+      \node (L01) at (01) {$0$};
+      \node (L02) at (02) {$1$};
+      
+      \node (L10) at (10) {$0$};
+      \node (L11) at (11) {$1$};
+      \node (L12) at (12) {$1$};
+      
+      \draw[->,>=latex] (PP1) -- (PP2);
+      \draw[->,>=latex] (PP2) -- (QQ1);
+      \draw[->,>=latex] (QQ1) -- (QQ2);
+      
+      \draw[->,>=latex] (L00) -- (L10);
+      \draw[->,>=latex] (L01) -- (L11);
+      \draw[->,>=latex] (L02) -- (L12);
     \end{tikzpicture}
-    \caption{action de l'état 0 de la machine $\mathcal{A}$ sur le mot 101. Sont représentés horizontalement les états sucessifs et verticalement l'action de chacun de ces états sur les lettres du mot.}
+    \caption{action de l'état 0 de la machine $\mathcal{A}$ sur le mot 101. Sont représentés horizontalement les états successifs et verticalement l'action de chacun de ces états sur les lettres du mot.}
   \end{center}
 \end{figure}
 
