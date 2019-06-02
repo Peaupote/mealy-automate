@@ -13,6 +13,7 @@
 \usepackage{threeparttable}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{fancyvrb}
 \usepackage{tikz}
 \usetikzlibrary{calc,automata,positioning}
 \usepackage{subcaption}
@@ -871,7 +872,9 @@ Nous maintenons une liste de \texttt{sources} et de \texttt{cibles} qui représe
 Ainsi, les automates trouvés -- en vertu de la proposition \ref{thm:ir-helix} -- sont bien biréversibles. La structure globale du programme est représentée sur la figure~\ref{fig:gen-pseudo-code}.
 
 \begin{figure}[!ht]
-\begin{verbatim}
+\begin{center}
+\begin{Verbatim}[fontsize=\small]
+
 def rec(start, prev, sources, targets, delta, rho):
     if not sources and not targets:
         # plus de sources ni de targets
@@ -902,8 +905,8 @@ def rec(start, prev, sources, targets, delta, rho):
           res = rec(...)
 
     [...]
-
-\end{verbatim}
+\end{Verbatim}
+\end{center}
   \caption{Structure globale de la fonction de génération en python\label{fig:gen-pseudo-code}}
 \end{figure}
 
@@ -915,6 +918,7 @@ La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficace
 
 \begin{figure}[!ht]
   \begin{center}
+  	\scalebox{1}{
     \begin{tikzpicture}[scale=0.7]
         \coordinate (A) at (-10, 0);
         \coordinate (B) at (-7, 0);
@@ -964,7 +968,8 @@ La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficace
       \draw[->,>=latex] (FB) to[bend left] (QC);
       \draw[->,>=latex] (FB) to[bend right] (QD);
     \end{tikzpicture}
-  \end{center}
+  }
+	\end{center}
   \caption{Une machine de Mealy et son graphe en hélice augmenté\label{fig:helix-aug}}
 \end{figure}
 
