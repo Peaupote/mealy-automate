@@ -621,11 +621,38 @@ Cette conjecture est l'objet des recherches ménées au cours de ce projet.
   Les facteurs $\mathcal{A}$ et $\mathcal{B}$ jouant des rôles complètement symétriques, la même démonstration marche pour montrer la réciproque.
 \end{proof}
 
-On remarque toutefois que cette proposition n'est pas vraie pour les produits $\mathcal{ABC}$ et $\mathcal{ACB}$.
+On remarque toutefois que cette proposition n'est pas vraie pour les produits $\mathcal{ABC}$ et $\mathcal{BAC}$.
 
 \begin{figure}[h!]
-  CONTRE EXEMPLE
-  \caption{Contre-exemple pour 3 facteurs}
+  \begin{center}
+  	\begin{tikzpicture}
+  		\coordinate (A) at (-4,-1);
+  		\coordinate (B) at (-4,1);
+  		\coordinate (C) at (0,-1);
+  		\coordinate (D) at (0,1);
+  		\coordinate (E) at (4,-1);
+  		\coordinate (F) at (4,1);
+  		
+  		\node[draw,thick,circle,minimum width = 2.5em] (QA) at (A) {$a$};
+  		\node[draw,thick,circle,minimum width = 2.5em] (QB) at (B) {$b$};
+  		\node[draw,thick,circle,minimum width = 2.5em] (QC) at (C) {$c$};
+  		\node[draw,thick,circle,minimum width = 2.5em] (QD) at (D) {$d$};
+  		\node[draw,thick,circle,minimum width = 2.5em] (QE) at (E) {$e$};
+  		\node[draw,thick,circle,minimum width = 2.5em] (QF) at (F) {$f$};
+  		
+  		 \draw[thick,->,>=latex] (QA) to[bend left] node[midway, left]{\begin{tabular}{c} $0|0$ \\ $1|1$ \\ $2|2$ \end{tabular}} (QB);
+  		\draw[thick,->,>=latex] (QB) to[bend left] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $1|0$ \\ $2|2$ \end{tabular}} (QA);
+  		\draw[thick,->,>=latex] (QC) to[out=250,in=290,looseness=6] node[midway, below]{$0|0$} (QC);
+  		\draw[thick,->,>=latex] (QC) to[bend left] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|2$ \end{tabular}} (QD);
+  		\draw[thick,->,>=latex] (QD) to[out=70,in=110,looseness=6] node[midway, above]{$0|0$} (QD);
+  		\draw[thick,->,>=latex] (QD) to[bend left] node[midway, right]{\begin{tabular}{c} $1|2$ \\ $2|1$ \end{tabular}} (QC);
+  		\draw[thick,->,>=latex] (QE) to[out=250,in=290,looseness=6] node[midway, below]{\begin{tabular}{c} $1|0$ \\ $2|2$ \end{tabular}} (QE);
+  		\draw[thick,->,>=latex] (QE) to[bend left] node[midway, left]{$0|1$} (QF);
+  		\draw[thick,->,>=latex] (QF) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $1|2$ \\ $2|0$ \end{tabular}} (QF);
+  		\draw[thick,->,>=latex] (QF) to[bend left] node[midway, right]{$0|1$} (QE);
+  	\end{tikzpicture}
+  \end{center}
+  \caption{Si on nomme $\mathcal{A}$ l'automate de gauche, $\mathcal{B}$ l'automate central et $\mathcal{C}$ l'automate de droite, alors $\mathcal{ABC}$ engendre un groupe fini, et $\mathcal{BAC}$ un groupe infini.}
 \end{figure}
 
 On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref{prop:finitude-c} la proposition suivante.
