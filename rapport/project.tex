@@ -33,9 +33,9 @@
 \maketitle
 
 \section*{Introduction}
-Les automates de Mealy sont une extension des automates qui écrivent des mots en même temps qu'ils en lisent sur ce même alphabet. À partir de l'action de ces automates sur l'ensemble des mots, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes on peut travailler sur des constructions spécifiques à la structure sous-jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
+Les automates de Mealy sont une extension des automates qui écrivent des mots dans un alphabet en même temps qu'ils en lisent dans ce même alphabet. À partir de l'action de ces automates sur l'ensemble des mots, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes on peut travailler sur des constructions spécifiques à la structure sous-jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
 
-Les 3 problèmes importants\footnote{ref} de théorie des groupes sont le problème du mot, être capable de décider si un mot est l'élement neutre ; le problème de conjugaison, être capable de décider si un élément est le conjugé d'un autre; et le problème de finitude, être capable de décider si un groupe est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates. Picantin et Klimann~\cite{DBLP:journals/corr/abs-1105-4725} on proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate pour décider de la finitude du groupe qu'il engendre et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
+Le problème de théorie des groupes auquel nous nous intéressons ici le problème de finitude, c’est-à-dire savoir si le groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Picantin et Klimann~\cite{DBLP:journals/corr/abs-1105-4725} on proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate pour décider de la finitude du groupe qu'il engendre et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
 
 Notre projet consistait à essayer d'étendre ce résultat à tous les automates biréversibles de plus de deux états/lettres mais il n'est pas valide pour les automates à 4 états et 3 lettres (voir les quatres contres-exemples figure \ref{fig:fantastiques}). Cependant Picantin a remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quant à lui $\mathfrak{md}$-trivial. Nous nous sommes basés sur ces exemples pour ajouter cette opération à la $\mathfrak{md}$-réduction et l'étendre en $\mathfrak{mdc}$-réduction (definition \ref{def:mdc-red}) qui résoudrait le problème de finitude pour les classes d'automates biréversibles à plus de deux états/lettres.
 
@@ -231,9 +231,9 @@ et
   \caption{Correspondance entre les flèches dans $\mathcal{AB}$ et celles de $\mathcal{A}$ et de $\mathcal{B}$}
 \end{figure}
 
-\begin{definition}
+\begin{definition}{\cite{DBLP:journals/corr/abs-1105-4725}}
   \label{def:md-red}
-  La $\mathfrak{md}$-réduction...
+  Une paire d'automates duaux est $\mathfrak{md}$-réduite si les deux automates sont minimaux. La $\mathfrak{md}$-réduction d'un automate consiste à minimiser cet automate et son dual jusqu'à avoir une paire $\mathfrak{md}$-réduite.
 \end{definition}
 
 \begin{figure}[h!]
@@ -372,15 +372,18 @@ Ce théorème n'est pas valide pout les automates biréversibles en général.
 \end{center}
 
 \begin{definition}
-  conjugaison
+  Deux automates $\mathcal{A}$ et $\mathcal{B}$ sont \textbf{\textit{conjugés}} s'il existe des automates $\mathcal{C}$ et $\mathcal{D}$ tels que $\mathcal{A}=\mathcal{CD}$ et $\mathcal{B}=\mathcal{DC}$.
 \end{definition}
 
 \begin{definition}
   \label{def:mdc-red}
-  mdc red
+  Une paire d'automates duaux est $\mathfrak{mdc}$-réduite si elle est $\mathfrak{md}$-réduite et que les deux automates ne sont irréductibles.
+  La $\mathfrak{mdc}$-réduction consiste à répéter la $\mathfrak{md}$-réduction de l'automate et de ses conjugés jusqu'à touver des paires $\mathfrak{mdc}$-réduite.
 \end{definition}
 
-Ces contre-exemples sont pourtant factorisables, et en conjugant\footnote{mauvaise formulation, conjugaison non introduite} leur factorisation, on trouve un automate $\mathfrak{md}$-trivial. Ce qui conduit à la conjecture suivante.
+On remarque qu'il n'existe pas une unique $\mathfrak{mdc}$-réduction, contrairement à la $\mathfrak{md}$-réduction.
+
+Ces contre-exemples sont pourtant factorisables, et en conjugant leur factorisation, on trouve un automate $\mathfrak{md}$-trivial. Ce qui conduit à la conjecture suivante.
 
 \begin{figure}
   TODO: illustrer mdc red sur un fantastique
@@ -389,7 +392,7 @@ Ces contre-exemples sont pourtant factorisables, et en conjugant\footnote{mauvai
 
 \begin{conj}
   \label{conj:birev-mdc}
-  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son $\mathfrak{mdc}$-réduit est trivial\footnote{pas compris}.
+  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son $\mathfrak{mdc}$-réduit est trivial.
 \end{conj}
 
 Cette conjecture est l'objet des recherches ménées au cours de ce projet.
@@ -432,7 +435,7 @@ On remarque toutefois que cette proposition n'est pas vraie pour les produits $\
 
 On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref{prop:finitude-c} une des implications de la conjecture~\ref{conj:birev-mdc}.
 
-\begin{prop}\footnote{wtf ?}
+\begin{prop}
   Tout automate de Mealy engendre un (semi)groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un (semi)groupe fini.
 \end{prop}
 
@@ -625,7 +628,7 @@ On a rapidement constaté que le nombre d'automates à générer est très impor
 
 La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficaces. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un morphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permute sur tous les sommets du graphe en hélice.
 
-\begin{figure}[h]\label{fig:helix-aug}
+\begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}[scale=0.7]
         \coordinate (A) at (-10, 0);
@@ -691,9 +694,7 @@ Nous avions commencé par implémenter la génération en \textrm{Python} mais n
 \item \textrm{Nauty} ne dispose pas d'interface efficace en Python.
 \end{itemize}
 
-Nous avons donc décidé d'implémenter une version C beaucoup plus efficace.
-
-Le test de la forme canonique ne nécessitant le parcours d'aucune structure de donnée globale au programme, il a été très facile de le parallèlliser\footnote{bof}.
+Nous avons donc décidé d'implémenter une version C beaucoup plus efficace. Nous avons pu augmenter l'efficacité de notre programme en le parallélisant.
 
 \subsubsection*{Quelques benchmarks}
 
@@ -749,7 +750,7 @@ Le test de la forme canonique ne nécessitant le parcours d'aucune structure de 
         \hline
       \end{tabular}
 
-      \caption{Benchmark génération d'automates biréversibles à isomorphisme près}
+      \caption{Benchmark génération d'automates biréversibles à isomorphisme près\label{table:birev-iso}}
     \end{threeparttable}
   \end{center}
 \end{table}
@@ -796,11 +797,9 @@ On peut borner grossièrement la complexité en temps de l'algorithme par $\math
 
 \section{Avancées sur le problème de finitude\label{sec:finitude}}
 
-\subsection{$\mathfrak{md}$-triviaux dans des classes d'automates irréductibles}
+\subsection{Décider de la finitude du groupe engendré}
 
-Comme dit dans la section \ref{sec:action} la $\mathfrak{md}$-réduction résout le problème de finitude pour les automates biréversibles à deux états/lettres. La figure \ref{fig:fantastiques} montre les quatres automates qui ne se $\mathfrak{md}$-trivialisent pas mais engendre du fini pour les biréversibles à 4 états et 3 lettres. Ces automates se factorisent, et en permutant l'ordre de leurs facteurs on trouve des automates $\mathfrak{md}$-triviaux.
-
-Un critère simple pour étudier la finitude d'un automate est d'étudier sa fonction de croissance.
+Le problème est indécidable en général mais pour tester notre conjecture nous avons besoin d'être capable de savoir si un groupe engendre du fini. Un critère simple pour étudier la finitude d'un automate est d'étudier sa fonction de croissance.
 
 \begin{definition}
   Soit $\mathcal{A}$ une machine de Mealy. On appelle \textbf{\textit{sa fonction de croissance}} la fonction $\pi:\mathbb{N}\rightarrow\mathbb{N}$ qui à un $n$ associe le nombre d'états de $\mathfrak{m}\left(\mathcal{A}^n\right)$.
@@ -813,23 +812,26 @@ Un critère simple pour étudier la finitude d'un automate est d'étudier sa fon
 
 La proposition \ref{prop:mass} nous donne donc un critère de semi-décidabilité sur la finitude du (semi-)groupe engendré par l'automate. En effet, pour décider de la finitude du groupe engendré par $\mathcal{A}$ on peut calculer le nombre d'états sucessifs de $\mathfrak{m}\left(\mathcal{A}^n\right)$ jusqu'à ce que ce nombre de stabilise. Cependant, si l'automate engendre de l'infini la procédure ne terminera pas. De plus la minimisation et le produit d'automate sont des opérations coûteuses (de complexités respectives $\mathcal{O}\left(\Sigma\mathcal{Q}\log\mathcal{Q}\right)$ et $\mathcal{O}\left(\mathcal{Q}^2\Sigma\right)$) qui peuvent être à répéter de nombreuses fois.
 
+\subsection{$\mathfrak{md}$-triviaux dans des classes d'automates irréductibles}
+
+Comme dit dans la section \ref{sec:action} la $\mathfrak{md}$-réduction résout le problème de finitude pour les automates biréversibles à deux états/lettres. La figure \ref{fig:fantastiques} montre les quatres automates qui ne se $\mathfrak{md}$-trivialisent pas mais engendre du fini pour les biréversibles à 4 états et 3 lettres. Ces automates se factorisent, et en permutant l'ordre de leurs facteurs on trouve des automates $\mathfrak{md}$-triviaux.
+
 Une première manière de tester la conjecture \ref{conj:birev-mdc} est de tester si la $\mathfrak{md}$-réduction suffit pour décider de la finitude dans des cas où la factorisation est impossible -- \emph{i.e.} quand les nombres d'états et de lettres sont premiers.
 
-Nous avons donc engendré les fonctions de croissances des automates à 3 états, 3 lettres (figure \ref{fig:mass-33}) et 5 états, 3 lettres (figure \ref{fig:mass-53}).
+Nous avons donc procédé de la manière suivante:
+
+\begin{enumerate}
+\item engendrer une classe d'automates biréversibles irréductibles à isomorphismes près
+\item calculer la borne supérieure des fonctions de croissance des automates $\mathfrak{md}$-triviaux
+\item vérifier que la fonction de croissance de tous les automates $\mathfrak{md}$-trivaux dépasse cette borne.
+\end{enumerate}
+
+Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contres exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 752 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis parralèliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contres exemples.
 
 \begin{figure}[h]
-  \centering
-  \includegraphics[width=\textwidth]{mass_33.png}
-  \caption{Fonctions de croissance des automates à 3 états et 3 lettres $\mathfrak{md}$-triviaux à gauche et des non $\mathfrak{md}$-triviaux à droite.\label{fig:mass-33}}
+  CONTRE EXEMPLE
+  \caption{Contre exemple à la conjecture \ref{conj:birev-mdc}}
 \end{figure}
-
-\begin{figure}[h]
-  \centering
-  % \includegraphics[width=\textwidth]{mass_53.png}
-  \caption{Fonctions de croissance des automates à 5 états et 3 lettres $\mathfrak{md}$-triviaux à gauche et des non $\mathfrak{md}$-triviaux à droite.\label{fig:mass-53}}
-\end{figure}
-
-Nous en avons déduit que...
 
 \subsection{Automates fantastiques}
 
@@ -851,7 +853,7 @@ La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-r
         \hline
         4 & 3 & 4 \\
         \hline
-        4 & 4 & 38 \\
+        4 & 4 & 40 \\
         \hline
         6 & 3 & 0 \\
         \hline
@@ -860,12 +862,6 @@ La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-r
     \end{threeparttable}
   \end{center}
 \end{table}
-
-
-Pour essayer de se convaincre que notre conjecture est correcte, il faut aussi s'assurer qu'aucun automate non $\mathfrak{mdc}$-trivial n'engendre du fini.
-
-Nous avons donc considéré la borne supérieure du nombre d'états des $\mathfrak{m}(\mathcal{M}^5)$ où $\mathcal{M}$ est une machine biréversible à 4 états 3 lettres ou 4 états 4 lettres $\mathfrak{mdc}$-triviale puis vérifié que la fonction de masse des automates non $\mathfrak{mdc}$-triviaux dépasse bien cette borne. Bien que ce résultat ne prouve rien, il reste encourageant.
-
 
 \section{Conclusions}
 
