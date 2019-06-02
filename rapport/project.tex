@@ -14,7 +14,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{tikz}
-\usetikzlibrary{automata,positioning}
+\usetikzlibrary{calc,automata,positioning}
 \usepackage{subcaption}
 
 \usepackage[french]{babel}
@@ -60,7 +60,7 @@ La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entie
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
       \node[state] (q_0) {$0$};
       \node[state] (q_1) [right=of q_0] {$1$};
-      \path[->]
+      \path[->,>=latex]
       (q_0) edge [loop above] node {$1|0$} (q_0)
       edge node {$0|1$} (q_1)
       (q_1) edge [loop above] node {$0|0~1|1$} (q_1);
@@ -74,14 +74,14 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
 \begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}
-      \draw[->] (-1.25, 0.5) node[above] {1} to (-1.25, -0.5) node[below] {0};
-      \draw[->] (-1.5, 0) node[left] {0} to (-1, 0) node[right] {0};
+      \draw[->,>=latex] (-1.25, 0.5) node[above] {1} to (-1.25, -0.5) node[below] {0};
+      \draw[->,>=latex] (-1.5, 0) node[left] {0} to (-1, 0) node[right] {0};
 
-      \draw[->] (-0.25, 0.5) node[above] {0} to (-0.25, -0.5) node[below] {1};
-      \draw[->] (-0.5, 0) to (0, 0) node[right] {1};
+      \draw[->,>=latex] (-0.25, 0.5) node[above] {0} to (-0.25, -0.5) node[below] {1};
+      \draw[->,>=latex] (-0.5, 0) to (0, 0) node[right] {1};
 
-      \draw[->] (0.75, 0.5) node[above] {1} to (0.75, -0.5) node[below] {1};
-      \draw[->] (0.5, 0) to (1, 0) node[right] {1};
+      \draw[->,>=latex] (0.75, 0.5) node[above] {1} to (0.75, -0.5) node[below] {1};
+      \draw[->,>=latex] (0.5, 0) to (1, 0) node[right] {1};
     \end{tikzpicture}
     \caption{action de l'état 0 de la machine $\mathcal{A}$ sur le mot 101. Sont représentés horizontalement les états sucessifs et verticalement l'action de chacun de ces états sur les lettres du mot.}
   \end{center}
@@ -96,7 +96,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
       \node[state] (q_11) [right=of q_00] {$1, 1$};
       \node[state] (q_10) [above=of q_11] {$1, 0$};
       \node[state] (q_01) [above=of q_00] {$0, 1$};
-      \path[->]
+      \path[->,>=latex]
       (q_00) edge node {} (q_11)
       (q_10) edge node {} (q_01)
       (q_11) edge [loop right] node {} (q_11)
@@ -125,7 +125,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
       \node[state] (p) {$p$};
       \node[state] (q) [right=of q_0] {$q$};
-      \path[->]
+      \path[->,>=latex]
       (p) edge [loop left] node {$1|0$} (p)
       (p) edge [bend left] node {$0|1$} (q)
       (q) edge [bend left] node {$0|0$} (p)
@@ -138,7 +138,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
       \node[state] (p) {$p^{-1}$};
       \node[state] (q) [right=of q_0] {$q^{-1}$};
-      \path[->]
+      \path[->,>=latex]
       (p) edge [loop left] node {$0|1$} (p)
       (p) edge [bend left] node {$1|0$} (q)
       (q) edge [bend left] node {$0|0$} (p)
@@ -160,7 +160,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
       \node[state] (p) {$p$};
       \node[state] (q) [right=of p] {$q$};
-      \path[->]
+      \path[->,>=latex]
       (p) edge [loop left] node {$1|0$} (p)
       (p) edge [bend left] node {$0|1$} (q)
       (q) edge [bend left] node {$0|0$} (p)
@@ -173,7 +173,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
       \node[state] (p) {$0$};
       \node[state] (q) [right=of p] {$1$};
-      \path[->]
+      \path[->,>=latex]
       (p) edge [loop left] node {$q|p$} (p)
       (p) edge [bend left] node {$p|q$} (q)
       (q) edge [bend left] node {$q|q$} (p)
@@ -213,11 +213,11 @@ et
   \begin{subfigure}[b]{0.5\textwidth}
     \centering
     \begin{tikzpicture}
-      \draw [->] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
-      \draw [->] (0, 1.5) node[above] {$x$} to (0, 0.5);
+      \draw [->,>=latex] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
+      \draw [->,>=latex] (0, 1.5) node[above] {$x$} to (0, 0.5);
 
-      \draw [->] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
-      \draw [->] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
+      \draw [->,>=latex] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
+      \draw [->,>=latex] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
     \end{tikzpicture}
     \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$}
   \end{subfigure}
@@ -225,8 +225,8 @@ et
   \begin{subfigure}[b]{0.5\textwidth}
     \centering
     \begin{tikzpicture}
-      \draw [->] (-0.5, 0) node[left] {$p_0p_1$} to (0.5, 0) node[right] {$q_0q_1$};
-      \draw [->] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
+      \draw [->,>=latex] (-0.5, 0) node[left] {$p_0p_1$} to (0.5, 0) node[right] {$q_0q_1$};
+      \draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
     \end{tikzpicture}
     \caption{Une flèche de l'automate $\mathcal{AB}$}
   \end{subfigure}
@@ -301,8 +301,9 @@ Ce théorème n'est pas valide pout les automates biréversibles en général.
 
 \begin{center}
   \begin{figure}[h]
-    \makebox[\textwidth][c]{
-      \begin{tikzpicture}[scale=0.65]
+  	\begin{center}
+  	\scalebox{.6}{
+      \begin{tikzpicture}[scale=0.9]
 
         \coordinate (A) at (-10,-2);
         \coordinate (B) at (-6,-2);
@@ -368,8 +369,9 @@ Ce théorème n'est pas valide pout les automates biréversibles en général.
         \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|2$} (QC);
         \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
       \end{tikzpicture}
-    }
-    \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}, aka Les 4 fantastiques. Le quatrième est l'inverse du premier.\label{fig:fantastiques}}
+	}
+	\end{center}
+    \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier.\label{fig:fantastiques}}
   \end{figure}
 \end{center}
 
@@ -385,8 +387,150 @@ Ce théorème n'est pas valide pout les automates biréversibles en général.
 Ces contre-exemples sont pourtant factorisables, et en conjugant\footnote{mauvaise formulation, conjugaison non introduite} leur factorisation, on trouve un automate $\mathfrak{md}$-trivial. Ce qui conduit à la conjecture suivante.
 
 \begin{figure}
-  TODO: illustrer mdc red sur un fantastique
-  \caption{$\mathfrak{mdc}$-réduction de xx}
+\begin{center}
+  \scalebox{0.8}{
+  \begin{tikzpicture}
+  
+  	% Automate de départ : fantastique2
+  	
+  	\coordinate (A1) at (0,0);
+  	\coordinate (B1) at (0:3);
+  	\coordinate (C1) at (120:3);
+  	\coordinate (D1) at (240:3);
+  	\node[draw,circle,minimum width = 2.5em] (QA1) at (A1) {};
+  	\node[draw,circle,minimum width = 2.5em] (QB1) at (B1) {};
+  	\node[draw,circle,minimum width = 2.5em] (QC1) at (C1) {};
+  	\node[draw,circle,minimum width = 2.5em] (QD1) at (D1) {};
+  	\draw[->,>=latex] (QA1) to[bend right] node[midway, below]{$1|0$} (QB1);
+  	\draw[->,>=latex] (QB1) to[bend right] node[midway, above]{$2|0$} (QA1);
+  	\draw[->,>=latex] (QA1) to[bend right] node[midway, above right]{$0|1$} (QC1);
+  	\draw[->,>=latex] (QC1) to[bend right] node[midway, below left]{$0|2$} (QA1);
+  	\draw[->,>=latex] (QA1) to[bend right] node[midway, above left]{$2|2$} (QD1);
+  	\draw[->,>=latex] (QD1) to[bend right] node[midway, below right]{$1|1$} (QA1);
+  	\draw[->,>=latex] (QB1) to[bend right] node[midway, below]{$1|2$} (QC1);
+  	\draw[->,>=latex] (QC1) to[bend left=40] node[midway, above]{$2|1$} (QB1);
+  	\draw[->,>=latex] (QC1) to[bend right] node[midway, right]{$1|0$} (QD1);
+  	\draw[->,>=latex] (QD1) to[bend left=40] node[midway, left]{$2|0$} (QC1);
+  	\draw[->,>=latex] (QD1) to[bend right] node[midway, above]{$0|2$} (QB1);
+  	\draw[->,>=latex] (QB1) to[bend left=40] node[midway, below]{$0|1$} (QD1);
+  	
+  	% égal
+  	
+  	\draw (4,0) node {$=$};
+  	
+  	% Décomposition en produit
+  	
+  	\coordinate (A2) at (6,2);
+  	\coordinate (B2) at (6,-2);
+  	\node[draw,circle,minimum width = 2.5em] (QA2) at (A2) {};
+  	\node[draw,circle,minimum width = 2.5em] (QB2) at (B2) {};
+  	\draw[->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$0|2$} (QA2);
+  	\draw[->,>=latex] (QA2) to[bend right] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|0$ \end{tabular}} (QB2);
+  	\draw[->,>=latex] (QB2) to[out=250,in=290,looseness=6] node[midway, below]{$0|2$} (QB2);
+  	\draw[->,>=latex] (QB2) to[bend right] node[midway, right]{\begin{tabular}{c} $1|0$ \\ $2|1$ \end{tabular}} (QA2);
+  	
+  	\draw (8,0) node {$\times$};
+  	
+  	\coordinate (A3) at (10,2);
+  	\coordinate (B4) at (10,-2);
+  	\node[draw,circle,minimum width = 2.5em] (QA3) at (A3) {};
+  	\node[draw,circle,minimum width = 2.5em] (QB4) at (B4) {};
+  	\draw[->,>=latex] (QA3) to[out=70,in=110,looseness=6] node[midway, above]{$1|0$} (QA3);
+  	\draw[->,>=latex] (QA3) to[bend right] node[midway, left]{\begin{tabular}{c} $0|2$ \\ $2|1$ \end{tabular}} (QB4);
+  	\draw[->,>=latex] (QB4) to[out=250,in=290,looseness=6] node[midway, below]{$1|0$} (QB4);
+  	\draw[->,>=latex] (QB4) to[bend right] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $2|2$ \end{tabular}} (QA3);
+  	
+  	% conjugaison
+  	
+  	\draw[->,>=latex] (8, -4) to node[midway, left] {$\mathfrak{c}$} (8, -5);
+  	
+  	% produit conjugué
+  	
+  	\coordinate (A3) at (6,-7);
+  	\coordinate (B4) at (6,-11);
+  	\node[draw,circle,minimum width = 2.5em] (QA3) at (A3) {};
+  	\node[draw,circle,minimum width = 2.5em] (QB4) at (B4) {};
+  	\draw[->,>=latex] (QA3) to[out=70,in=110,looseness=6] node[midway, above]{$1|0$} (QA3);
+  	\draw[->,>=latex] (QA3) to[bend right] node[midway, left]{\begin{tabular}{c} $0|2$ \\ $2|1$ \end{tabular}} (QB4);
+  	\draw[->,>=latex] (QB4) to[out=250,in=290,looseness=6] node[midway, below]{$1|0$} (QB4);
+  	\draw[->,>=latex] (QB4) to[bend right] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $2|2$ \end{tabular}} (QA3);
+  	
+  	\draw (8,-9) node {$\times$};
+  	
+  	\coordinate (A2) at (10,-7);
+  	\coordinate (B2) at (10,-11);
+  	\node[draw,circle,minimum width = 2.5em] (QA2) at (A2) {};
+  	\node[draw,circle,minimum width = 2.5em] (QB2) at (B2) {};
+  	\draw[->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$0|2$} (QA2);
+  	\draw[->,>=latex] (QA2) to[bend right] node[midway, left]{\begin{tabular}{c} $1|1$ \\ $2|0$ \end{tabular}} (QB2);
+  	\draw[->,>=latex] (QB2) to[out=250,in=290,looseness=6] node[midway, below]{$0|2$} (QB2);
+  	\draw[->,>=latex] (QB2) to[bend right] node[midway, right]{\begin{tabular}{c} $1|0$ \\ $2|1$ \end{tabular}} (QA2);
+  	
+  	%égalité 
+  	
+  	\draw (4,-9) node {$=$};
+  	
+  	%conjugué
+  	
+  	\coordinate (A2) at (-2,-7);
+  	\coordinate (B2) at (-2,-11);
+  	\coordinate (C2) at (2,-7);
+  	\coordinate (D2) at (2,-11);
+  	\node[draw,circle,minimum width = 2.5em] (QA2) at (A2) {$b$};
+  	\node[draw,circle,minimum width = 2.5em] (QB2) at (B2) {$a$};
+  	\node[draw,circle,minimum width = 2.5em] (QC2) at (C2) {$c$};
+  	\node[draw,circle,minimum width = 2.5em] (QD2) at (D2) {$d$};
+  	\draw[->,>=latex] (QA2) to[out=115,in=155,looseness=6] node[midway, above left]{$1|2$} (QA2);
+  	\draw[->,>=latex] (QA2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QC2);
+  	\draw[->,>=latex] (QB2) to[out=205,in=245,looseness=6] node[midway, below left]{$1|2$} (QB2);
+  	\draw[->,>=latex] (QB2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QD2);
+  	\draw[->,>=latex] (QC2) to[out=25,in=65,looseness=6] node[midway, above right]{$1|2$} (QC2);
+  	\draw[->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
+  	\draw[->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
+  	\draw[->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
+  	
+  	%minization
+  	\draw[->,>=latex] (0, -13) to node[midway, right] {$\mathfrak{m}$} (0, -14);
+  	
+  	%minimisé du conjugué
+  	
+  	\coordinate (A2) at (-2,-17);
+  	\coordinate (B2) at (2,-17);
+  	\node[draw,circle,minimum width = 2.5em] (QA2) at (A2) {$bc$};
+  	\node[draw,circle,minimum width = 2.5em] (QB2) at (B2) {$ad$};
+  	\draw[->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA2);
+  	\draw[->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $1|2$ \\ $2|0$ \end{tabular}} (QB2);
+  	
+  	%dualisation
+  	
+  	\draw[->,>=latex] (3.5, -16) to node[midway, above] {$\mathfrak{d}$} (4.5, -16);
+  	
+  	% dual du minimisé du conjugué
+  	
+  	\coordinate (A2) at (6.5,-17);
+  	\coordinate (B2) at (9.5,-17);
+  	\coordinate (C2) at ($(A2) + (60:3)$);
+  	\node[draw,circle,minimum width = 2.5em] (QA2) at (A2) {$0$};
+  	\node[draw,circle,minimum width = 2.5em] (QB2) at (B2) {$2$};
+  	\node[draw,circle,minimum width = 2.5em] (QC2) at (C2) {$1$};
+  	
+  	\draw[->,>=latex] (QA2) to[out=190,in=230,looseness=6] node[midway, below left]{$ad|ad$} (QA2);
+  	\draw[->,>=latex] (QA2) to node[midway, above left] {$bc|bc$} (QC2);
+  	\draw[->,>=latex] (QB2) to node[midway, below] {$bc|bc$} (QA2);
+  	\draw[->,>=latex] (QB2) to[bend left] node[midway, below left] {$ad|ad$} (QC2);
+  	\draw[->,>=latex] (QC2) to[bend left] node[midway, above right] {\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QB2);
+  	
+  	%minimisation
+  	\draw[->,>=latex] (8, -19) to node[midway, right] {$\mathfrak{m}$} (8, -20);
+  	
+  	\coordinate (A2) at (8, -23);
+  	\node[draw,circle,minimum width = 2.5em] (QA2) at (A2) {$012$};
+  	\draw[->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QA2);
+  	
+  \end{tikzpicture}
+  }
+\end{center}
+  \caption{$\mathfrak{mdc}$-réduction du deuxième contre-exemple}
 \end{figure}
 
 \begin{conj}
@@ -635,7 +779,7 @@ La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficace
 
         \node[draw,circle,minimum width = 2.5em] (q_0) at (A) {$a$};
         \node[draw,circle,minimum width = 2.5em] (q_1) at (B) {$b$};
-        \path[->]
+        \path[->,>=latex]
         (q_0) edge [loop left] node {$0|1$} (q_0)
         (q_0) edge [bend left] node[midway, above] {$1|1$} (q_1)
         (q_1) edge [bend left] node[midway, below] {$0|0$} (q_0)
@@ -772,8 +916,8 @@ On remarquera que toutes les bijections $\iota$ ne conduisent pas à une factori
   \begin{subfigure}[b]{0.5\textwidth}
     \centering
     \begin{tikzpicture}
-      \draw [->] (-0.5, 0) node[left] {$p$} to (0.5, 0) node[right] {$q$};
-      \draw [->] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
+      \draw [->,>=latex] (-0.5, 0) node[left] {$p$} to (0.5, 0) node[right] {$q$};
+      \draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
     \end{tikzpicture}
     \caption{Une flèche de l'automate $\mathcal{M}$}
   \end{subfigure}
@@ -781,11 +925,11 @@ On remarquera que toutes les bijections $\iota$ ne conduisent pas à une factori
   \begin{subfigure}[b]{0.5\textwidth}
     \centering
     \begin{tikzpicture}
-      \draw [->] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
-      \draw [->] (0, 1.5) node[above] {$x$} to (0, 0.5);
+      \draw [->,>=latex] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
+      \draw [->,>=latex] (0, 1.5) node[above] {$x$} to (0, 0.5);
 
-      \draw [->] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
-      \draw [->] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
+      \draw [->,>=latex] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
+      \draw [->,>=latex] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
     \end{tikzpicture}
     \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$\label{fig:factor-ab}}
   \end{subfigure}
