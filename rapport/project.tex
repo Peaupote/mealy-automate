@@ -455,7 +455,7 @@ Ce théorème n'est pas valide pour les automates biréversibles en général.
       \end{tikzpicture}
     }
   \end{center}
-  \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier.\label{fig:fantastiques}
+  \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier. Dans la suite, nous appelons ces automates $\mathfrak{c}$-faible.\label{fig:fantastiques}
   }
 \end{figure}
 
@@ -1089,22 +1089,22 @@ Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne
 \end{center}
 \end{figure}
 
-\subsection{Automates fantastiques}
+\subsection{Automates $\mathfrak{c}$-faible}
 
-Nous avons ensuite cherché dans des classes plus grandes que celles abordées jusqu'alors pour trouver des automates \textit{fantastiques}.
+Nous avons ensuite cherché dans des classes plus grandes que celles abordées jusqu'alors pour trouver des automates \textit{$\mathfrak{c}$-faible}.
 
 \begin{definition}
-  Un automate est \textbf{\textit{fantastique}} s'il est $\mathfrak{mdc}$-trivial mais pas $\mathfrak{md}$-trivial.
+  Un automate est \textbf{\textit{$\mathfrak{c}$-faible}} s'il est $\mathfrak{mdc}$-trivial mais pas $\mathfrak{md}$-trivial.
 \end{definition}
 
-La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-réduction il est donc préférable d'énumérer les classes de diviseurs et de faire tous les produits. On trouve ainsi tous les automates fantastiques d'une classe à isomorphisme près.
+La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-réduction il est donc préférable d'énumérer les classes de diviseurs et de faire tous les produits. On trouve ainsi tous les automates $\mathfrak{c}$-faible d'une classe à isomorphisme près.
 
 \begin{table}[h!]
   \begin{center}
     \begin{threeparttable}
       \begin{tabular}{|rrr|}
         \hline
-        \#états & \#lettres & \#fantastiques \\ [0.5ex]
+        \#états & \#lettres & \#$\mathfrak{c}$-faibles \\ [0.5ex]
         \hline\hline
         \hline
         4 & 3 & 4 \\
@@ -1114,7 +1114,7 @@ La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-r
         6 & 3 & 0 \\
         \hline
       \end{tabular}
-      \caption{Nombre d'automates fantastiques pour des classes d'automates biréversibles.}
+      \caption{Nombre d'automates $\mathfrak{c}$-faibles pour des classes d'automates biréversibles.}
     \end{threeparttable}
   \end{center}
 \end{table}
@@ -1124,7 +1124,7 @@ La factorisation est une opération coûteuse, pour tester la $\mathfrak{mdc}$-r
 
 La $\mathfrak{mdc}$-réduction ne fournit pas un critère suffisant pour résoudre le problème de finitude des groupes engendrés par des automates biréversibles (contre-exemple figure \ref{fig:contre-exemple}).
 
-On pourrait se demander s'il y a des points communs entre les fantastiques et les contre-exemples irréductibles que nous avons trouvé. Nous pourrions alors peut-être ajouter une opération à la $\mathfrak{mdc}$-réduction qui résolve le problème de finitude pour les groupes d'automates biréversibles.
+On pourrait se demander s'il y a des points communs entre les $\mathfrak{c}$-faible et les contre-exemples irréductibles que nous avons trouvé. Nous pourrions alors peut-être ajouter une opération à la $\mathfrak{mdc}$-réduction qui résolve le problème de finitude pour les groupes d'automates biréversibles.
 
 Les contre-exemples que nous avons trouvés fournissent une nouvelle source d'information sur les limites de la $\mathfrak{md}$-réduction. Aussi, permettront-ils peut être d'envisager le problème de finitude sous de nouvelles perspectives.
 
