@@ -27,7 +27,7 @@
 \newtheorem{conj}{Conjecture}
 \newtheorem*{rem*}{Remarque}
 
-\title{À propos du problème de finitude des groupes d'automates biréversibles}
+\title{À propos du problème de finitude\\ des groupes d'automates biréversibles}
 \author{Maxime Flin \& Tristan François}
 
 \begin{document}
@@ -36,7 +36,7 @@
 \section*{Introduction}
 Les automates de Mealy sont une extension des automates qui écrivent des mots dans un alphabet en même temps qu'ils en lisent dans ce même alphabet. À partir de l'action de ces automates sur l'ensemble des mots, on peut dégager une structure de (semi-)groupe engendré par l'automate. Pour étudier cette classe de (semi-)groupes, on peut travailler sur des constructions spécifiques à la structure sous-jacente d'automate (comme la minimisation ou la dualisation) pour résoudre des problèmes d'algèbre de la théorie des groupes.
 
-Le problème de théorie des groupes auquel nous nous intéressons ici est le problème de finitude, c’est-à-dire savoir si le groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Picantin et Klimann~\cite{DBLP:journals/corr/abs-1105-4725} ont proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles (définition \ref{def:birev}) à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
+Le problème de théorie des groupes auquel nous nous intéressons ici est le problème de finitude, c’est-à-dire savoir si le (semi-)groupe engendré par un automate de Mealy donné est fini ou non. C'est un problème difficile, indécidable en général pour les semi-groupes d'automates~\cite{Undecidable}. Akhavi \emph{et al}~\cite{DBLP:journals/corr/abs-1105-4725} ont proposé la $\mathfrak{md}$-réduction (définition \ref{def:md-red}), une procédure alternant minimisation et dualisation de l'automate et Klimann~\cite{Klimann13} a réussi à montrer que les groupes engendrés par des automates biréversibles (définition \ref{def:birev}) à deux états ou deux lettres sont finis si et seulement si l'automate est $\mathfrak{md}$-trivial.
 
 Notre projet consistait à essayer d'étendre ce résultat à tous les automates biréversibles de plus de deux états/lettres. Cependant,  le critère de $\mathfrak{md}$-réduction n'est pas suffisant pour les automates à 4 états et 3 lettres (voir les quatre contres-exemples figure \ref{fig:fantastiques}). Picantin a toutefois remarqué que ces automates se factorisent et que l'automate obtenu en inversant les deux termes de la factorisation est quant à lui $\mathfrak{md}$-trivial. Nous nous sommes basés sur ces exemples pour ajouter l'opération de conjugaison (définition \ref{def:conj}) à la $\mathfrak{md}$-réduction afin de l'étendre en $\mathfrak{mdc}$-réduction (définition \ref{def:mdc-red}). Nous avons émis l'hypothèse que ce nouveau critère résoudrait le problème de finitude pour les classes d'automates biréversibles à plus de deux états/lettres.
 
@@ -52,7 +52,7 @@ La notion d'automate de Mealy étend la simple notion d'automate en lui ajoutant
   Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexées par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexées par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
 \end{definition}
 
-La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entier écrit en binaire. Une flèche du type $p\overset{x|y}{\longrightarrow}q$ indique que quand on est dans l'état $p$ et qu'on lit la lettre $x$, on se déplace dans l'état $q$ et on écrit la lettre $y$.
+La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entier écrit en binaire. Une flèche du type $p\overset{x|y}{\longrightarrow}q$ indique que quand on est dans l'état~$p$ et qu'on lit la lettre $x$, on se déplace dans l'état $q$ et on écrit la lettre $y$.
 
 \begin{figure}[!ht]
   \begin{center}
@@ -64,7 +64,7 @@ La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entie
       edge node {$0|1$} (q_1)
       (q_1) edge [loop above] node {$0|0~1|1$} (q_1);
     \end{tikzpicture}
-    \caption{une machine de Mealy $\mathcal{A}$ \label{fig:example}}
+    \caption{une machine de Mealy $\mathcal{A}$.\label{fig:example}}
   \end{center}
 \end{figure}
 
@@ -77,32 +77,32 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
       \coordinate (P2) at (2,0);
       \coordinate (Q1) at (4,0);
       \coordinate (Q2) at (6,0);
-      
+
       \coordinate (00) at (1,1);
       \coordinate (01) at (3,1);
       \coordinate (02) at (5,1);
-      
+
       \coordinate (10) at (1,-1);
       \coordinate (11) at (3,-1);
       \coordinate (12) at (5,-1);
-      
+
       \node (PP1) at (P1) {$p$};
       \node (PP2) at (P2) {$p$};
       \node (QQ1) at (Q1) {$q$};
       \node (QQ2) at (Q2) {$q$};
-      
+
       \node (L00) at (00) {$1$};
       \node (L01) at (01) {$0$};
       \node (L02) at (02) {$1$};
-      
+
       \node (L10) at (10) {$0$};
       \node (L11) at (11) {$1$};
       \node (L12) at (12) {$1$};
-      
+
       \draw[->,>=latex] (PP1) -- (PP2);
       \draw[->,>=latex] (PP2) -- (QQ1);
       \draw[->,>=latex] (QQ1) -- (QQ2);
-      
+
       \draw[->,>=latex] (L00) -- (L10);
       \draw[->,>=latex] (L01) -- (L11);
       \draw[->,>=latex] (L02) -- (L12);
@@ -111,7 +111,7 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
   \end{center}
 \end{figure}
 
-Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de le représenter par un graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquetés par des couples états lettres. Pour chaque flèche du type $p\overset{x|y}{\longrightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t-on que de chaque sommet du graphe en hélice part exactement une flèche.
+Une autre représentation qui sera commode dans la partie \ref{sec:gen} est le graphe en hélice. On représente l'automate par un graphe dont les sommets sont étiquetés par des couples état-lettre. Pour chaque flèche du type $p\overset{x|y}{\longrightarrow}q$ dans l'automate, il y a une flèche de l'état $p, x$ vers l'état $q, y$ dans le graphe en hélice. Aussi remarque-t-on que de chaque sommet du graphe en hélice part exactement une flèche.
 
 \begin{figure}[!ht]
   \begin{center}
@@ -139,7 +139,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
 \end{definition}
 
 \begin{definition}
-  Si un machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire sont \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplacant les flèches $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
+  Si une machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire son \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplaçant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
 \end{definition}
 
 
@@ -172,12 +172,12 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
     \end{tikzpicture}
   \end{subfigure}
   }
-  \caption{Automate et son inverse}
+  \caption{Automate et son inverse.}
 \end{figure}
 
 
 \begin{definition}
-  Si une machine de Mealy est réversible, alors on peut construire sont \textbf{\textit{dual}}, noté $\mathfrak{d}\mathcal{M}$, en remplacant les flèches $p\overset{x|y}{\longrightarrow}q$ par $x\overset{p|q}{\longrightarrow}y$.
+  Si une machine de Mealy est réversible, alors on peut construire son \textbf{\textit{dual}}, noté $\mathfrak{d}\mathcal{M}$, en remplacant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $x\overset{p|q}{\longrightarrow}y$.
 \end{definition}
 
 
@@ -205,8 +205,8 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
       \path[->,>=latex]
       (p) edge [loop left] node {$q|p$} (p)
       (p) edge [bend left] node {$p|q$} (q)
-      (q) edge [bend left] node {$q|q$} (p)
-      (q) edge [loop right] node {$p|p$} (q);
+      (q) edge [bend left] node {$p|p$} (p)
+      (q) edge [loop right] node {$q|q$} (q);
     \end{tikzpicture}
   \end{subfigure}
   }
@@ -224,7 +224,7 @@ Une autre représentation qui sera commode dans la partie \ref{sec:gen} est de l
   \begin{align*}
     \forall p, q \in Q,\\
     p \equiv_0 q &\iff \rho_p = \rho_q \\
-    \forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right)
+    \forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right).
   \end{align*}
 
   Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x([p]) = [\delta_x(p)]$ et $\bar{\rho}_{[p]} =  \rho_p$.
@@ -249,7 +249,7 @@ et
       \draw [->,>=latex] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
       \draw [->,>=latex] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
     \end{tikzpicture}
-    \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$}
+    \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$.}
   \end{subfigure}
   ~
   \begin{subfigure}[b]{0.5\textwidth}
@@ -258,9 +258,9 @@ et
       \draw [->,>=latex] (-0.5, 0) node[left] {$p_0p_1$} to (0.5, 0) node[right] {$q_0q_1$};
       \draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
     \end{tikzpicture}
-    \caption{Une flèche de l'automate $\mathcal{AB}$}
+    \caption{Une flèche de l'automate $\mathcal{AB}$.}
   \end{subfigure}
-  \caption{Correspondance entre les flèches dans $\mathcal{AB}$ et celles de $\mathcal{A}$ et de $\mathcal{B}$}
+  \caption{Correspondance entre les flèches dans $\mathcal{AB}$ et celles de $\mathcal{A}$ et de $\mathcal{B}$.}
 \end{figure}
 
 \begin{definition}{\cite{DBLP:journals/corr/abs-1105-4725}}
