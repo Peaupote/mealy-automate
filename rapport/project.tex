@@ -57,8 +57,8 @@ La figure \ref{fig:example} montre une machine de Mealy qui incrémente un entie
 \begin{figure}[!ht]
   \begin{center}
     \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-      \node[state] (q_0) {$0$};
-      \node[state] (q_1) [right=of q_0] {$1$};
+      \node[state] (q_0) {$p$};
+      \node[state] (q_1) [right=of q_0] {$q$};
       \path[->,>=latex]
       (q_0) edge [loop above] node {$1|0$} (q_0)
       edge node {$0|1$} (q_1)
@@ -74,13 +74,13 @@ On peut représenter l'action d'un automate de Mealy par son diagramme en croix:
   \begin{center}
     \begin{tikzpicture}
       \draw[->,>=latex] (-1.25, 0.5) node[above] {1} to (-1.25, -0.5) node[below] {0};
-      \draw[->,>=latex] (-1.5, 0) node[left] {0} to (-1, 0) node[right] {0};
+      \draw[->,>=latex] (-1.5, 0) node[left] {$p$} to (-1, 0) node[right] {$p$};
 
       \draw[->,>=latex] (-0.25, 0.5) node[above] {0} to (-0.25, -0.5) node[below] {1};
-      \draw[->,>=latex] (-0.5, 0) to (0, 0) node[right] {1};
+      \draw[->,>=latex] (-0.5, 0) to (0, 0) node[right] {$q$};
 
       \draw[->,>=latex] (0.75, 0.5) node[above] {1} to (0.75, -0.5) node[below] {1};
-      \draw[->,>=latex] (0.5, 0) to (1, 0) node[right] {1};
+      \draw[->,>=latex] (0.5, 0) to (1, 0) node[right] {$q$};
     \end{tikzpicture}
     \caption{action de l'état 0 de la machine $\mathcal{A}$ sur le mot 101. Sont représentés horizontalement les états sucessifs et verticalement l'action de chacun de ces états sur les lettres du mot.}
   \end{center}
