@@ -376,16 +376,18 @@ Soit $\Sigma$ un alphabet. On note $\Sigma^*$ l'ensemble des mots sur cet alphab
 
 \end{definition}
 
+\begin{prop}
+	\label{prop:finitude-m}
+	Soit $\mathcal{A}$ un automate de Mealy, alors on a :
+	\[ \left<\mathfrak{m}\mathcal{A}\right> = \left<\mathcal{A}\right>. \]
+\end{prop}
+
 \begin{prop}{\cite{DBLP:journals/corr/abs-1105-4725}}
   \label{prop:finitude-d}
   Soit $\mathcal{A}$ un automate de Mealy. Le (semi-)groupe $\left<\mathcal{A}\right>_+$ est fini si et seulement si $\left<\mathfrak{d}\mathcal{A}\right>_+$ est fini.
 \end{prop}
 
-\begin{prop}
-  \label{prop:finitude-m}
-  Soit $\mathcal{A}$ un automate de Mealy, alors
-  \[ \left<\mathfrak{m}\mathcal{A}\right> = \left<\mathcal{A}\right>. \]
-\end{prop}
+
 
 Des propositions \ref{prop:finitude-d} et \ref{prop:finitude-m} on déduit les propositions suivantes.
 
@@ -398,16 +400,14 @@ Des propositions \ref{prop:finitude-d} et \ref{prop:finitude-m} on déduit les p
   Tout automate $\mathfrak{md}$-trivial engendre un groupe fini.
 \end{prop}
 
-La réciproque est fausse en général (voir figure \ref{fig:fantastiques}). \footnote{``un mot sur la faible efficacité en dehors des biréversibles''}
-
-Il semble pourtant que dans la classe particulière des automates biréversibles, la $\mathfrak{md}$-réduction est efficace.
+La réciproque est fausse en général (voir figure \ref{fig:fantastiques}). Il semble pourtant que dans la classe particulière des automates biréversibles, la $\mathfrak{md}$-réduction est particulièrement efficace.
 
 \begin{thm}{\cite{Klimann13}}
   \label{thm:K}
   Tout automate à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
 \end{thm}
 
-Ce théorème n'est pas valide pour les automates biréversibles en général.
+Ce théorème n'est toutefois pas valide pour les automates biréversibles en général.
 \newpage
 
 \begin{figure}[!ht]
@@ -484,11 +484,11 @@ Ce théorème n'est pas valide pour les automates biréversibles en général.
   }
 \end{figure}
 
-On observe cependant que les contre-exemples de la figure \ref{fig:fantastiques} sont factorisables et qu'en permutant leurs facteurs on trouve un automate $\mathfrak{md}$-trivial (figure \ref{fig:mdc-red-ex}). Ce qui conduit à introduire les opérations suivantes.
+On observe cependant que les contre-exemples de la figure \ref{fig:fantastiques} sont factorisables et qu'en permutant leurs facteurs on trouve un automate $\mathfrak{md}$-trivial (figure \ref{fig:mdc-red-ex}). Cela conduit à introduire les opérations suivantes.
 
 \begin{definition}
   \label{def:conj}
-  Deux automates $\mathcal{A}$ et $\mathcal{B}$ sont \textbf{\textit{conjugés}} s'il existe des automates $\mathcal{C}$ et $\mathcal{D}$ tels que $\mathcal{A}=\mathcal{CD}$ et $\mathcal{B}=\mathcal{DC}$.
+  Deux automates $\mathcal{A}$ et $\mathcal{B}$ sont \textbf{\textit{conjugués}} s'il existe des automates $\mathcal{C}$ et $\mathcal{D}$ tels que $\mathcal{A}=\mathcal{CD}$ et $\mathcal{B}=\mathcal{DC}$.
 \end{definition}
 
 \begin{definition}
@@ -606,16 +606,16 @@ On observe cependant que les contre-exemples de la figure \ref{fig:fantastiques}
   \end{tikzpicture}
   }
 \end{center}
-  \caption{$\mathfrak{mdc}$-réduction du deuxième contre-exemple. Il est conjugé avec l'automate $\mathcal{B}$ de la figure \ref{fig:md-red-ex} qui est $\mathfrak{md}$-trvial.\label{fig:mdc-red-ex}}
+  \caption{$\mathfrak{mdc}$-réduction du deuxième contre-exemple. Il est conjugué avec l'automate $\mathcal{B}$ de la figure \ref{fig:md-red-ex} qui est $\mathfrak{md}$-trivial.\label{fig:mdc-red-ex}}
 \end{figure}
 \newpage
 
 \begin{conj}
   \label{conj:birev-mdc}
-  Un automate de Mealy biréversible engendre un groupe fini si et seulement si son $\mathfrak{mdc}$-réduit est trivial.
+  Un automate de Mealy biréversible engendre un groupe fini si et seulement sa $\mathfrak{mdc}$-réduction produit (au moins) un $\mathfrak{mdc}$-trivial.
 \end{conj}
 
-Cette conjecture est l'objet des recherches ménées au cours de ce projet.
+Cette conjecture est l'objet des recherches menées au cours de ce projet.
 
 \begin{prop}
   \label{prop:finitude-c}
@@ -641,12 +641,12 @@ Cette conjecture est l'objet des recherches ménées au cours de ce projet.
     &=\rho_{q_1}\circ\underbrace{\left(\rho_{q_2p_1}\circ\rho_{q_3p_2}\circ\cdots\circ\rho_{q_np_{n-1}}\right)}_{\in\left<\mathcal{A}\mathcal{B}\right>}\circ\rho_{p_n}
   \end{align*}
 
-  On en déduit que tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ s'écrit comme la composition d'un $\rho_{q},~q\in\mathcal{Q}_1$, d'un $\rho_\bullet\in\left<\mathcal{A}\mathcal{B}\right>$ et d'un $\rho_{p},~p\in\mathcal{Q}_2$. Or $\mathcal{Q}_1$ et $\mathcal{Q}_2$ sont finis, donc le nombre de choix de $p$ et de $q$ est fini. De plus, on a supposé le nombre d'éléments $\rho_\bullet\in\left<\mathcal{A}\mathcal{B}\right>$ fini, donc le nombre d'élements qui s'écrivent \[ \rho_q\circ\rho_\bullet\circ\rho_p \] est fini. On a montré plus haut que tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ sont de cette forme, on en conclut qu'il y en a un nombre fini.
+  On en déduit que tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ s'écrit comme la composition d'un $\rho_{q},~q\in\mathcal{Q}_1$, d'un $\rho_\bullet\in\left<\mathcal{A}\mathcal{B}\right>$ et d'un $\rho_{p},~p\in\mathcal{Q}_2$. Or $\mathcal{Q}_1$ et $\mathcal{Q}_2$ sont finis, donc le nombre de choix de $p$ et de $q$ est fini. De plus, on a supposé le nombre d'éléments $\rho_\bullet\in\left<\mathcal{A}\mathcal{B}\right>$ fini, donc le nombre d'éléments qui s'écrivent \[ \rho_q\circ\rho_\bullet\circ\rho_p \] est fini. On a montré plus haut que tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ sont de cette forme, on en conclut qu'il y en a un nombre fini.
 
   Les facteurs $\mathcal{A}$ et $\mathcal{B}$ jouant des rôles complètement symétriques, la même démonstration marche pour montrer la réciproque.
 \end{proof}
 
-On remarque toutefois que cette proposition n'est pas vraie pour les produits $\mathcal{ABC}$ et $\mathcal{BAC}$.
+On fait remarquer que cette proposition concerne bien la conjugaison, et ne s'étend par à $\mathcal{ABC}$ et $\mathcal{BAC}$, par exemple (voir figure \ref{fig:abc}).
 
 \begin{figure}[h!]
   \begin{center}
@@ -677,17 +677,17 @@ On remarque toutefois que cette proposition n'est pas vraie pour les produits $\
         \draw[thick,->,>=latex] (QF) to[bend left] node[midway, right]{$0|1$} (QE);
     \end{tikzpicture}
   \end{center}
-  \caption{Si on nomme $\mathcal{A}$ l'automate de gauche, $\mathcal{B}$ l'automate central et $\mathcal{C}$ l'automate de droite, alors $\mathcal{ABC}$ engendre un groupe fini, et $\mathcal{BAC}$ un groupe infini.}
+  \caption{Si on nomme $\mathcal{A}$ l'automate de gauche, $\mathcal{B}$ l'automate central et $\mathcal{C}$ l'automate de droite, alors $\mathcal{ABC}$ engendre un groupe fini, et $\mathcal{BAC}$ un groupe infini. \label{fig:abc}}
 \end{figure}
 
 On déduit des propositions \ref{prop:finitude-d}, \ref{prop:finitude-m} et \ref{prop:finitude-c} la proposition suivante.
 
 \begin{prop}
-  Toute machine de Mealy engendre un (semi)groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un (semi)groupe fini.
+  Toute machine de Mealy engendre un (semi-)groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un (semi-)groupe fini.
 \end{prop}
 
 \begin{prop}
-  Toute machine de Mealy $\mathfrak{mdc}$-trivial engendre un (semi)groupe fini.
+  Toute machine de Mealy $\mathfrak{mdc}$-trivial engendre un (semi-)groupe fini.
 \end{prop}
 
 Nous avons donc prouvé une des implications de la conjecture~\ref{conj:birev-mdc}.
