@@ -469,10 +469,12 @@ On observe cependant que les contre-exemples de la figure \ref{fig:fantastiques}
 \begin{definition}
   \label{def:mdc-red}
   Une paire d'automates duaux est $\mathfrak{mdc}$-réduite si elle est $\mathfrak{md}$-réduite et que les deux automates sont irréductibles.
-  La $\mathfrak{mdc}$-réduction consiste à répéter la $\mathfrak{md}$-réduction de l'automate et de ses conjugués jusqu'à trouver des paires $\mathfrak{mdc}$-réduite.
+  La $\mathfrak{mdc}$-réduction consiste à répéter la $\mathfrak{md}$-réduction de l'automate et de ses conjugués jusqu'à trouver des paires $\mathfrak{mdc}$-réduites.
 \end{definition}
 
-On remarque qu'il n'existe pas une unique $\mathfrak{mdc}$-réduction, contrairement à la $\mathfrak{md}$-réduction.
+\begin{rem*}
+  Contrairement au $\mathfrak{md}$-réduit, il n'existe pas une unique $\mathfrak{mdc}$-réduction.
+\end{rem*}
 
 \begin{figure}[!ht]
 \begin{center}
@@ -644,7 +646,7 @@ La génération de biréversibles et la factorisation d'automates de Mealy sont 
 
 \subsection{Clôture de classes d'automates\label{sec:cloture}}
 
-Puisque nous nous interéssons à la classe des automates biréversibles, montrons qu'elle est bien close par les opérations qui nous interéssent, \emph{i.e.} la dualisation, la minimisation, le produit et la factorisation.
+Puisque nous nous intéressons à la classe des automates biréversibles, montrons qu'elle est bien close par les opérations qui nous intéressent, \emph{i.e.} la dualisation, la minimisation, le produit et la factorisation.
 
 \begin{prop}[Clôture des inversibles par produit]
   Soient $\mathcal{A}$ et $\mathcal{B}$ des automates de Mealy \textbf{inversibles}. Alors $\mathcal{A}\cdot\mathcal{B}$ est inversible
@@ -740,8 +742,8 @@ Avant de faire la démonstration, rappelons un résultat élémentaire qui nous 
   De plus, chacun des $\delta''_{\rho_p(x)}$ est inversibles, donc si $\mathcal{A}_1$ est inversible, les ${(\rho_p)}_{p\in\Sigma}$ étant des bijections, alors tous les ${(\delta''_x)}_{x\in\Sigma}$ sont inversibles. D'où $\mathcal{A}_2$ est réversible.
 \end{proof}
 
-\begin{prop}[Clôture des biréversibles par facteurs]
-  Soit $\mathcal{A}$ un automate \textbf{biréversible} et $\mathcal{A}_1$, $\mathcal{A}_2$ des automates tels que $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, alors $\mathcal{A}_1$ et $\mathcal{A}_2$ sont biréversible.
+\begin{prop}[Clôture des biréversibles par facteur]
+  Soit $\mathcal{A}$ un automate \textbf{biréversible} et $\mathcal{A}_1$, $\mathcal{A}_2$ des automates tels que $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, alors $\mathcal{A}_1$ et $\mathcal{A}_2$ sont biréversibles.
 \end{prop}
 
 \begin{proof}
@@ -755,11 +757,11 @@ Avant de faire la démonstration, rappelons un résultat élémentaire qui nous 
 \subsection{Algorithme de génération des biréversibles\label{sec:gen}}
 
 \subsubsection*{Représentation des machines de Mealy en mémoire}
-Les machines de Mealy sont représentés en mémoire par deux matrices \lstinline$delta$ et \lstinline{rho}, l'une représentant les $(\delta_x)_{x\in\Sigma}$ et l'autre les $(\rho_p)_{p\in\mathcal{Q}}$. Dans les deux cas les lignes des matrices sont indexées par les états et les colonnes par les lettres.
+Les machines de Mealy sont représentées en mémoire par deux matrices \lstinline$delta$ et \lstinline{rho}, l'une représentant les $(\delta_x)_{x\in\Sigma}$ et l'autre les $(\rho_p)_{p\in\mathcal{Q}}$. Dans les deux cas, les lignes des matrices sont indexées par les états et les colonnes par les lettres.
 
 \begin{enumerate}[(i)]
-\item On reconnait une machine réversible en vérifiant que les colonnes de \textrm{delta}  sont des permutations.
-\item On reconnait une machine inversible en vérifiant que les lignes dans \textrm{rho} sont des permutations.
+\item On reconnaît une machine réversible en vérifiant que les colonnes de \textrm{delta}  sont des permutations.
+\item On reconnaît une machine inversible en vérifiant que les lignes dans \textrm{rho} sont des permutations.
 \end{enumerate}
 
 \subsubsection*{L'algorithme}
@@ -777,7 +779,7 @@ Notre algorithme de génération se base sur le résultat suivant
 
 Notre algorithme procède donc à la recherche exhaustive de toutes les machines de Mealy inversibles réversibles en maintenant la contrainte que le graphe en hélice est une union de cycles disjoints.
 
-Nous maintenons une liste de \textit{sources} et de \textit{cibles} qui représentent les sommets du graphe en hélice desquels encore aucune flèche ne part et les sommets du graphe en hélice vers lesquels encore aucune flèche ne pointe. En choisissant nos sommets dans ces ensembles nous nous assuront que le graphe en hélice obtenu est bien une union de cycles disjoints. À chaque fois que nous modifions \textrm{delta} ou \textrm{rho}, nous vérifions que la machine est bien inversible-réversible.
+Nous maintenons une liste de \textit{sources} et de \textit{cibles} qui représentent les sommets du graphe en hélice desquels encore aucune flèche ne part et les sommets du graphe en hélice vers lesquels encore aucune flèche ne pointe. En choisissant nos sommets dans ces ensembles nous nous assurons que le graphe en hélice obtenu est bien une union de cycles disjoints. À chaque fois que nous modifions \textrm{delta} ou \textrm{rho}, nous vérifions que la machine est bien inversible-réversible.
 
 Ainsi, les automates trouvés -- en vertu de la proposition \ref{thm:ir-helix} -- sont bien biréversibles. La structure globale du programme est représentée sur la figure~\ref{fig:gen-pseudo-code}.
 
@@ -822,7 +824,7 @@ def rec(start, prev, sources, targets, delta, rho):
 
 On a rapidement constaté que le nombre d'automates à générer est très important. Aussi, il ne semble pas réaliste de tester la $\mathfrak{mdc}$-réduction sur tous ceux-ci. On a donc cherché à extraire seulement les classes d'isomorphismes au sens de Nérode de notre génération.
 
-La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficaces. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appellons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un morphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permute sur tous les sommets du graphe en hélice.
+La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficaces. Il a fallu s'assurer que les morphismes de \textit{graphe} trouvé par \textrm{Nauty} correspondent bien à des morphismes de \textit{machine de Mealy}. Nous avons donc utilisé ce que nous appelons \textit{\textbf{le graphe en hélice augmenté}}: le graphe en hélice auquel nous ajoutons des sommets pour chaque état et chaque lettre de l'automate et les relions à ceux qu'ils étiquettent. Ainsi, si un morphisme de graphe trouvé par Nauty permute deux lettres ou deux états, il les permute sur tous les sommets du graphe en hélice.
 
 \begin{figure}[!ht]
   \begin{center}
@@ -879,12 +881,12 @@ La bibliothèque de graphe \textrm{Nauty}~\cite{Nauty} est une des plus efficace
   \caption{Une machine de Mealy et son graphe en hélice augmenté\label{fig:helix-aug}}
 \end{figure}
 
-Pour calculer les isomorphismes entre les graphes, \textrm{Nauty} associe à un graphe \textit{\textbf{une forme canonique}}, \emph{i.e.} un graphe représentant de sa classe d'isomorphisme. Nous prenons donc comme représentant des classes d'isomorphismes de machines de Mealy celles qui sont une forme canonique au sens de \textrm{Nauty}. Lors de la génération nous nous contentons de calculer la forme canonique du graphe en hélice augmenté puis de tester s'il laisse les lettres et les états inchangés. Auquel cas, il est canonique.
+Pour calculer les isomorphismes entre les graphes, \textrm{Nauty} associe à un graphe \textit{\textbf{une forme canonique}}, \emph{i.e.} un graphe représentant de sa classe d'isomorphisme. Nous prenons donc comme représentant des classes d'isomorphismes de machines de Mealy celles qui sont une forme canonique au sens de \textrm{Nauty}. Lors de la génération, nous nous contentons de calculer la forme canonique du graphe en hélice augmenté puis de tester s'il laisse les lettres et les états inchangés. Auquel cas, il est canonique.
 
-Nauty permet de préciser des classes d'équivalence sur les sommets du graphe qui doivent êtres préservés lors du passage à la forme canonique. Les sommets correspondants aux états, aux lettres et au graphe en hélice simple représente trois classes (correspondant aux couleurs sur la figure \ref{fig:helix-aug}) qui ne doivent pas être mélangées les unes avec les autres par \textrm{Nauty}.
+Nauty permet de préciser des classes d'équivalence sur les sommets du graphe qui doivent être préservés lors du passage à la forme canonique. Les sommets correspondants aux états, aux lettres et au graphe en hélice simple représentent trois classes (correspondant aux couleurs sur la figure \ref{fig:helix-aug}) qui ne doivent pas être mélangées les unes avec les autres par \textrm{Nauty}.
 
 \subsubsection*{Quelques optimisations conséquentes}
-Nous avions commencé par implémenter la génération en \textrm{Python} mais nous avions deux inconvénients majeurs :
+Nous avions commencé par implémenter la génération en \textrm{Python}, mais nous avions deux inconvénients majeurs :
 \begin{itemize}
 \item La complexité en temps.
 \item \textrm{Nauty} ne dispose pas d'interface efficace en Python.
@@ -959,10 +961,10 @@ On constate que Nauty ralentit très significativement le temps d'exécution.
 
   Notons $\mathcal{Q}$ les états de $\mathcal{A}$, $\mathcal{Q'}$ les états de $\mathcal{B}$ et $\mathcal{Q''}$ les états de $\mathcal{M}$. On remarque que tel qu'a été défini le produit (définition \ref{def:produit}) les états de $\mathcal{AB}$ sont des éléments de $\mathcal{Q}\times\mathcal{Q'}$.
 
-Or quand on factorise un automate, l'ensemble de ses états n'apparait pas comme un produit d'ensemble. Aussi faut-il choisir une manière canonique de construire une bijection $\iota$ de $\mathcal{Q''}$ dans $\mathcal{Q}\times\mathcal{Q'}$ qui représente cette correspondance. Il est clair que si une telle bijection n'existe pas -- c'est-à-dire si $|\mathcal{Q}''| \ne |\mathcal{Q}|\times|\mathcal{Q'}|$ -- l'automate $\mathcal{M}$ n'est pas factorisable en $\mathcal{AB}$.
+Or, quand on factorise un automate, l'ensemble de ses états n'apparaît pas comme un produit d'ensemble. Aussi faut-il choisir une manière canonique de construire une bijection $\iota$ de $\mathcal{Q''}$ dans $\mathcal{Q}\times\mathcal{Q'}$ qui représente cette correspondance. Il est clair que si une telle bijection n'existe pas -- c'est-à-dire si $|\mathcal{Q}''| \ne |\mathcal{Q}|\times|\mathcal{Q'}|$ -- l'automate $\mathcal{M}$ n'est pas factorisable en $\mathcal{AB}$.
 
 
-On remarquera que toutes les bijections $\iota$ ne conduisent pas à une factorisation. Pour que l'automate soit factorisable il doit seulement en exister une. On remarque aussi que si on fixe la bijection $\iota$ il existe au moins une permutation $\sigma_\iota\in\mathfrak{S}(\mathcal{Q})$ des états de l'automate tel que $\left(\sigma(\mathcal{Q}), \Sigma, \delta, \rho\right)$ soit factorisable selon la bijection $\iota$.
+On remarquera que toutes les bijections $\iota$ ne conduisent pas à une factorisation. Pour que l'automate soit factorisable, il doit seulement en exister une. On remarque aussi que si on fixe la bijection $\iota$ il existe au moins une permutation $\sigma_\iota\in\mathfrak{S}(\mathcal{Q})$ des états de l'automate tel que $\left(\sigma(\mathcal{Q}), \Sigma, \delta, \rho\right)$ soit factorisable selon la bijection $\iota$.
 
 \begin{figure}[h!]
   \begin{subfigure}[b]{0.5\textwidth}
