@@ -1058,11 +1058,11 @@ Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne
   \begin{center}
     \scalebox{0.8}{
 	  \begin{tikzpicture}
-	    \coordinate (A) at (225:4);
+	    \coordinate (A) at (270:4);
 	    \coordinate (B) at (0,0);
-	    \coordinate (C) at (135:4);
-	    \coordinate (D) at (315:4);
-	    \coordinate (E) at (45:4);
+	    \coordinate (C) at (180:4);
+	    \coordinate (D) at (0:4);
+	    \coordinate (E) at (90:4);
 	    
 	    \node[draw,thick,circle,minimum width = 2.5em] (QA) at (A) {$a$};
 	    \node[draw,thick,circle,minimum width = 2.5em] (QB) at (B) {$b$};
@@ -1070,19 +1070,19 @@ Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne
 	    \node[draw,thick,circle,minimum width = 2.5em] (QD) at (D) {$d$};
 	    \node[draw,thick,circle,minimum width = 2.5em] (QE) at (E) {$e$};
 	    
-	    \draw[thick,->,>=latex] (QA) to[bend left] node[midway, above left]{$0|1$} (QB);
-	    \draw[thick,->,>=latex] (QA) to[bend left] node[midway, left]{$2|0$} (QC);
-	    \draw[thick,->,>=latex] (QA) to node[midway, above]{$1|2$} (QD);
-	    \draw[thick,->,>=latex] (QB) to[bend left] node[midway, above left]{$1|0$} (QA);
-	    \draw[thick,->,>=latex] (QB) to node[midway, below left]{$0|2$} (QC);
-	    \draw[thick,->,>=latex] (QB) to[bend left] node[midway, above right]{$2|1$} (QD);
-	    \draw[thick,->,>=latex] (QC) to[bend left] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $1|0$ \\ $2|2$ \end{tabular}} (QE);
-	    \draw[thick,->,>=latex] (QD) to[bend left] node[midway, below]{$2|1$} (QA);
-	    \draw[thick,->,>=latex] (QD) to[bend left] node[midway, above right]{$1|2$} (QB);
-	    \draw[thick,->,>=latex] (QD) to[out=295,in=335,looseness=6] node[midway, below right]{$0|0$} (QD);
-	    \draw[thick,->,>=latex] (QE) to[out=315,in=315,looseness=2.3] node[midway, below right]{$0|2$} (QA);
-	    \draw[thick,->,>=latex] (QE) to node[midway, below right]{$2|0$} (QB);
-	    \draw[thick,->,>=latex] (QE) to node[midway, below]{$1|1$} (QC);
+	    \draw[thick,->,>=latex] (QA) to[bend left] node[midway, left]{$0|1$} (QB);
+	    \draw[thick,->,>=latex] (QA) to[bend left] node[midway, below left]{$2|0$} (QC);
+	    \draw[thick,->,>=latex] (QA) to node[midway, above left]{$1|2$} (QD);
+	    \draw[thick,->,>=latex] (QB) to[bend left] node[midway, left]{$1|0$} (QA);
+	    \draw[thick,->,>=latex] (QB) to node[midway, above]{$0|2$} (QC);
+	    \draw[thick,->,>=latex] (QB) to[bend left] node[midway, above]{$2|1$} (QD);
+	    \draw[thick,->,>=latex] (QC) to[bend left] node[midway,above left]{\begin{tabular}{c} $0|1$ \\ $1|0$ \\ $2|2$ \end{tabular}} (QE);
+	    \draw[thick,->,>=latex] (QD) to[bend left] node[midway, below right]{$2|1$} (QA);
+	    \draw[thick,->,>=latex] (QD) to[bend left] node[midway, above]{$1|2$} (QB);
+	    \draw[thick,->,>=latex] (QD) to[out=340,in=20,looseness=6] node[midway, right]{$0|0$} (QD);
+	    \draw[thick,->,>=latex] (QE) to[out=0,in=0,looseness=2.3] node[midway, right]{$0|2$} (QA);
+	    \draw[thick,->,>=latex] (QE) to node[midway, right]{$2|0$} (QB);
+	    \draw[thick,->,>=latex] (QE) to node[midway, below right]{$1|1$} (QC);
 	  \end{tikzpicture}
   }
   \caption{Contre exemple à la conjecture \ref{conj:birev-mdc}.\label{fig:contre-exemple}}
