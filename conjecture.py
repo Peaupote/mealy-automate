@@ -240,5 +240,11 @@ def main():
     out.close()
 
 if __name__ == "__main__":
-    conjecture()
+    #conjecture()
     # main()
+
+    i = 0
+    for _ in read_canonics(sys.argv[1]):
+        i += 1
+
+    print(i)
