@@ -11,6 +11,9 @@
 \usepackage{caption}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage{listings}
+\usepackage{fancyvrb}
+\usepackage{threeparttable}
 
 \usepackage{tikz}
 \usetikzlibrary{overlay-beamer-styles,calc,automata,positioning}
@@ -24,346 +27,736 @@
 \newtheorem*{rem*}{Remarque}
 
 \begin{document}
-	\author{Maxime Flin  \& Tristan François}
-	\title{\`A propos du problème de finitude des groupes d'automates biréversibles}
-	%\subtitle{}
-	%\logo{}
-	%\institute{}
-	%\date{}
-	%\subject{}
-	%\setbeamercovered{transparent}
-	%\setbeamertemplate{navigation symbols}{}
-	\begin{frame}[plain]
-		\maketitle
-	\end{frame}
-	
-	\section{Automates de Mealy et position du problème}
-	
-	\begin{frame}
-		\frametitle{Objectifs du Projet}
-	\end{frame}
+\author{Maxime Flin  \& Tristan François}
+\title{\`A propos du problème de finitude des groupes d'automates biréversibles}
+% \subtitle{}
+% \logo{}
+% \institute{}
+% \date{}
+% \subject{}
+% \setbeamercovered{transparent}
+% \setbeamertemplate{navigation symbols}{}
+\begin{frame}[plain]
+  \maketitle
+\end{frame}
 
-	\begin{frame}
-		\frametitle{Automate de Mealy}
-		
-		\begin{figure}
-			\centering
-			\begin{tikzpicture}
-				\coordinate (A) at (0,0);
-				\coordinate (B) at (3,0);
-				\coordinate (C) at (6,0);
-				
-				\node[draw,circle,minimum width = 2.5em,alt={<3>{orange}{black}}] (QA) at (A) {$0$};
-				\node[draw,circle,minimum width = 2.5em,alt={<5,11>{orange}{black}}] (QB) at (B) {$1$};
-				\node[draw,circle,minimum width = 2.5em,alt={<7,9>{orange}{black}}] (QC) at (C) {$2$};
-				
-				\draw[->,>=latex] (QA) to[out=160,in=200,looseness=6] node[midway, left] {$0|0$}(QA);
-				\draw[->,>=latex,alt=<4>{orange}{black}] (QA) to[bend left] node[midway, above] {$1|0$} (QB);
-				\draw[->,>=latex] (QB) to[bend left] node[midway, below] {$1|1$}(QA);
-				\draw[->,>=latex, alt={<6>{orange}{black}}] (QB) to[bend left] node[midway, above] {$0|0$}(QC);
-				\draw[->,>=latex,alt={<10>{orange}{black}}] (QC) to[bend left] node[midway, below] {$0|1$}(QB);
-				\draw[->,>=latex,alt={<8>{orange}{black}}] (QC) to[out=340,in=20,looseness=6] node[midway, right] {$1|1$}(QC);
-				
-				\pause
-				
-				\coordinate (C1) at (0,-2);
-				\coordinate (C2) at (2,-2);
-				\coordinate (C3) at (4,-2);
-				\coordinate (C4) at (6,-2);
-				
-				\node[alt={<3>{orange}{black}}] (CC1) at (C1) {$1$};
-				\node[alt={<5>{orange}{black}}] (CC2) at (C2) {$0$};
-				\node[alt={<7>{orange}{black}}] (CC3) at (C3) {$1$};
-				\node[] (CC4) at (C4) {$0$};
-				
-				\pause
-				
-				\coordinate (E1) at (-1,-3);
-				
-				\node[alt={<3>{orange}{black}}] (EE1) at (E1) {$0$};
-				
-				\pause
-				
-				\coordinate (E2) at (1,-3);
-				\coordinate (O1) at (0,-4);
-				
-				\node[alt={<4,5>{orange}{black}}] (EE2) at (E2) {$1$};
-				\node[alt={<4,12>{orange}{black}}] (OO1) at (O1) {$0$};
-				
-				\draw[->,>=latex,alt={<4>{orange}{black}}] (EE1) to (EE2);
-				\draw[->,>=latex,alt={<4>{orange}{black}}] (CC1) to (OO1);
-				
-				\pause
-				\pause
-				
-				\coordinate (E3) at (3,-3);
-				\coordinate (O2) at (2,-4);
-				
-				\node[alt={<6,7>{orange}{black}}] (EE3) at (E3) {$2$};
-				\node[alt={<6,12>{orange}{black}}] (OO2) at (O2) {$0$};
-				
-				\draw[->,>=latex,alt={<6>{orange}{black}}] (EE2) to (EE3);
-				\draw[->,>=latex,alt={<6>{orange}{black}}] (CC2) to (OO2);
-				
-				\pause
-				\pause
-				
-				\coordinate (E4) at (5,-3);
-				\coordinate (O3) at (4,-4);
-				
-				\node[alt={<8,9>{orange}{black}}] (EE4) at (E4) {$2$};
-				\node[alt={<8,12>{orange}{black}}] (OO3) at (O3) {$1$};
-				
-				\draw[->,>=latex,alt={<8>{orange}{black}}] (EE3) to (EE4);
-				\draw[->,>=latex,alt={<8>{orange}{black}}] (CC3) to (OO3);
-				
-				\pause
-				
-				\coordinate (E5) at (7,-3);
-				\coordinate (O4) at (6,-4);
-				
-				\node[alt={<10,11>{orange}{black}}] (EE5) at (E5) {$1$};
-				\node[alt={<10,12>{orange}{black}}] (OO4) at (O4) {$1$};
-				
-				\draw[->,>=latex,alt={<10>{orange}{black}}] (EE4) to (EE5);
-				\draw[->,>=latex,alt={<10>{orange}{black}}] (CC4) to (OO4);
-			\end{tikzpicture}
-			\caption{Automate de Mealy réalisant la division par 3 en binaire.}
-		\end{figure}
-	\end{frame}
+\begin{frame}
+  \frametitle{Sommaire}
+  \tableofcontents
+\end{frame}
 
-	\begin{frame}
-		\frametitle{Automate inversible, réversible et biréversible}
-		
-		\begin{definition}
-			Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy.
-			\begin{enumerate}[(i)]
-				\item On dit que $\mathcal{A}$ est \textbf{inversible} si $\rho_q$ est une permutation de $\Sigma$ pour tout état $q\in\mathcal{Q}$.
-				\item On dit que $\mathcal{A}$ est \textbf{réversible} si $\delta_x$ est une permutation de $\mathcal{Q}$ pour toute lettre $x\in\Sigma$.
-			\end{enumerate}
-		\end{definition}
-	
-		\footnote{Insérer exemple}
-	\end{frame}
+\section{Automates de Mealy et position du problème}
 
-	\begin{frame}
-		\frametitle{Automate inversible, réversible et biréversible}
-		
-		\begin{definition}
-			Si une machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire son \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplaçant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
-		\end{definition}
-		
-		
-		\begin{figure}[h!]
-			\centering
-			\scalebox{.9} {
-				\begin{subfigure}[b]{0.5\textwidth}
-					\centering
-					\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-					\node[state] (p) {$p$};
-					\node[state] (q) [right=of p] {$q$};
-					\path[->,>=latex]
-					(p) edge [loop left] node {$1|0$} (p)
-					(p) edge [bend left] node {$0|1$} (q)
-					(q) edge [bend left] node {$0|0$} (p)
-					(q) edge [loop right] node {$1|1$} (q);
-					\end{tikzpicture}
-				\end{subfigure}
-				~
-				\begin{subfigure}[b]{0.5\textwidth}
-					\centering
-					\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-					\node[state] (p) {$p^{-1}$};
-					\node[state] (q) [right=of p] {$q^{-1}$};
-					\path[->,>=latex]
-					(p) edge [loop left] node {$0|1$} (p)
-					(p) edge [bend left] node {$1|0$} (q)
-					(q) edge [bend left] node {$0|0$} (p)
-					(q) edge [loop right] node {$1|1$} (q);
-					\end{tikzpicture}
-				\end{subfigure}
-			}
-			\caption{Automate et son inverse.}
-		\end{figure}
-	\end{frame}
+\begin{frame}
+  \frametitle{Automate de Mealy}
 
-	\begin{frame}
-		\frametitle{Groupe d'actions d'un automate de Mealy}
-	\end{frame}
+  \begin{figure}
+    \centering
+    \begin{tikzpicture}
+      \coordinate (A) at (0,0);
+      \coordinate (B) at (3,0);
+      \coordinate (C) at (6,0);
 
-	\begin{frame}
-		\frametitle{Minimisation et Dualisation : $\mathfrak{md}$-réduction}
-	\end{frame}
+      \node[draw,circle,minimum width = 2.5em,alt={<3>{orange}{black}}] (QA) at (A) {$0$};
+      \node[draw,circle,minimum width = 2.5em,alt={<5,11>{orange}{black}}] (QB) at (B) {$1$};
+      \node[draw,circle,minimum width = 2.5em,alt={<7,9>{orange}{black}}] (QC) at (C) {$2$};
 
-	\begin{frame}
-		\frametitle{Limite et nouvelle opération : $\mathfrak{mdc}$-réduction}
-	\end{frame}
+      \draw[->,>=latex] (QA) to[out=160,in=200,looseness=6] node[midway, left] {$0|0$}(QA);
+      \draw[->,>=latex,alt=<4>{orange}{black}] (QA) to[bend left] node[midway, above] {$1|0$} (QB);
+      \draw[->,>=latex] (QB) to[bend left] node[midway, below] {$1|1$}(QA);
+      \draw[->,>=latex, alt={<6>{orange}{black}}] (QB) to[bend left] node[midway, above] {$0|0$}(QC);
+      \draw[->,>=latex,alt={<10>{orange}{black}}] (QC) to[bend left] node[midway, below] {$0|1$}(QB);
+      \draw[->,>=latex,alt={<8>{orange}{black}}] (QC) to[out=340,in=20,looseness=6] node[midway, right] {$1|1$}(QC);
 
-	\section{Bien fondé de la $\mathfrak{mdc}$-réduction}
-	
-	\begin{frame}
-		\frametitle{Conservation du caractère fini par minimisation et dualisation}
-	\end{frame}
-	
-	\begin{frame}
-		\frametitle{Conservation du caractère fini par conjugaison}
-		
-		\begin{prop} %\label{prop:finitude-c}
-			Soient $\mathcal{A}, \mathcal{B}$ des automates de Mealy.
-			L'automate $\mathcal{A}\mathcal{B}$ engendre un groupe fini si et seulement si $\mathcal{B}\mathcal{A}$ engendre un groupe fini.
-		\end{prop}
-	\end{frame}
+      \pause
 
-	\section{Algorithme de Factorisation}
-	
-	\begin{frame}
-		\frametitle{Clôture des automates par facteurs}
-	\end{frame}
+      \coordinate (C1) at (0,-2);
+      \coordinate (C2) at (2,-2);
+      \coordinate (C3) at (4,-2);
+      \coordinate (C4) at (6,-2);
 
-	\begin{frame}
-		\frametitle{Description de l'algorithme}
-	\end{frame}
+      \node[alt={<3>{orange}{black}}] (CC1) at (C1) {$1$};
+      \node[alt={<5>{orange}{black}}] (CC2) at (C2) {$0$};
+      \node[alt={<7>{orange}{black}}] (CC3) at (C3) {$1$};
+      \node[] (CC4) at (C4) {$0$};
 
-	\section{Algorithme de Génération}
-	
-	\begin{frame}
-		\frametitle{Graphe en hélice augmenté}
-		
-		\begin{figure}[!ht]
-			\begin{center}
-				\scalebox{1}{
-					\begin{tikzpicture}[scale=0.63]
-					\coordinate (A) at (-10, 0);
-					\coordinate (B) at (-7, 0);
-					
-					\node[draw,circle,minimum width = 2.5em] (q_0) at (A) {$a$};
-					\node[draw,circle,minimum width = 2.5em] (q_1) at (B) {$b$};
-					\path[->,>=latex]
-					(q_0) edge [loop left] node {$0|1$} (q_0)
-					(q_0) edge [bend left] node[midway, above] {$1|1$} (q_1)
-					(q_1) edge [bend left] node[midway, below] {$0|0$} (q_0)
-					(q_1) edge [loop right] node {$1|0$} (q_1);
-					
-					%############################################
-					
-					\coordinate (A) at (-1,-1);
-					\coordinate (B) at (1,-1);
-					\coordinate (C) at (1,1);
-					\coordinate (D) at (-1,1);
-					
-					\coordinate (P1) at (-3,0);
-					\coordinate (P2) at (3,0);
-					\coordinate (PA) at (0,-3);
-					\coordinate (PB) at (0,3);
-					
-					\node[draw,circle,minimum width = 2.5em] (QA) at (A) {$0|a$};
-					\node[draw,circle,minimum width = 2.5em] (QB) at (B) {$1|a$};
-					\node[draw,circle,minimum width = 2.5em] (QC) at (C) {$1|b$};
-					\node[draw,circle,minimum width = 2.5em] (QD) at (D) {$0|b$};
+      \pause
 
-					\draw[->,>=latex] (QA) to[bend right] (QB);
-					\draw[->,>=latex] (QB) to[bend right] (QC);
-					\draw[->,>=latex] (QC) to[bend right] (QD);
-					\draw[->,>=latex] (QD) to[bend right] (QA);
-					
-					\pause
-										
-					\node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F1) at (P1) {$0$};
-					\node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F2) at (P2) {$1$};
-					
-										
-					\draw[->,>=latex] (F1) to[bend right] (QA);
-					\draw[->,>=latex] (F1) to[bend left] (QD);
-					\draw[->,>=latex] (F2) to[bend left] (QB);
-					\draw[->,>=latex] (F2) to[bend right] (QC);
-					
-					\pause
-					
-					\node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FA) at (PA) {$a$};
-					\node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FB) at (PB) {$b$};
-							
-					\draw[->,>=latex] (FA) to[bend right] (QB);
-					\draw[->,>=latex] (FA) to[bend left] (QA);
-					\draw[->,>=latex] (FB) to[bend left] (QC);
-					\draw[->,>=latex] (FB) to[bend right] (QD);
-					\end{tikzpicture}
-				}
-			\end{center}
-			%\caption{Une machine de Mealy et son graphe en hélice augmenté\label{fig:helix-aug}}
-		\end{figure}
-	\end{frame}
+      \coordinate (E1) at (-1,-3);
 
-	\begin{frame}
-		\frametitle{Description de l'algorithme}
-	\end{frame}
+      \node[alt={<3>{orange}{black}}] (EE1) at (E1) {$0$};
 
-	\begin{frame}
-		\frametitle{Benchmarks et résultats}
-	\end{frame}
+      \pause
 
-	\section{Avancée sur le problème de finitude}
-	
-	\begin{frame}
-		\frametitle{Fonction de croissance}
-		
-		\begin{defi} %\label{def:mass}
-			Soit $\mathcal{A}$ une machine de Mealy. On appelle \textbf{\textit{sa fonction de croissance}} la fonction $\pi:\mathbb{N}\rightarrow\mathbb{N}$ qui à un entier $n$ associe le nombre d'états de~$\mathfrak{m}\left(\mathcal{A}^n\right)$.
-		\end{defi}
-		
-		\begin{prop} %\label{prop:mass}
-			Si la fonction de croissance d'une machine de Mealy $\mathcal{A}$ est bornée, alors $\left<\mathcal{A}\right>_+$ est fini.
-		\end{prop}
-	\end{frame}
+      \coordinate (E2) at (1,-3);
+      \coordinate (O1) at (0,-4);
 
-	\begin{frame}
-		\frametitle{Vérification empirique de l'hypothèse}
-		
-		\begin{enumerate}
-			\item engendrer une classe d'automates biréversibles irréductibles à isomorphismes près;
-			\item calculer la borne supérieure des fonctions de croissance des automates $\mathfrak{md}$-triviaux;
-			\item vérifier que la fonction de croissance de tous les automates non $\mathfrak{md}$-trivaux dépasse cette borne.
-		\end{enumerate}
-	\end{frame}
+      \node[alt={<4,5>{orange}{black}}] (EE2) at (E2) {$1$};
+      \node[alt={<4,12>{orange}{black}}] (OO1) at (O1) {$0$};
 
-	\begin{frame}
-		\frametitle{Contre-exemple}
-		\begin{center}
-		\begin{figure}[!ht]
-			\begin{center}
-				\scalebox{0.8}{
-					\begin{tikzpicture}
-					\coordinate (A) at (270:4);
-					\coordinate (B) at (0,0);
-					\coordinate (C) at (180:4);
-					\coordinate (D) at (0:4);
-					\coordinate (E) at (90:4);
-					
-					\node[draw,thick,circle,minimum width = 2.5em] (QA) at (A) {$a$};
-					\node[draw,thick,circle,minimum width = 2.5em] (QB) at (B) {$b$};
-					\node[draw,thick,circle,minimum width = 2.5em] (QC) at (C) {$c$};
-					\node[draw,thick,circle,minimum width = 2.5em] (QD) at (D) {$d$};
-					\node[draw,thick,circle,minimum width = 2.5em] (QE) at (E) {$e$};
-					
-					\draw[thick,->,>=latex] (QA) to[bend left] node[midway, left]{$0|1$} (QB);
-					\draw[thick,->,>=latex] (QA) to[bend left] node[midway, below left]{$2|0$} (QC);
-					\draw[thick,->,>=latex] (QA) to node[midway, above left]{$1|2$} (QD);
-					\draw[thick,->,>=latex] (QB) to[bend left] node[midway, left]{$1|0$} (QA);
-					\draw[thick,->,>=latex] (QB) to node[midway, above]{$0|2$} (QC);
-					\draw[thick,->,>=latex] (QB) to[bend left] node[midway, above]{$2|1$} (QD);
-					\draw[thick,->,>=latex] (QC) to[bend left] node[midway,above left]{\begin{tabular}{c} $0|1$ \\ $1|0$ \\ $2|2$ \end{tabular}} (QE);
-					\draw[thick,->,>=latex] (QD) to[bend left] node[midway, below right]{$2|1$} (QA);
-					\draw[thick,->,>=latex] (QD) to[bend left] node[midway, above]{$1|2$} (QB);
-					\draw[thick,->,>=latex] (QD) to[out=340,in=20,looseness=6] node[midway, right]{$0|0$} (QD);
-					\draw[thick,->,>=latex] (QE) to[out=0,in=0,looseness=2.3] node[midway, right]{$0|2$} (QA);
-					\draw[thick,->,>=latex] (QE) to node[midway, right]{$2|0$} (QB);
-					\draw[thick,->,>=latex] (QE) to node[midway, below right]{$1|1$} (QC);
-					\end{tikzpicture}
-				}
-				%\caption{Contre-exemple à la conjecture.\label{fig:contre-exemple}}
-			\end{center}
-		\end{figure}
-		\end{center}
-	\end{frame}
+      \draw[->,>=latex,alt={<4>{orange}{black}}] (EE1) to (EE2);
+      \draw[->,>=latex,alt={<4>{orange}{black}}] (CC1) to (OO1);
 
-	\section{Conclusion}
+      \pause
+      \pause
+
+      \coordinate (E3) at (3,-3);
+      \coordinate (O2) at (2,-4);
+
+      \node[alt={<6,7>{orange}{black}}] (EE3) at (E3) {$2$};
+      \node[alt={<6,12>{orange}{black}}] (OO2) at (O2) {$0$};
+
+      \draw[->,>=latex,alt={<6>{orange}{black}}] (EE2) to (EE3);
+      \draw[->,>=latex,alt={<6>{orange}{black}}] (CC2) to (OO2);
+
+      \pause
+      \pause
+
+      \coordinate (E4) at (5,-3);
+      \coordinate (O3) at (4,-4);
+
+      \node[alt={<8,9>{orange}{black}}] (EE4) at (E4) {$2$};
+      \node[alt={<8,12>{orange}{black}}] (OO3) at (O3) {$1$};
+
+      \draw[->,>=latex,alt={<8>{orange}{black}}] (EE3) to (EE4);
+      \draw[->,>=latex,alt={<8>{orange}{black}}] (CC3) to (OO3);
+
+      \pause
+
+      \coordinate (E5) at (7,-3);
+      \coordinate (O4) at (6,-4);
+
+      \node[alt={<10,11>{orange}{black}}] (EE5) at (E5) {$1$};
+      \node[alt={<10,12>{orange}{black}}] (OO4) at (O4) {$1$};
+
+      \draw[->,>=latex,alt={<10>{orange}{black}}] (EE4) to (EE5);
+      \draw[->,>=latex,alt={<10>{orange}{black}}] (CC4) to (OO4);
+    \end{tikzpicture}
+    \caption{Automate de Mealy réalisant la division par 3 en binaire.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Automate inversible, réversible et biréversible~i}
+
+  \begin{defi}
+    Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy.
+    \begin{enumerate}[(i)]
+    \item On dit que $\mathcal{A}$ est \textbf{inversible} si $\rho_q$ est une permutation de $\Sigma$ pour tout état $q\in\mathcal{Q}$.
+    \item On dit que $\mathcal{A}$ est \textbf{réversible} si $\delta_x$ est une permutation de $\mathcal{Q}$ pour toute lettre $x\in\Sigma$.
+    \end{enumerate}
+  \end{defi}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Automate inversible, réversible et biréversible~ii}
+
+  \begin{defi}
+    Si une machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire son \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplaçant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
+  \end{defi}
+
+
+  \begin{figure}[h!]
+    \centering
+    \scalebox{.9} {
+      \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+          \node[state] (p) {$p$};
+          \node[state] (q) [right=of p] {$q$};
+          \path[->,>=latex]
+          (p) edge [loop left] node {$1|0$} (p)
+          (p) edge [bend left] node {$0|1$} (q)
+          (q) edge [bend left] node {$0|0$} (p)
+          (q) edge [loop right] node {$1|1$} (q);
+        \end{tikzpicture}
+      \end{subfigure}
+      ~
+      \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+          \node[state] (p) {$p^{-1}$};
+          \node[state] (q) [right=of p] {$q^{-1}$};
+          \path[->,>=latex]
+          (p) edge [loop left] node {$0|1$} (p)
+          (p) edge [bend left] node {$1|0$} (q)
+          (q) edge [bend left] node {$0|0$} (p)
+          (q) edge [loop right] node {$1|1$} (q);
+        \end{tikzpicture}
+      \end{subfigure}
+    }
+    \caption{Automate et son inverse.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Automate inversible, réversible et biréversible~iii}
+
+  \begin{defi}
+    Si une machine de Mealy est réversible, alors on peut construire son \textbf{\textit{dual}}, noté $\mathfrak{d}\mathcal{M}$, en remplacant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $x\overset{p|q}{\longrightarrow}y$.
+  \end{defi}
+
+
+  \begin{figure}[h!]
+    \centering
+    \scalebox{.9}{
+      \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+          \node[state] (p) {$p$};
+          \node[state] (q) [right=of p] {$q$};
+          \path[->,>=latex]
+          (p) edge [loop left] node {$1|0$} (p)
+          (p) edge [bend left] node {$0|1$} (q)
+          (q) edge [bend left] node {$0|0$} (p)
+          (q) edge [loop right] node {$1|1$} (q);
+        \end{tikzpicture}
+      \end{subfigure}
+      ~
+      \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+          \node[state] (p) {$0$};
+          \node[state] (q) [right=of p] {$1$};
+          \path[->,>=latex]
+          (p) edge [loop left] node {$q|p$} (p)
+          (p) edge [bend left] node {$p|q$} (q)
+          (q) edge [bend left] node {$p|p$} (p)
+          (q) edge [loop right] node {$q|q$} (q);
+        \end{tikzpicture}
+      \end{subfigure}
+    }
+    \caption{Automate et son dual}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Automate inversible, réversible et biréversible~iv}
+
+  \begin{defi} \label{def:birev}
+    On dit que $\mathcal{A}$ est \textbf{biréversible} s'il est inversible, réversible et que son inverse est réversible.
+  \end{defi}
+
+  C'est à cette classe d'automates en particulier que nous allons nous intéresser.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Produit d'automates~i}
+  \begin{defi}
+    \label{def:produit}
+    Soient $\mathcal{A} = \left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B} = \left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates sur le même alphabet. On appelle \textbf{\textit{automate produit}} la machine $\mathcal{AB} = \left(\mathcal{Q}\times\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ avec
+
+    \[ \delta_x''(p_0, p_1) = (\delta_x(p), \delta_{\rho_{p_0}(x)}'(q))\]
+    et
+    \[ \rho_{(p_0,p_1)}(x) = \rho_{p_1}'(\rho_{p_0}(x)). \]
+  \end{defi}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Produit d'automate~ii}
+  \begin{figure}[h!]
+    \begin{subfigure}[b]{0.3\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \draw [->,>=latex] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
+        \draw [->,>=latex] (0, 1.5) node[above] {$x$} to (0, 0.5);
+
+        \draw [->,>=latex] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
+        \draw [->,>=latex] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
+      \end{tikzpicture}
+      \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$.}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.3\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \draw [->,>=latex] (-0.5, 0) node[left] {$p_0p_1$} to (0.5, 0) node[right] {$q_0q_1$};
+        \draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
+      \end{tikzpicture}
+      \caption{Une flèche de l'automate $\mathcal{AB}$.}
+    \end{subfigure}
+    \caption{Correspondance entre les flèches dans $\mathcal{AB}$ et celles de $\mathcal{A}$ et de $\mathcal{B}$.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{(Semi-)groupe engendré par un automate de Mealy~i}
+
+  On peut étendre l'ensemble de définition de $\rho$ à $\Sigma^*$ par induction comme suit.
+
+  Soient $p\in\mathcal{Q}$, $x\in\Sigma$ et $\textbf{u}\in\Sigma^*$
+  \begin{align*}
+    &\rho_p(\epsilon)=\varepsilon \\
+    &\rho_p(x\textbf{u})=\rho_p(x)\rho_{\delta_x(p)}(\textbf{u})
+  \end{align*}
+  diagramme en croix
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{(Semi-)groupe engendré par un automate de Mealy~ii}
+
+  \begin{defi}
+    On définit le \textbf{semi-groupe d'automate engendré par $\mathcal{A}$} comme
+    \begin{equation*}
+      \left<\mathcal{A}\right>_+=\left<\rho_p, \forall p\in\mathcal{Q}\right>
+    \end{equation*}
+
+    Si l'automate $\mathcal{A}$ est inversible, alors on peut aussi considérer l'inverse des $\rho_p$. Dans ce cas, l'automate engendre un groupe noté $\left<\mathcal{A}\right>$.
+
+  \end{defi}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Minimisation et Dualisation : $\mathfrak{md}$-réduction}
+    Akhavi \emph{et al}~\cite{DBLP:journals/corr/abs-1105-4725} ont proposé la $\mathfrak{md}$-réduction, une procédure alternant minimisation et dualisation de l'automate.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Objectif du Projet~i}
+  \begin{thm}[Klimann~\cite{Klimann13}]
+    \label{thm:K}
+    Tout automate à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
+  \end{thm}
+
+  Le but du projet était d'essayer d'étendre cette conjecture à des classes d'automates plus grandes.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Des contre-exemples au théorème dans le cas général}
+
+  \begin{figure}[!ht]
+    \scalebox{.5}{
+      \centering
+      \begin{tikzpicture}[scale=0.9]
+        \coordinate (A) at (-10,-2);
+        \coordinate (B) at (-6,-2);
+        \coordinate (C) at (-6,2);
+        \coordinate (D) at (-10,2);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|2$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|1$} (QB);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|0$} (QD);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|0$} (QA);
+        \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|2$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
+        \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|2$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|1$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|0$} (QC);
+        \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|2$} (QD);
+
+
+        \coordinate (A) at (0,0);
+        \coordinate (B) at (0:3);
+        \coordinate (C) at (120:3);
+        \coordinate (D) at (240:3);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$1|0$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$2|0$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, above right]{$0|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, below left]{$0|2$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, above left]{$2|2$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below right]{$1|1$} (QA);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, below]{$1|2$} (QC);
+        \draw[->,>=latex] (QC) to[bend left=40] node[midway, above]{$2|1$} (QB);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, right]{$1|0$} (QD);
+        \draw[->,>=latex] (QD) to[bend left=40] node[midway, left]{$2|0$} (QC);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, above]{$0|2$} (QB);
+        \draw[->,>=latex] (QB) to[bend left=40] node[midway, below]{$0|1$} (QD);
+
+        \coordinate (A) at (6,-2);
+        \coordinate (B) at (10,-2);
+        \coordinate (C) at (10,2);
+        \coordinate (D) at (6,2);
+        \node[draw,circle,minimum width = 2.5em] (QA) at (A) {};
+        \node[draw,circle,minimum width = 2.5em] (QB) at (B) {};
+        \node[draw,circle,minimum width = 2.5em] (QC) at (C) {};
+        \node[draw,circle,minimum width = 2.5em] (QD) at (D) {};
+        \draw[->,>=latex] (QA) to[out=240,in=210,looseness=8] node[midway, below left]{$1|0$} (QA);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, below]{$0|2$} (QB);
+        \draw[->,>=latex] (QA) to[bend right] node[midway, right]{$2|1$} (QD);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, above]{$0|2$} (QA);
+        \draw[->,>=latex] (QB) to[out=330, in=300, looseness=8] node[midway, below right]{$1|1$} (QB);
+        \draw[->,>=latex] (QB) to[bend right] node[midway, right]{$2|0$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, left]{$2|0$} (QB);
+        \draw[->,>=latex] (QC) to[out=30, in=60, looseness=8] node[midway, above right]{$0|1$} (QC);
+        \draw[->,>=latex] (QC) to[bend right] node[midway, above]{$1|2$} (QD);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, left]{$2|1$} (QA);
+        \draw[->,>=latex] (QD) to[bend right] node[midway, below]{$1|2$} (QC);
+        \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
+      \end{tikzpicture}
+    }
+    \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier. \label{fig:fantastiques}
+    }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Un point commun à ces quatre contre-exemples}
+  Ils se factorisent en produit de deux automates et en permutant les facteurs on trouve un automate $\mathfrak{md}$-trivial.
+
+  Figure mdc.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Une proposition d'extention de la $\mathfrak{md}$-réduction}
+
+  \begin{defi}
+    \label{def:conj}
+    Deux automates $\mathcal{A}$ et $\mathcal{B}$ sont \textbf{\textit{conjugués}} s'il existe des automates $\mathcal{C}$ et $\mathcal{D}$ tels que $\mathcal{A}=\mathcal{CD}$ et $\mathcal{B}=\mathcal{DC}$.
+  \end{defi}
+
+  \begin{defi}
+    \label{def:mdc-red}
+    Une paire d'automates duaux est $\mathfrak{mdc}$-réduite si elle est $\mathfrak{md}$-réduite et que les deux automates sont irréductibles.
+    La $\mathfrak{mdc}$-réduction consiste à répéter la $\mathfrak{md}$-réduction de l'automate et de ses conjugués jusqu'à trouver des paires $\mathfrak{mdc}$-réduites.
+  \end{defi}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Objectif du projet~ii}
+
+  Nous voulions donc prouver ou contredire la conjecture suivante.
+
+  \begin{conj}
+    \label{conj:birev-mdc}
+    Un automate de Mealy biréversible engendre un groupe fini si et seulement sa $\mathfrak{mdc}$-réduction produit (au moins) un $\mathfrak{mdc}$-trivial.
+  \end{conj}
+
+\end{frame}
+
+\section{Bien fondé de la $\mathfrak{mdc}$-réduction}
+
+\begin{frame}
+  \frametitle{Conservation du caractère fini par minimisation et dualisation}
+  \begin{prop}
+    \label{prop:finitude-m}
+    Soit $\mathcal{A}$ un automate de Mealy, alors on a :
+    \[ \left<\mathfrak{m}\mathcal{A}\right> = \left<\mathcal{A}\right>. \]
+  \end{prop}
+
+  \begin{prop}[Akhavi \emph{et al}~\cite{DBLP:journals/corr/abs-1105-4725}]
+    \label{prop:finitude-d}
+    Soit $\mathcal{A}$ un automate de Mealy. Le (semi-)groupe $\left<\mathcal{A}\right>_+$ est fini si et seulement si $\left<\mathfrak{d}\mathcal{A}\right>_+$ est fini.
+  \end{prop}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conservation du caractère fini par conjugaison}
+
+  \begin{prop} %\label{prop:finitude-c}
+    Soient $\mathcal{A}, \mathcal{B}$ des automates de Mealy.
+    L'automate $\mathcal{A}\mathcal{B}$ engendre un groupe fini si et seulement si $\mathcal{B}\mathcal{A}$ engendre un groupe fini.
+  \end{prop}
+
+  \textbf{Démonstration}
+  On suppose $\left<\mathcal{A}\mathcal{B}\right>$ fini.
+
+  Tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ est de la forme
+  \[
+    \rho_{p_1q_1}\circ\rho_{p_2q_2}\circ\cdots\circ\rho_{p_nq_n}
+  \]
+  où les $p_i$ sont des éléments de $\mathcal{Q}_2$ et les $q_i$ des éléments de $\mathcal{Q}_1$.
+\end{frame}
+
+\begin{frame}
+  \begin{align*}
+    \rho_{p_1q_1}\circ\rho_{p_2q_2}\circ\cdots\circ\rho_{p_nq_n} &= \rho_{q_1}\circ\rho_{p_1}\circ\rho_{q_2}\circ\rho_{p_2}\circ\cdots\circ\rho_{q_n}\circ\rho_{p_n} \\
+    &=\rho_{q_1}\circ\left(\rho_{p_1}\circ\rho_{q_2}\circ\rho_{p_2}\circ\cdots\circ\rho_{q_n}\right)\circ\rho_{p_n} \\
+    &=\rho_{q_1}\circ\underbrace{\left(\rho_{q_2p_1}\circ\rho_{q_3p_2}\circ\cdots\circ\rho_{q_np_{n-1}}\right)}_{\in\left<\mathcal{A}\mathcal{B}\right>}\circ\rho_{p_n}
+  \end{align*}
+
+  On en déduit que tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ s'écrit sous la forme
+  \[ \rho_q\circ\rho\circ\rho_p. \] Or il y a un nombre fini de $p\in\mathcal{Q}_2$, de $q\in\mathcal{Q}_1$ et par hypothèse de $\rho\in\left<\mathcal{AB}\right>$. On en conclut qu'il y en a un nombre fini.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Un premier résultat sur la $\mathfrak{mdc}$-réduction}
+  \begin{prop}
+    Toute machine de Mealy engendre un (semi-)groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un (semi-)groupe fini.
+  \end{prop}
+
+  \begin{prop}
+    Toute machine de Mealy $\mathfrak{mdc}$-trivial engendre un (semi-)groupe fini.
+  \end{prop}
+
+  Nous avons donc prouvé une des implications de la conjecture~\ref{conj:birev-mdc}.
+\end{frame}
+
+\section{Algorithme de Factorisation}
+
+\begin{frame}
+  \frametitle{Clôture des automates par facteurs}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Description de l'algorithme}
+\end{frame}
+
+\section{Algorithme de Génération}
+
+\begin{frame}
+  \frametitle{Description de l'algorithme}
+  Notre algorithme de génération se base sur le résultat suivant:
+
+  \begin{prop}[Akhavi \emph{et al}~\cite{DBLP:journals/corr/abs-1105-4725}]
+    \label{thm:ir-helix}
+    Soit $\mathcal{A}$ un automate de Mealy inversible réversible. Les propositions suivantes sont équivalentes~:
+
+    \begin{enumerate}[(i)]
+    \item $\mathcal{A}$ est biréversible
+    \item Le graphe en hélice de $\mathcal{A}$ est une union de cycles disjoints.
+    \end{enumerate}
+  \end{prop}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{figure}[!ht]
+\begin{center}
+\begin{Verbatim}[fontsize=\small]
+
+def rec(start, prev, sources, targets, delta, rho):
+    if not sources and not targets:
+        return delta, rho
+    if not prev:
+    start = sources.pop()
+
+    # on backtrack sur les targets
+    for _ in range(len(targets)):
+        p_next, x_next = targets.pop(0)
+        delta[p_prev][x_prev] = p_next
+        rho[p_prev][x_prev] = x_next
+
+        if valid_delta(delta) and valid_rho(rho):
+          res = rec(...)
+\end{Verbatim}
+\end{center}
+  \caption{Structure globale de la fonction de génération en python\label{fig:gen-pseudo-code}}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Benchmarks et résultats}
+  \begin{table}[h!]
+  \begin{center}
+    \begin{threeparttable}
+      \begin{tabular}{|rrrr|}
+        \hline
+        \#états & \#lettres & Temps d'exécution & \#biréversibles \\ [0.5ex]
+        \hline\hline
+        2 & 2 & 0.002s & 12 \\
+        \hline
+        3 & 2 & 0.003s & 144 \\
+        \hline
+        3 & 3 & 0.011s & 8 784 \\
+        \hline
+        4 & 3 & 0.156s & 1 092 096 \\
+        \hline
+        5 & 3 & 21s    & 16 128 000 \\
+        \hline
+        4 & 4 & 1m51s  & 1 031 000 000 \\
+        \hline
+        6 & 3 & 145m44s& 9 848 143 872 \\
+        \hline
+      \end{tabular}
+
+      \caption{Benchmark génération d'automates biréversibles}
+    \end{threeparttable}
+  \end{center}
+\end{table}
+\end{frame}
+
+\begin{frame}
+  On atteint des temps d'exécutions très raisonnables.
+
+  On constate que le nombre d'automates biréversible est très grand. Pour pouvoir tous les analyser, il serait préférable de se contenter de les regarder à isomorphime près.
+
+  Pour ce faire, nous avons utilisé la bibliothèque de graphe Nauty~\cite{Nauty}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Graphe en hélice augmenté}
+
+  \begin{figure}[!ht]
+    \begin{center}
+      \scalebox{1}{
+        \begin{tikzpicture}[scale=0.63]
+          \coordinate (A) at (-10, 0);
+          \coordinate (B) at (-7, 0);
+
+          \node[draw,circle,minimum width = 2.5em] (q_0) at (A) {$a$};
+          \node[draw,circle,minimum width = 2.5em] (q_1) at (B) {$b$};
+          \path[->,>=latex]
+          (q_0) edge [loop left] node {$0|1$} (q_0)
+          (q_0) edge [bend left] node[midway, above] {$1|1$} (q_1)
+          (q_1) edge [bend left] node[midway, below] {$0|0$} (q_0)
+          (q_1) edge [loop right] node {$1|0$} (q_1);
+
+          % ############################################
+
+          \coordinate (A) at (-1,-1);
+          \coordinate (B) at (1,-1);
+          \coordinate (C) at (1,1);
+          \coordinate (D) at (-1,1);
+
+          \coordinate (P1) at (-3,0);
+          \coordinate (P2) at (3,0);
+          \coordinate (PA) at (0,-3);
+          \coordinate (PB) at (0,3);
+
+          \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$0|a$};
+          \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$1|a$};
+          \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$1|b$};
+          \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$0|b$};
+
+          \draw[->,>=latex] (QA) to[bend right] (QB);
+          \draw[->,>=latex] (QB) to[bend right] (QC);
+          \draw[->,>=latex] (QC) to[bend right] (QD);
+          \draw[->,>=latex] (QD) to[bend right] (QA);
+
+          \pause
+
+          \node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F1) at (P1) {$0$};
+          \node[draw,circle,minimum width = 2.5em,fill=black!20!green] (F2) at (P2) {$1$};
+
+
+          \draw[->,>=latex] (F1) to[bend right] (QA);
+          \draw[->,>=latex] (F1) to[bend left] (QD);
+          \draw[->,>=latex] (F2) to[bend left] (QB);
+          \draw[->,>=latex] (F2) to[bend right] (QC);
+
+          \pause
+
+          \node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FA) at (PA) {$a$};
+          \node[draw,circle,minimum width = 2.5em,fill=white!20!orange] (FB) at (PB) {$b$};
+
+          \draw[->,>=latex] (FA) to[bend right] (QB);
+          \draw[->,>=latex] (FA) to[bend left] (QA);
+          \draw[->,>=latex] (FB) to[bend left] (QC);
+          \draw[->,>=latex] (FB) to[bend right] (QD);
+        \end{tikzpicture}
+      }
+    \end{center}
+    % \caption{Une machine de Mealy et son graphe en hélice augmenté\label{fig:helix-aug}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Benchmarks et résultats à isomorphisme près}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{threeparttable}
+      \begin{tabular}{|rrrr|}
+        \hline
+        \#états & \#lettres & Temps d'exécution & \#birev. à iso. près\\ [0.5ex]
+        \hline\hline
+        2 & 2 & 0.002s & 8 \\
+        \hline
+        3 & 2 & 0.003s & 28 \\
+        \hline
+        3 & 3 & 0.011s & 335  \\
+        \hline
+        4 & 3 & 2.59s & 8 606 \\
+        \hline
+        5 & 3 & 12m34s    & 347 753 \\
+        \hline
+        4 & 4 & 56min34s  & 1 831 489 \\
+        \hline
+        6 & 3 & $\infty$  &  \\
+        \hline
+      \end{tabular}
+
+      \caption{Benchmark génération d'automates biréversibles à isomorphisme près\label{table:birev-iso}}
+    \end{threeparttable}
+  \end{center}
+\end{table}
+
+\end{frame}
+
+\section{Avancée sur le problème de finitude}
+
+\begin{frame}
+  \frametitle{Fonction de croissance}
+
+  \begin{defi} %\label{def:mass}
+    Soit $\mathcal{A}$ une machine de Mealy. On appelle \textbf{\textit{sa fonction de croissance}} la fonction $\pi:\mathbb{N}\rightarrow\mathbb{N}$ qui à un entier $n$ associe le nombre d'états de~$\mathfrak{m}\left(\mathcal{A}^n\right)$.
+  \end{defi}
+
+  \begin{prop} %\label{prop:mass}
+    Si la fonction de croissance d'une machine de Mealy $\mathcal{A}$ est bornée, alors $\left<\mathcal{A}\right>_+$ est fini.
+  \end{prop}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Vérification empirique de l'hypothèse}
+
+  \begin{enumerate}
+  \item engendrer une classe d'automates biréversibles irréductibles à isomorphismes près;
+  \item calculer la borne supérieure des fonctions de croissance des automates $\mathfrak{md}$-triviaux;
+  \item vérifier que la fonction de croissance de tous les automates non $\mathfrak{md}$-trivaux dépasse cette borne.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Contre-exemple}
+  \begin{center}
+    \begin{figure}[!ht]
+      \begin{center}
+        \scalebox{0.8}{
+          \begin{tikzpicture}
+            \coordinate (A) at (270:4);
+            \coordinate (B) at (0,0);
+            \coordinate (C) at (180:4);
+            \coordinate (D) at (0:4);
+            \coordinate (E) at (90:4);
+
+            \node[draw,thick,circle,minimum width = 2.5em] (QA) at (A) {$a$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QB) at (B) {$b$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QC) at (C) {$c$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QD) at (D) {$d$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QE) at (E) {$e$};
+
+            \draw[thick,->,>=latex] (QA) to[bend left] node[midway, left]{$0|1$} (QB);
+            \draw[thick,->,>=latex] (QA) to[bend left] node[midway, below left]{$2|0$} (QC);
+            \draw[thick,->,>=latex] (QA) to node[midway, above left]{$1|2$} (QD);
+            \draw[thick,->,>=latex] (QB) to[bend left] node[midway, left]{$1|0$} (QA);
+            \draw[thick,->,>=latex] (QB) to node[midway, above]{$0|2$} (QC);
+            \draw[thick,->,>=latex] (QB) to[bend left] node[midway, above]{$2|1$} (QD);
+            \draw[thick,->,>=latex] (QC) to[bend left] node[midway,above left]{\begin{tabular}{c} $0|1$ \\ $1|0$ \\ $2|2$ \end{tabular}} (QE);
+            \draw[thick,->,>=latex] (QD) to[bend left] node[midway, below right]{$2|1$} (QA);
+            \draw[thick,->,>=latex] (QD) to[bend left] node[midway, above]{$1|2$} (QB);
+            \draw[thick,->,>=latex] (QD) to[out=340,in=20,looseness=6] node[midway, right]{$0|0$} (QD);
+            \draw[thick,->,>=latex] (QE) to[out=0,in=0,looseness=2.3] node[midway, right]{$0|2$} (QA);
+            \draw[thick,->,>=latex] (QE) to node[midway, right]{$2|0$} (QB);
+            \draw[thick,->,>=latex] (QE) to node[midway, below right]{$1|1$} (QC);
+          \end{tikzpicture}
+        }
+        % \caption{Contre-exemple à la conjecture.\label{fig:contre-exemple}}
+      \end{center}
+    \end{figure}
+  \end{center}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Références}
+  \bibliography{project}{
+    \nocite{*}
+  }
+  \bibliographystyle{plain}
+\end{frame}
+
 \end{document}
