@@ -1077,7 +1077,7 @@ Nous avons donc procédé de la manière suivante:
 \begin{enumerate}
 \item engendrer une classe d'automates biréversibles irréductibles à isomorphismes près;
 \item calculer la borne supérieure des fonctions de croissance des automates $\mathfrak{md}$-triviaux;
-\item vérifier que la fonction de croissance de tous les automates $\mathfrak{md}$-trivaux dépasse cette borne.
+\item vérifier que la fonction de croissance de tous les automates non $\mathfrak{md}$-trivaux dépasse cette borne.
 \end{enumerate}
 
 Le calcul sur les biréversibles à 3 états et 3 lettres est très rapide et ne montre pas de contre-exemples. La plus petite classe d'automates biréversibles irréductibles est ensuite les automates à 5 états et 3 lettres. Nous en avions dénombrés 347 753 à isomorphisme près (table \ref{table:birev-iso}). Pour arriver au bout de cette classe d'automates, nous avons implémenté le calcul du $\mathfrak{md}$-réduit et de la fonction de croissance en C puis paralléliser son exécution. Grâce au super calculateur de l'université nous avons pu trouver 8 contre-exemples.
