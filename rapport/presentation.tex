@@ -2,23 +2,27 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[french]{babel}
 \usetheme{metropolis}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{mathtools}
-\usepackage{times}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{subcaption}
 
 \usepackage{tikz}
-\usetikzlibrary{positioning,overlay-beamer-styles}
+\usetikzlibrary{overlay-beamer-styles,calc,automata,positioning}
+
+\usepackage[french]{babel}
 
 \newtheorem{prop}{Proposition}
 \newtheorem{defi}{Définition}
 \newtheorem{thm}{Théorème}
 \newtheorem{conj}{Conjecture}
 \newtheorem*{rem*}{Remarque}
+
 \begin{document}
 	\author{Maxime Flin  \& Tristan François}
 	\title{\`A propos du problème de finitude des groupes d'automates biréversibles}
@@ -126,6 +130,65 @@
 			\end{tikzpicture}
 			\caption{Automate de Mealy réalisant la division par 3 en binaire.}
 		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Automate inversible, réversible et biréversible}
+		
+		\begin{definition}
+			Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy.
+			\begin{enumerate}[(i)]
+				\item On dit que $\mathcal{A}$ est \textbf{inversible} si $\rho_q$ est une permutation de $\Sigma$ pour tout état $q\in\mathcal{Q}$.
+				\item On dit que $\mathcal{A}$ est \textbf{réversible} si $\delta_x$ est une permutation de $\mathcal{Q}$ pour toute lettre $x\in\Sigma$.
+			\end{enumerate}
+		\end{definition}
+	
+		\footnote{Insérer exemple}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Automate inversible, réversible et biréversible}
+		
+		\begin{definition}
+			Si une machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire son \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplaçant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
+		\end{definition}
+		
+		
+		\begin{figure}[h!]
+			\centering
+			\scalebox{.9} {
+				\begin{subfigure}[b]{0.5\textwidth}
+					\centering
+					\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+					\node[state] (p) {$p$};
+					\node[state] (q) [right=of p] {$q$};
+					\path[->,>=latex]
+					(p) edge [loop left] node {$1|0$} (p)
+					(p) edge [bend left] node {$0|1$} (q)
+					(q) edge [bend left] node {$0|0$} (p)
+					(q) edge [loop right] node {$1|1$} (q);
+					\end{tikzpicture}
+				\end{subfigure}
+				~
+				\begin{subfigure}[b]{0.5\textwidth}
+					\centering
+					\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+					\node[state] (p) {$p^{-1}$};
+					\node[state] (q) [right=of p] {$q^{-1}$};
+					\path[->,>=latex]
+					(p) edge [loop left] node {$0|1$} (p)
+					(p) edge [bend left] node {$1|0$} (q)
+					(q) edge [bend left] node {$0|0$} (p)
+					(q) edge [loop right] node {$1|1$} (q);
+					\end{tikzpicture}
+				\end{subfigure}
+			}
+			\caption{Automate et son inverse.}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Groupe d'actions d'un automate de Mealy}
 	\end{frame}
 
 	\begin{frame}
