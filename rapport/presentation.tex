@@ -253,7 +253,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Produit d'automate~ii}
+  \frametitle{Produit d'automates~ii}
   \begin{figure}[h!]
     \begin{subfigure}[b]{0.3\textwidth}
       \centering
@@ -286,7 +286,7 @@
 
   Soient $p\in\mathcal{Q}$, $x\in\Sigma$ et $\textbf{u}\in\Sigma^*$
   \begin{align*}
-    &\rho_p(\epsilon)=\varepsilon \\
+    &\rho_p(\varepsilon)=\varepsilon \\
     &\rho_p(x\textbf{u})=\rho_p(x)\rho_{\delta_x(p)}(\textbf{u})
   \end{align*}
   diagramme en croix
@@ -316,7 +316,7 @@
   \frametitle{Objectif du Projet~i}
   \begin{thm}[Klimann~\cite{Klimann13}]
     \label{thm:K}
-    Tout automate à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
+    Tout automate inversible-réversible à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
   \end{thm}
 
   Le but du projet était d'essayer d'étendre cette conjecture à des classes d'automates plus grandes.
@@ -434,7 +434,7 @@
 
 \end{frame}
 
-\section{Bien fondé de la $\mathfrak{mdc}$-réduction}
+\section{Bien-fondé de la $\mathfrak{mdc}$-réduction}
 
 \begin{frame}
   \frametitle{Conservation du caractère fini par minimisation et dualisation}
