@@ -11,6 +11,9 @@
 \usepackage{mathtools}
 \usepackage{times}
 
+\usepackage{tikz}
+\usetikzlibrary{positioning,overlay-beamer-styles}
+
 \newtheorem{prop}{Proposition}
 \newtheorem{defi}{Définition}
 \newtheorem{thm}{Théorème}
@@ -38,6 +41,91 @@
 
 	\begin{frame}
 		\frametitle{Automate de Mealy}
+		
+		\begin{figure}
+			\centering
+			\begin{tikzpicture}
+				\coordinate (A) at (0,0);
+				\coordinate (B) at (3,0);
+				\coordinate (C) at (6,0);
+				
+				\node[draw,circle,minimum width = 2.5em,alt={<3>{orange}{black}}] (QA) at (A) {$0$};
+				\node[draw,circle,minimum width = 2.5em,alt={<5,11>{orange}{black}}] (QB) at (B) {$1$};
+				\node[draw,circle,minimum width = 2.5em,alt={<7,9>{orange}{black}}] (QC) at (C) {$2$};
+				
+				\draw[->,>=latex] (QA) to[out=160,in=200,looseness=6] node[midway, left] {$0|0$}(QA);
+				\draw[->,>=latex,alt=<4>{orange}{black}] (QA) to[bend left] node[midway, above] {$1|0$} (QB);
+				\draw[->,>=latex] (QB) to[bend left] node[midway, below] {$1|1$}(QA);
+				\draw[->,>=latex, alt={<6>{orange}{black}}] (QB) to[bend left] node[midway, above] {$0|0$}(QC);
+				\draw[->,>=latex,alt={<10>{orange}{black}}] (QC) to[bend left] node[midway, below] {$0|1$}(QB);
+				\draw[->,>=latex,alt={<8>{orange}{black}}] (QC) to[out=340,in=20,looseness=6] node[midway, right] {$1|1$}(QC);
+				
+				\pause
+				
+				\coordinate (C1) at (0,-2);
+				\coordinate (C2) at (2,-2);
+				\coordinate (C3) at (4,-2);
+				\coordinate (C4) at (6,-2);
+				
+				\node[alt={<3>{orange}{black}}] (CC1) at (C1) {$1$};
+				\node[alt={<5>{orange}{black}}] (CC2) at (C2) {$0$};
+				\node[alt={<7>{orange}{black}}] (CC3) at (C3) {$1$};
+				\node[] (CC4) at (C4) {$0$};
+				
+				\pause
+				
+				\coordinate (E1) at (-1,-3);
+				
+				\node[alt={<3>{orange}{black}}] (EE1) at (E1) {$0$};
+				
+				\pause
+				
+				\coordinate (E2) at (1,-3);
+				\coordinate (O1) at (0,-4);
+				
+				\node[alt={<4,5>{orange}{black}}] (EE2) at (E2) {$1$};
+				\node[alt={<4,12>{orange}{black}}] (OO1) at (O1) {$0$};
+				
+				\draw[->,>=latex,alt={<4>{orange}{black}}] (EE1) to (EE2);
+				\draw[->,>=latex,alt={<4>{orange}{black}}] (CC1) to (OO1);
+				
+				\pause
+				\pause
+				
+				\coordinate (E3) at (3,-3);
+				\coordinate (O2) at (2,-4);
+				
+				\node[alt={<6,7>{orange}{black}}] (EE3) at (E3) {$2$};
+				\node[alt={<6,12>{orange}{black}}] (OO2) at (O2) {$0$};
+				
+				\draw[->,>=latex,alt={<6>{orange}{black}}] (EE2) to (EE3);
+				\draw[->,>=latex,alt={<6>{orange}{black}}] (CC2) to (OO2);
+				
+				\pause
+				\pause
+				
+				\coordinate (E4) at (5,-3);
+				\coordinate (O3) at (4,-4);
+				
+				\node[alt={<8,9>{orange}{black}}] (EE4) at (E4) {$2$};
+				\node[alt={<8,12>{orange}{black}}] (OO3) at (O3) {$1$};
+				
+				\draw[->,>=latex,alt={<8>{orange}{black}}] (EE3) to (EE4);
+				\draw[->,>=latex,alt={<8>{orange}{black}}] (CC3) to (OO3);
+				
+				\pause
+				
+				\coordinate (E5) at (7,-3);
+				\coordinate (O4) at (6,-4);
+				
+				\node[alt={<10,11>{orange}{black}}] (EE5) at (E5) {$1$};
+				\node[alt={<10,12>{orange}{black}}] (OO4) at (O4) {$1$};
+				
+				\draw[->,>=latex,alt={<10>{orange}{black}}] (EE4) to (EE5);
+				\draw[->,>=latex,alt={<10>{orange}{black}}] (CC4) to (OO4);
+			\end{tikzpicture}
+			\caption{Automate de Mealy réalisant la division par 3 en binaire.}
+		\end{figure}
 	\end{frame}
 
 	\begin{frame}
