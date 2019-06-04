@@ -266,7 +266,7 @@
 \begin{frame}
   \frametitle{Automate inversible, réversible et biréversible~iv}
 
-  \begin{defi} \label{def:birev}
+  \begin{defi}
     On dit que $\mathcal{A}$ est \textbf{biréversible} s'il est inversible, réversible et que son inverse est réversible.
   \end{defi}
 
@@ -276,7 +276,6 @@
 \begin{frame}
   \frametitle{Produit d'automates~i}
   \begin{defi}
-    \label{def:produit}
     Soient $\mathcal{A} = \left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B} = \left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates sur le même alphabet. On appelle \textbf{\textit{automate produit}} la machine $\mathcal{AB} = \left(\mathcal{Q}\times\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ avec
 
     \[ \delta_x''(p_0, p_1) = (\delta_x(p), \delta_{\rho_{p_0}(x)}'(q))\]
@@ -375,7 +374,7 @@
 \begin{frame}
   \frametitle{Minimisation et Dualisation : $\mathfrak{md}$-réduction}
 
-    \begin{definition}
+    \begin{defi}
         Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy. \textbf{L'équivalence de Nérode} $\equiv$ sur $\mathcal{Q}$ est la limite de la suite de relations d'équivalence $\equiv_k$ de plus en plus fines définies récursivement par
         \begin{align*}
         \forall p, q \in Q,\\
@@ -384,7 +383,7 @@
         \end{align*}
 
         Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x([p]) = [\delta_x(p)]$ et $\bar{\rho}_{[p]} =  \rho_p$.
-    \end{definition}
+    \end{defi}
 
     Akhavi \emph{et al}~\cite{DBLP:journals/corr/abs-1105-4725} ont proposé la $\mathfrak{md}$-réduction, une procédure alternant minimisation et dualisation de l'automate.
 \end{frame}
@@ -475,7 +474,6 @@
 \begin{frame}
   \frametitle{Objectif du Projet~i}
   \begin{thm}[Klimann~\cite{Klimann13}]
-    \label{thm:K}
     Tout automate inversible-réversible à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
   \end{thm}
 
@@ -675,12 +673,10 @@
   \frametitle{Une proposition d'extention de la $\mathfrak{md}$-réduction}
 
   \begin{defi}
-    \label{def:conj}
     Deux automates $\mathcal{A}$ et $\mathcal{B}$ sont \textbf{\textit{conjugués}} s'il existe des automates $\mathcal{C}$ et $\mathcal{D}$ tels que $\mathcal{A}=\mathcal{CD}$ et $\mathcal{B}=\mathcal{DC}$.
   \end{defi}
 
   \begin{defi}
-    \label{def:mdc-red}
     Une paire d'automates duaux est $\mathfrak{mdc}$-réduite si elle est $\mathfrak{md}$-réduite et que les deux automates sont irréductibles.
     La $\mathfrak{mdc}$-réduction consiste à répéter la $\mathfrak{md}$-réduction de l'automate et de ses conjugués jusqu'à trouver des paires $\mathfrak{mdc}$-réduites.
   \end{defi}
@@ -693,7 +689,6 @@
   Nous voulions donc prouver ou contredire la conjecture suivante.
 
   \begin{conj}
-    \label{conj:birev-mdc}
     Un automate de Mealy biréversible engendre un groupe fini si et seulement sa $\mathfrak{mdc}$-réduction produit (au moins) un $\mathfrak{mdc}$-trivial.
   \end{conj}
 
