@@ -558,6 +558,51 @@
 \section{Algorithme de Génération}
 
 \begin{frame}
+  \frametitle{Graphe en hélice}
+  \begin{figure}[!ht]
+    \begin{center}
+      \scalebox{1}{
+        \begin{tikzpicture}[scale=0.63]
+          \coordinate (A) at (-10, 0);
+          \coordinate (B) at (-7, 0);
+
+          \node[draw,circle,minimum width = 2.5em] (q_0) at (A) {$a$};
+          \node[draw,circle,minimum width = 2.5em] (q_1) at (B) {$b$};
+          \path[->,>=latex]
+          (q_0) edge [loop left] node {$0|1$} (q_0)
+          (q_0) edge [bend left] node[midway, above] {$1|1$} (q_1)
+          (q_1) edge [bend left] node[midway, below] {$0|0$} (q_0)
+          (q_1) edge [loop right] node {$1|0$} (q_1);
+
+          % ############################################
+
+          \coordinate (A) at (-1,-1);
+          \coordinate (B) at (1,-1);
+          \coordinate (C) at (1,1);
+          \coordinate (D) at (-1,1);
+
+          \coordinate (P1) at (-3,0);
+          \coordinate (P2) at (3,0);
+          \coordinate (PA) at (0,-3);
+          \coordinate (PB) at (0,3);
+
+          \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$0|a$};
+          \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$1|a$};
+          \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$1|b$};
+          \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$0|b$};
+
+          \draw[->,>=latex] (QA) to[bend right] (QB);
+          \draw[->,>=latex] (QB) to[bend right] (QC);
+          \draw[->,>=latex] (QC) to[bend right] (QD);
+          \draw[->,>=latex] (QD) to[bend right] (QA);
+        \end{tikzpicture}
+      }
+    \end{center}
+    \caption{Une machine de Mealy et son graphe en hélice.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
   \frametitle{Description de l'algorithme}
   Notre algorithme de génération se base sur le résultat suivant:
 
