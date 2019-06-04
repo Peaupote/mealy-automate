@@ -49,7 +49,16 @@
 \section{Automates de Mealy et position du problème}
 
 \begin{frame}
-  \frametitle{Automate de Mealy}
+	\frametitle{Automate de Mealy : définition}
+	
+	\begin{defi}
+		Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexées par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexées par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
+	\end{defi}
+	
+\end{frame}
+
+\begin{frame}
+  \frametitle{Automate de Mealy : exemple}
 
   \begin{figure}
     \centering
@@ -760,9 +769,9 @@
   \end{prop}
 
   \begin{proof}
-    Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in \mathfrak{S}(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho'_r\circ\rho''_p$.
+    Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in \mathfrak{S}(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho_{2,r}\circ\rho_{1,p}$.
 
-    Or $\rho_{(p, r)}$ est une bijection donc $\rho'_r$ est sujective et $\rho''_p$ est injective. Or puisque ce sont des fonctions de $\Sigma$ dans $\Sigma$ qui est fini on a l'équivalence
+    Or $\rho_{(p, r)}$ est une bijection donc $\rho_{2,r}$ est surjective et ${\rho_{1,p}}$ est injective. Or puisque ce sont des fonctions de $\Sigma$ dans $\Sigma$ qui est fini on a l'équivalence
     \[ injective \iff surjective \iff bijective. \]
     D'où le résultat.
   \end{proof}
@@ -804,7 +813,7 @@
         \draw [->,>=latex] (0, 1.5) node[above] {$x$} to (0, 0.5);
 
         \draw [->,>=latex] (-0.5, -0.5) node[left] {$p_1$} to (0.5, -0.5) node[right] {$q_1$};
-        \draw [->,>=latex] (0, 0) node[above] {$z$} to (0, -1) node[below] {$y$};
+        \draw [->,>=latex] (0, 0) node[above] {$?$} to (0, -1) node[below] {$y$};
       \end{tikzpicture}
       \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$\label{fig:factor-ab}}
     \end{subfigure}
@@ -844,10 +853,10 @@
           \coordinate (PA) at (0,-3);
           \coordinate (PB) at (0,3);
 
-          \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$0|a$};
-          \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$1|a$};
-          \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$1|b$};
-          \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$0|b$};
+          \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$a|0$};
+          \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$a|1$};
+          \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$b|1$};
+          \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$b|0$};
 
           \draw[->,>=latex] (QA) to[bend right] (QB);
           \draw[->,>=latex] (QB) to[bend right] (QC);
@@ -969,10 +978,10 @@ def rec(start, prev, sources, targets, delta, rho):
           \coordinate (PA) at (0,-3);
           \coordinate (PB) at (0,3);
 
-          \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$0|a$};
-          \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$1|a$};
-          \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$1|b$};
-          \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$0|b$};
+          \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$a|0$};
+          \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$a|1$};
+          \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$b|1$};
+          \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$b|0$};
 
           \draw[->,>=latex] (QA) to[bend right] (QB);
           \draw[->,>=latex] (QB) to[bend right] (QC);
