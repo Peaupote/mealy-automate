@@ -49,12 +49,12 @@
 \section{Automates de Mealy et position du problème}
 
 \begin{frame}
-	\frametitle{Automate de Mealy : définition}
-	
-	\begin{defi}
-		Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexées par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexées par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
-	\end{defi}
-	
+    \frametitle{Automate de Mealy : définition}
+
+    \begin{defi}
+        Un \textbf{automate de Mealy} est la donné d'un quadruplet $\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ où $\mathcal{Q}$ est l'ensemble des états de l'automate, $\Sigma$ l'alphabet sur lequel l'automate agit, $\delta$ une famille d'applications de $\mathcal{Q}$ dans $\mathcal{Q}$ indexées par $\Sigma$ qui représente les transitions entre les états et $\rho$ une famille d'applications de $\Sigma$ dans $\Sigma$ indexées par $\mathcal{Q}$ qui représente l'écriture en sortie de l'automate.
+    \end{defi}
+
 \end{frame}
 
 \begin{frame}
@@ -332,38 +332,37 @@
   \end{align*}
 
 
-\begin{figure}[!ht]
-  \begin{center}
-    \begin{tikzpicture}
-      \coordinate (P1) at (0.5,0);
-      \coordinate (P2) at (2.5,0);
-      \coordinate (Q1) at (5,0);
+  \begin{figure}[!ht]
+    \begin{center}
+      \begin{tikzpicture}
+        \coordinate (P1) at (0.5,0);
+        \coordinate (P2) at (2.5,0);
+        \coordinate (Q1) at (5,0);
 
-      \coordinate (00) at (1.25,1);
-      \coordinate (01) at (3.60,1);
+        \coordinate (00) at (1.25,1);
+        \coordinate (01) at (3.60,1);
 
-      \coordinate (10) at (1.25,-1);
-      \coordinate (11) at (3.60,-1);
+        \coordinate (10) at (1.25,-1);
+        \coordinate (11) at (3.60,-1);
 
-      \node (PP1) at (P1) {$p$};
-      \node (PP2) at (P2) {$\delta_x(p)$};
-      \node (QQ1) at (Q1) {$\delta_\textbf{u}(\delta_x(p))$};
+        \node (PP1) at (P1) {$p$};
+        \node (PP2) at (P2) {$\delta_x(p)$};
+        \node (QQ1) at (Q1) {$\delta_{\textbf{u}}(\delta_x(p))$};
 
-      \node (L00) at (00) {$x$};
-      \node (L01) at (01) {$\textbf{u}$};
+        \node (L00) at (00) {$x$};
+        \node (L01) at (01) {$\textbf{u}$};
 
-      \node (L10) at (10) {$\rho_p(x)$};
-      \node (L11) at (11) {$\rho_{\delta_x(p)}(\textbf{u})$};
+        \node (L10) at (10) {$\rho_p(x)$};
+        \node (L11) at (11) {$\rho_{\delta_x(p)}(\textbf{u})$};
 
-      \draw[->,>=latex] (PP1) -- (PP2);
-      \draw[->,>=latex] (PP2) -- (QQ1);
+        \draw[->,>=latex] (PP1) -- (PP2);
+        \draw[->,>=latex] (PP2) -- (QQ1);
 
-      \draw[->,>=latex] (L00) -- (L10);
-      \draw[->,>=latex] (L01) -- (L11);
-    \end{tikzpicture}
-  \end{center}
-\end{figure}
-
+        \draw[->,>=latex] (L00) -- (L10);
+        \draw[->,>=latex] (L01) -- (L11);
+      \end{tikzpicture}
+    \end{center}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
