@@ -147,6 +147,38 @@
     \item On dit que $\mathcal{A}$ est \textbf{réversible} si $\delta_x$ est une permutation de $\mathcal{Q}$ pour toute lettre $x\in\Sigma$.
     \end{enumerate}
   \end{defi}
+
+  \begin{figure}[!ht]
+    \begin{subfigure}[b]{0.4\textwidth}
+      \centering
+      \begin{tabular}{|r|r|r|}
+        \hline
+        1 & 2 & 2 \\
+        \hline
+        2 & 0 & 1 \\
+        \hline
+        0 & 1 & 0 \\
+        \hline
+      \end{tabular}
+      \caption{$\delta$ d'un automate réversible.}
+    \end{subfigure}
+    ~
+    \begin{subfigure}[b]{0.4\textwidth}
+      \centering
+      \begin{tabular}{|r|r|r|}
+        \hline
+        0 & 1 & 2 \\
+        \hline
+        2 & 0 & 1 \\
+        \hline
+        0 & 1 & 2 \\
+        \hline
+      \end{tabular}
+      \caption{$\rho$ d'un automate inversible.}
+    \end{subfigure}
+  \end{figure}
+
+
 \end{frame}
 
 \begin{frame}
@@ -310,103 +342,103 @@
 
 \begin{frame}
   \frametitle{Minimisation et Dualisation : $\mathfrak{md}$-réduction}
-  
-  	\begin{definition}
-  		Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy. \textbf{L'équivalence de Nérode} $\equiv$ sur $\mathcal{Q}$ est la limite de la suite de relations d'équivalence $\equiv_k$ de plus en plus fines définies récursivement par
-  		
-  		\begin{align*}
-  		\forall p, q \in Q,\\
-  		p \equiv_0 q &\iff \rho_p = \rho_q \\
-  		\forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right).
-  		\end{align*}
-  		
-  		Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x([p]) = [\delta_x(p)]$ et $\bar{\rho}_{[p]} =  \rho_p$.
-  	\end{definition}
-  
+
+    \begin{definition}
+        Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy. \textbf{L'équivalence de Nérode} $\equiv$ sur $\mathcal{Q}$ est la limite de la suite de relations d'équivalence $\equiv_k$ de plus en plus fines définies récursivement par
+
+        \begin{align*}
+        \forall p, q \in Q,\\
+        p \equiv_0 q &\iff \rho_p = \rho_q \\
+        \forall k \geq 0, p \equiv_{k+1}q &\iff \left(p\equiv_kq \wedge \forall x \in \Sigma,~\delta_x(p)=\delta_x(q)\right).
+        \end{align*}
+
+        Le \textbf{minimisé} de $\mathcal{A}$ est l'automate $\mathfrak{m}(\mathcal{A})=\left(\sfrac{\mathcal{Q}}{\equiv}, \Sigma, \bar{\delta}, \bar{\rho}\right)$, où pour tout $p\in\mathcal{Q}$ et $x\in\Sigma$, $\bar{\delta}_x([p]) = [\delta_x(p)]$ et $\bar{\rho}_{[p]} =  \rho_p$.
+    \end{definition}
+
     Akhavi \emph{et al}~\cite{DBLP:journals/corr/abs-1105-4725} ont proposé la $\mathfrak{md}$-réduction, une procédure alternant minimisation et dualisation de l'automate.
 \end{frame}
 
 \begin{frame}
-	\frametitle{Exemple de $\mathfrak{md}$-réduction}
-	\begin{figure}[!ht]
-		%\centering
-		\scalebox{0.5}{
-			\begin{tikzpicture}
-			\coordinate (A2) at (-2,-7);
-			\coordinate (B2) at (-2,-11);
-			\coordinate (C2) at (2,-7);
-			\coordinate (D2) at (2,-11);
-			\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$b$};
-			\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$a$};
-			\node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$c$};
-			\node[draw,thick,circle,minimum width = 2.5em] (QD2) at (D2) {$d$};
-			\draw[thick,->,>=latex] (QA2) to[out=115,in=155,looseness=6] node[midway, above left]{$1|2$} (QA2);
-			\draw[thick,->,>=latex] (QA2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QC2);
-			\draw[thick,->,>=latex] (QB2) to[out=205,in=245,looseness=6] node[midway, below left]{$1|2$} (QB2);
-			\draw[thick,->,>=latex] (QB2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QD2);
-			\draw[thick,->,>=latex] (QC2) to[out=25,in=65,looseness=6] node[midway, above right]{$1|2$} (QC2);
-			\draw[thick,->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
-			\draw[thick,->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
-			\draw[thick,->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
-			
-			% minization
-			\draw[thick,->,>=latex] (4, -9) to node[midway, above] {$\mathfrak{m}$} (5, -9);
-			
-			% minimisé du conjugué
-			
-			\coordinate (A2) at (7,-10);
-			\coordinate (B2) at (10,-10);
-			\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$bc$};
-			\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$ad$};
-			\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA2);
-			\draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $1|2$ \\ $2|0$ \end{tabular}} (QB2);
-			
-			% dualisation
-			
-			\draw[thick,<->,>=latex] (12, -9) to node[midway, above] {$\mathfrak{d}$} (13, -9);
-			
-			\coordinate (A2) at (15,-10);
-			\coordinate (B2) at (18,-10);
-			\coordinate (C2) at ($(A2) + (60:3)$);
-			\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$0$};
-			\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$2$};
-			\node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$1$};
-			
-			\draw[thick,->,>=latex] (QA2) to[out=190,in=230,looseness=6] node[midway, below left]{$ad|ad$} (QA2);
-			\draw[thick,->,>=latex] (QA2) to node[midway, above left] {$bc|bc$} (QC2);
-			\draw[thick,->,>=latex] (QB2) to node[midway, below] {$bc|bc$} (QA2);
-			\draw[thick,->,>=latex] (QB2) to[bend left] node[midway, below left] {$ad|ad$} (QC2);
-			\draw[thick,->,>=latex] (QC2) to[bend left] node[midway, above right] {\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QB2);
-			
-			%minimisation
-			\draw[thick,->,>=latex] (16.5, -12) to node[midway, right] {$\mathfrak{m}$} (16.5, -13);
-			
-			\coordinate (A2) at (16.5, -16);
-			\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$012$};
-			\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QA2);
-			
-			%dualisation
-			
-			\draw[thick,<->,>=latex] (12, -15) to node[midway, above] {$\mathfrak{d}$} (13, -15);
-			
-			\coordinate (A2) at (7, -15.5);
-			\coordinate (B2) at (10, -15.5);
-			\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$ad$};
-			\node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$bc$};
-			\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
-			\draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QB2);
-			
-			%minimisation
-			\draw[thick,->,>=latex] (5, -15) to node[midway, above] {$\mathfrak{m}$} (4, -15);
-			
-			\coordinate (A2) at (0, -15.5);
-			\node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$adbc$};
-			\draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
-			
-			\end{tikzpicture}
-		}
-		\caption{$\mathfrak{md}$-réduction de l'automate $\mathcal{B}$.\label{fig:md-red-ex}}
-	\end{figure}
+    \frametitle{Exemple de $\mathfrak{md}$-réduction}
+    \begin{figure}[!ht]
+        %\centering
+        \scalebox{0.5}{
+            \begin{tikzpicture}
+            \coordinate (A2) at (-2,-7);
+            \coordinate (B2) at (-2,-11);
+            \coordinate (C2) at (2,-7);
+            \coordinate (D2) at (2,-11);
+            \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$b$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$a$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$c$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QD2) at (D2) {$d$};
+            \draw[thick,->,>=latex] (QA2) to[out=115,in=155,looseness=6] node[midway, above left]{$1|2$} (QA2);
+            \draw[thick,->,>=latex] (QA2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QC2);
+            \draw[thick,->,>=latex] (QB2) to[out=205,in=245,looseness=6] node[midway, below left]{$1|2$} (QB2);
+            \draw[thick,->,>=latex] (QB2) to[bend left] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QD2);
+            \draw[thick,->,>=latex] (QC2) to[out=25,in=65,looseness=6] node[midway, above right]{$1|2$} (QC2);
+            \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
+            \draw[thick,->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
+            \draw[thick,->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
+
+            % minization
+            \draw[thick,->,>=latex] (4, -9) to node[midway, above] {$\mathfrak{m}$} (5, -9);
+
+            % minimisé du conjugué
+
+            \coordinate (A2) at (7,-10);
+            \coordinate (B2) at (10,-10);
+            \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$bc$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$ad$};
+            \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|0$ \\ $1|2$ \\ $2|1$ \end{tabular}} (QA2);
+            \draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $0|1$ \\ $1|2$ \\ $2|0$ \end{tabular}} (QB2);
+
+            % dualisation
+
+            \draw[thick,<->,>=latex] (12, -9) to node[midway, above] {$\mathfrak{d}$} (13, -9);
+
+            \coordinate (A2) at (15,-10);
+            \coordinate (B2) at (18,-10);
+            \coordinate (C2) at ($(A2) + (60:3)$);
+            \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$0$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$2$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QC2) at (C2) {$1$};
+
+            \draw[thick,->,>=latex] (QA2) to[out=190,in=230,looseness=6] node[midway, below left]{$ad|ad$} (QA2);
+            \draw[thick,->,>=latex] (QA2) to node[midway, above left] {$bc|bc$} (QC2);
+            \draw[thick,->,>=latex] (QB2) to node[midway, below] {$bc|bc$} (QA2);
+            \draw[thick,->,>=latex] (QB2) to[bend left] node[midway, below left] {$ad|ad$} (QC2);
+            \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, above right] {\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QB2);
+
+            %minimisation
+            \draw[thick,->,>=latex] (16.5, -12) to node[midway, right] {$\mathfrak{m}$} (16.5, -13);
+
+            \coordinate (A2) at (16.5, -16);
+            \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$012$};
+            \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{\begin{tabular}{c} $ad|ad$ \\ $bc|bc$ \end{tabular}} (QA2);
+
+            %dualisation
+
+            \draw[thick,<->,>=latex] (12, -15) to node[midway, above] {$\mathfrak{d}$} (13, -15);
+
+            \coordinate (A2) at (7, -15.5);
+            \coordinate (B2) at (10, -15.5);
+            \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$ad$};
+            \node[draw,thick,circle,minimum width = 2.5em] (QB2) at (B2) {$bc$};
+            \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
+            \draw[thick,->,>=latex] (QB2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QB2);
+
+            %minimisation
+            \draw[thick,->,>=latex] (5, -15) to node[midway, above] {$\mathfrak{m}$} (4, -15);
+
+            \coordinate (A2) at (0, -15.5);
+            \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {$adbc$};
+            \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$012|012$} (QA2);
+
+            \end{tikzpicture}
+        }
+        \caption{$\mathfrak{md}$-réduction de l'automate $\mathcal{B}$.\label{fig:md-red-ex}}
+    \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -758,6 +790,51 @@
 \end{frame}
 
 \section{Algorithme de Génération}
+
+\begin{frame}
+  \frametitle{Graphe en hélice}
+  \begin{figure}[!ht]
+    \begin{center}
+      \scalebox{1}{
+        \begin{tikzpicture}[scale=0.63]
+          \coordinate (A) at (-10, 0);
+          \coordinate (B) at (-7, 0);
+
+          \node[draw,circle,minimum width = 2.5em] (q_0) at (A) {$a$};
+          \node[draw,circle,minimum width = 2.5em] (q_1) at (B) {$b$};
+          \path[->,>=latex]
+          (q_0) edge [loop left] node {$0|1$} (q_0)
+          (q_0) edge [bend left] node[midway, above] {$1|1$} (q_1)
+          (q_1) edge [bend left] node[midway, below] {$0|0$} (q_0)
+          (q_1) edge [loop right] node {$1|0$} (q_1);
+
+          % ############################################
+
+          \coordinate (A) at (-1,-1);
+          \coordinate (B) at (1,-1);
+          \coordinate (C) at (1,1);
+          \coordinate (D) at (-1,1);
+
+          \coordinate (P1) at (-3,0);
+          \coordinate (P2) at (3,0);
+          \coordinate (PA) at (0,-3);
+          \coordinate (PB) at (0,3);
+
+          \node[draw,circle,minimum width = 2.5em] (QA) at (A) {$0|a$};
+          \node[draw,circle,minimum width = 2.5em] (QB) at (B) {$1|a$};
+          \node[draw,circle,minimum width = 2.5em] (QC) at (C) {$1|b$};
+          \node[draw,circle,minimum width = 2.5em] (QD) at (D) {$0|b$};
+
+          \draw[->,>=latex] (QA) to[bend right] (QB);
+          \draw[->,>=latex] (QB) to[bend right] (QC);
+          \draw[->,>=latex] (QC) to[bend right] (QD);
+          \draw[->,>=latex] (QD) to[bend right] (QA);
+        \end{tikzpicture}
+      }
+    \end{center}
+    \caption{Une machine de Mealy et son graphe en hélice.}
+  \end{figure}
+\end{frame}
 
 \begin{frame}
   \frametitle{Description de l'algorithme}
