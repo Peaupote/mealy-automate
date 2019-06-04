@@ -784,7 +784,7 @@ def rec(start, prev, sources, targets, delta, rho):
     if not sources and not targets:
         return delta, rho
     if not prev:
-    	start = sources.pop()
+        start = sources.pop()
 
     # on backtrack sur les targets
     for _ in range(len(targets)):
