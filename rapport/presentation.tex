@@ -497,7 +497,7 @@
     \scalebox{.5}{
       \centering
       \begin{tikzpicture}[scale=0.9]
-      
+
         \coordinate (A) at (-10,-2);
         \coordinate (B) at (-6,-2);
         \coordinate (C) at (-6,2);
@@ -578,9 +578,9 @@
             \begin{tikzpicture}
 
             % Automate de départ : fantastique2
-            
+
             \node[minimum width = 2.5em] (B) at (-3.5,0) {};
-            
+
             \draw[thick,->,>=latex] (B) to[out=165,in=195,looseness=8] node[midway, left]{$(\mathfrak{mdmd})^*$} (B);
 
             \coordinate (A1) at (0,0);
@@ -678,9 +678,9 @@
             \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
             \draw[thick,->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
             \draw[thick,->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
-            
+
             \draw[thick,->,>=latex] (-3.5, -9) to node[midway, above] {$(\mathfrak{mdmd})^*$} (-4.5, -9);
-            
+
             \coordinate (A2) at (-6, -9);
             \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {};
             \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$0|0$} (QA2);
@@ -1175,6 +1175,59 @@ def rec(start, prev, sources, targets, delta, rho):
 \end{frame}
 
 \section{Conclusion}
+
+\begin{frame}
+  \begin{figure}
+    \begin{center}
+      \begin{tikzpicture}[->,>=latex,node distance=25mm]
+        \begin{scope}[rotate=0]
+          \node[draw,circle] (a1) {~};%$a_1$};
+          \node[draw,circle] (a2) [above of=a1] {~};%$a_2$};
+          \node         (b0) [below of=a1,node distance=13mm] {};
+          \node[draw,circle] (b1) [right of=b0,node distance=14mm] {~};%$b_1$};
+          \node[draw,circle] (b2) [left of=b0,node distance=14mm] {~};%$b_2$};
+          \node[draw,circle] (b3) [below of=b0,node distance=25mm] {~};%$b_3$};
+          \path	(a1)	edge[bend left=10]		node[align=center,left]	{\(1|1\)}				(a2)
+          (a2)	edge[bend left=10]		node[align=center,right]	{\(0|1\)\\\(1|0\)\\\(2|2\)}	(a1)
+          (b1)	edge[bend left=10]		node[align=center,below]	{\(1|0\)}				(b2)
+          (b2)	edge[bend left=10]		node[align=center,above]	{\(0|1\)}				(b1)
+          (b1)	edge[bend left=10]		node[align=center,below right=-.1]	{\(2|1\)}		(b3)
+          (b3)	edge[bend left=10]		node[align=center,above left=-.1]	{\(1|2\)}		(b1)
+          (b2)	edge[bend left=10]		node[align=center,above right=-.1]	{\(1|2\)}		(b3)
+          (b3)	edge[bend left=10]		node[align=center,below left=-.1]	{\(2|1\)}		(b2)
+          (b3)	edge[loop below]		node[align=center]{\(0|0\)}						(b3);
+          \path	[red]
+          (a1)	edge node[align=center,pos=.35,above right=-.1]		{\(2|0\)}	(b1)
+          (a1)	edge node[align=center,pos=.35,above left=-.1]			{\(0|2\)}	(b2)
+          (b1)	edge[bend right=40] node[align=center,pos=.75,right]	{\(0|2\)}   (a2)
+          (b2)	edge[bend left=40] node[align=center,pos=.75,left]		{\(2|0\)}	(a2);
+        \end{scope}
+        \begin{scope}[->,>=latex,node distance=28mm,xshift=-8cm,yshift=8mm]
+          \node[draw,circle] (a1) {~};%$3$};
+          \node[draw,circle] (a2) [right of=a1,node distance=36mm] {~};%$5$};
+          \node         (b0) [right of=a1,node distance=18mm] {};
+          \node[draw,circle] (b1) [below of=b0,node distance=10mm] {~};%$4$};
+          \node[draw,circle] (b2) [below of=b1,node distance=18mm] {~};%$2$};
+          \node[draw,circle] (b3) [below of=b2,node distance=18mm] {~};%$1$};
+          \path	(a2)	edge[bend right=40]		node[align=center,above]	{\(0|0\)\\\(1|2\)\\\(2|1\)}	(a1)
+          (b1)	edge[bend left=10]		node[align=center,right]	{\(0|1\)}				(b2)
+          (b2)	edge[bend left=10]		node[align=center,left]	{\(2|0\)}				(b1)
+          (b2)	edge[bend left=10]		node[align=center,right]	{\(0|2\)}				(b3)
+          (b3)	edge[bend left=10]		node[align=center,left]	{\(1|0\)}				(b2)
+          (b1)	edge[loop above]		node[align=center]		{\(1|2\)}				(b1)
+          (b3)	edge[loop below]		node[align=center]		{\(2|1\)}				(b3);
+          \path	[red]
+          (a1)	edge node[align=center,above]							{\(0|1\)}	(b1)
+          (a1)	edge[bend right=15] node[align=center,pos=.6,below left=-.1]	{\(2|2\)}	(b2)
+          (a1)	edge[bend right=30] node[align=center,pos=.7,below left=-.1]	{\(1|0\)}	(b3)
+          (b1)	edge node[align=center,above]							{\(2|0\)}   (a2)
+          (b2)	edge[bend right=15] node[align=center,pos=.4,below right=-.1]	{\(1|1\)}   (a2)
+          (b3)	edge[bend right=30] node[align=center,pos=.3,below right=-.1]	{\(0|2\)}   (a2);
+        \end{scope}
+      \end{tikzpicture}
+    \end{center}
+  \end{figure}
+\end{frame}
 
 \begin{frame}[allowframebreaks]
   \frametitle{Références}
