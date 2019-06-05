@@ -562,7 +562,7 @@
         \draw[->,>=latex] (QD) to[out=120, in=150, looseness=8] node[midway, above left]{$0|0$} (QD);
       \end{tikzpicture}
     }
-    \caption{Les plus petits contre-exemples à une généralisation du théorème \ref{thm:K}. Le quatrième contre-exemple est l'automate inverse du premier. \label{fig:fantastiques}
+    \caption{Les plus petits contre-exemples à une généralisation du théorème. Le quatrième contre-exemple est l'automate inverse du premier. \label{fig:fantastiques}
     }
   \end{figure}
 \end{frame}
@@ -690,26 +690,26 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Une proposition d'extention de la $\mathfrak{md}$-réduction}
+  \frametitle{Une proposition d'extension de la $\mathfrak{md}$-réduction}
 
   \begin{defi}
-    Deux automates $\mathcal{A}$ et $\mathcal{B}$ sont \textbf{\textit{conjugués}} s'il existe des automates $\mathcal{C}$ et $\mathcal{D}$ tels que $\mathcal{A}=\mathcal{CD}$ et $\mathcal{B}=\mathcal{DC}$.
+    Deux automates $\mathcal{A}$ et $\mathcal{B}$ sont \textbf{\textit{conjugués}} s'il existe des automates~$\mathcal{C}$ et $\mathcal{D}$ tels que $\mathcal{A}=\mathcal{CD}$ et $\mathcal{B}=\mathcal{DC}$.
   \end{defi}
 
   \begin{defi}
-    Une paire d'automates duaux est $\mathfrak{mdc}$-réduite si elle est $\mathfrak{md}$-réduite et que les deux automates sont irréductibles.
+    Une paire d'automates duaux est $\mathfrak{mdc}$-réduite si elle et ses conjugués sont $\mathfrak{md}$-réduits.
     La $\mathfrak{mdc}$-réduction consiste à répéter la $\mathfrak{md}$-réduction de l'automate et de ses conjugués jusqu'à trouver des paires $\mathfrak{mdc}$-réduites.
   \end{defi}
 
 \end{frame}
 
 \begin{frame}
-  \frametitle{Objectif du projet~ii}
+  \frametitle{Objectif du projet~(ii)}
 
   Nous voulions donc prouver ou contredire la conjecture suivante.
 
   \begin{conj}
-    Un automate de Mealy biréversible engendre un groupe fini si et seulement sa $\mathfrak{mdc}$-réduction produit (au moins) un $\mathfrak{mdc}$-trivial.
+    Un automate de Mealy biréversible engendre un groupe fini si et seulement sa $\mathfrak{mdc}$-réduction produit (au moins) un automate trivial.
   \end{conj}
 
 \end{frame}
@@ -754,21 +754,21 @@
   \end{align*}
 
   On en déduit que tout élément de $\left<\mathcal{B}\mathcal{A}\right>$ s'écrit sous la forme
-  \[ \rho_q\circ\rho\circ\rho_p. \] Or il y a un nombre fini de $p\in\mathcal{Q}_\mathcal{B}$, de $q\in\mathcal{Q}_\mathcal{A}$ et par hypothèse de $\rho\in\left<\mathcal{AB}\right>$. On en conclut qu'il y en a un nombre fini.
+  \[ \rho_q\circ\rho\circ\rho_p. \] Or il y a un nombre fini de $p\in\mathcal{Q}_\mathcal{B}$, de $q\in\mathcal{Q}_\mathcal{A}$ et par hypothèse de $\rho\in\left<\mathcal{AB}\right>$. On en conclut que $\left<\mathcal{BA}\right>$ est fini.
 
 \end{frame}
 
 \begin{frame}
   \frametitle{Un premier résultat sur la $\mathfrak{mdc}$-réduction}
   \begin{prop}
-    Toute machine de Mealy engendre un (semi-)groupe fini si et seulement si son $\mathfrak{mdc}$-réduit engendre un (semi-)groupe fini.
+    Toute machine de Mealy engendre un (semi-)groupe fini si et seulement si ses $\mathfrak{mdc}$-réduits engendre un (semi-)groupe fini.
   \end{prop}
 
   \begin{prop}
-    Toute machine de Mealy $\mathfrak{mdc}$-trivial engendre un (semi-)groupe fini.
+    Toute machine de Mealy $\mathfrak{mdc}$-triviale engendre un (semi-)groupe fini.
   \end{prop}
 
-  Nous avons donc prouvé une des implications de la conjecture~\ref{conj:birev-mdc}.
+  Nous avons donc prouvé une des implications de la conjecture.
 \end{frame}
 
 \section{Algorithme de Factorisation}
@@ -780,7 +780,7 @@
   \end{prop}
 
   \begin{proof}
-    Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in \mathfrak{S}(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\cdot\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho_{2,r}\circ\rho_{1,p}$.
+    Pour chaque état $(p, r)$ de $\mathcal{A}$, $\rho_{(p, r)}\in \mathfrak{S}(\Sigma)$. Comme $\mathcal{A}=\mathcal{A}_1\mathcal{A}_2$, on a l'égalité $\rho_{(p, r)}=\rho_{2,r}\circ\rho_{1,p}$.
 
     Or $\rho_{(p, r)}$ est une bijection donc $\rho_{2,r}$ est surjective et ${\rho_{1,p}}$ est injective. Or puisque ce sont des fonctions de $\Sigma$ dans $\Sigma$ qui est fini on a l'équivalence
     \[ injective \iff surjective \iff bijective. \]
@@ -814,7 +814,7 @@
         \draw [->,>=latex] (-0.5, 0) node[left] {$p$} to (0.5, 0) node[right] {$q$};
         \draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
       \end{tikzpicture}
-      \caption{Une flèche de l'automate $\mathcal{M}$}
+      \caption{Une flèche de l'automate~$\mathcal{M}$}
     \end{subfigure}
     ~
     \begin{subfigure}[b]{0.4\textwidth}
@@ -954,7 +954,7 @@ def rec(start, prev, sources, targets, delta, rho):
 \begin{frame}
   On atteint des temps d'exécutions très raisonnables.
 
-  On constate que le nombre d'automates biréversible est très grand. Pour pouvoir tous les analyser, il serait préférable de se contenter de les regarder à isomorphime près.
+  On constate que le nombre d'automates biréversibles est très grand. Pour pouvoir tous les analyser, il serait préférable de se contenter de les regarder à isomorphime près.
 
   Pour ce faire, nous avons utilisé la bibliothèque de graphe Nauty~\cite{Nauty}.
 \end{frame}
