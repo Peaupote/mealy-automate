@@ -487,6 +487,7 @@
   \end{thm}
 
   Le but du projet était d'essayer d'étendre ce résultat à des classes d'automates plus grandes.
+  
 \end{frame}
 
 \begin{frame}
@@ -711,6 +712,56 @@
   \begin{conj}
     Un automate de Mealy biréversible engendre un groupe fini si et seulement sa $\mathfrak{mdc}$-réduction produit (au moins) un automate trivial.
   \end{conj}
+
+ \begin{figure}[!ht]
+ 	%\centering
+ 	\scalebox{0.5}{
+ 		\begin{tikzpicture}
+ 		\coordinate (A) at (0,10);
+ 		\coordinate (B) at (0,8);
+ 		\coordinate (C1) at (-3,6);
+ 		\coordinate (C2) at (0,6);
+ 		\coordinate (C3) at (3,6);
+ 		\coordinate (D1) at (-3,4);
+ 		\coordinate (D2) at (0,4);
+ 		\coordinate (D3) at (3,4);
+ 		\coordinate (E1) at (-3,2);
+ 		\coordinate (E2) at (0,2);
+ 		\coordinate (E3) at (3,2);
+ 		\coordinate (F1) at (-3,0);
+ 		\coordinate (F2) at (0,0);
+ 		\coordinate (F3) at (3,0);
+ 		\node[minimum width = 2em] (QA) at (A) {$\mathcal{A}$};
+ 		\node[minimum width = 2em] (QB) at (B) {};
+ 		\node[minimum width = 2em] (QC1) at (C1) {$\mathcal{A}_1\mathcal{B}_1$};
+ 		\node[minimum width = 2em] (QC2) at (C2) {$\mathcal{A}_2\mathcal{B}_2$};
+ 		\node[minimum width = 2em] (QC3) at (C3) {$\mathcal{A}_3\mathcal{B}_3$};
+ 		\node[minimum width = 2em] (QD1) at (D1) {$\mathcal{B}_1\mathcal{A}_1$};
+ 		\node[minimum width = 2em] (QD2) at (D2) {$\mathcal{B}_2\mathcal{A}_2$};
+ 		\node[minimum width = 2em] (QD3) at (D3) {$\mathcal{B}_3\mathcal{1}_3$};
+ 		\node[minimum width = 2em] (QE1) at (E1) {};
+ 		\node[minimum width = 2em] (QE2) at (E2) {};
+ 		\node[minimum width = 2em] (QE3) at (E3) {};
+ 		\node[minimum width = 2em] (QF1) at (F1) {};
+ 		\node[minimum width = 2em] (QF2) at (F2) {};
+ 		\node[minimum width = 2em] (QF3) at (F3) {};
+ 		
+ 		\draw[thick,->,>=latex] (QA) to node[midway, right] {$(\mathfrak{mdmd})^*$} (QB);
+ 		\draw[thick,->,>=latex] (QB) to node[midway, above left] {} (QC1);
+ 		\draw[thick,->,>=latex] (QB) to node[midway, right] {} (QC2);
+ 		\draw[thick,->,>=latex] (QB) to node[midway, above right] {} (QC3);
+ 		\draw[thick,->,>=latex] (QC1) to node[midway, right] {$\mathfrak{c}$} (QD1);
+ 		\draw[thick,->,>=latex] (QC2) to node[midway, right] {$\mathfrak{c}$} (QD2);
+ 		\draw[thick,->,>=latex] (QC3) to node[midway, right] {$\mathfrak{c}$} (QD3);
+ 		\draw[thick,->,>=latex] (QD1) to node[midway, right] {$(\mathfrak{mdmd})^*$} (QE1);
+ 		\draw[thick,->,>=latex] (QD2) to node[midway, right] {$(\mathfrak{mdmd})^*$} (QE2);
+ 		\draw[thick,->,>=latex] (QD3) to node[midway, right] {$(\mathfrak{mdmd})^*$} (QE3);
+ 		\draw[thick,->,>=latex] (QE2) to node[midway, above left] {} (QF1);
+ 		\draw[thick,->,>=latex] (QE2) to node[midway, right] {} (QF2);
+ 		\draw[thick,->,>=latex] (QE2) to node[midway, above right] {} (QF3);
+ 		\end{tikzpicture}
+ 	}
+ \end{figure}
 
 \end{frame}
 
