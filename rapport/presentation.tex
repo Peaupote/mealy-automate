@@ -29,7 +29,7 @@
 
 \begin{document}
 \author{Maxime Flin  \& Tristan François}
-\title{\`A propos du problème de finitude des groupes d'automates biréversibles}
+\title{\`A propos du problème de finitude \\ des groupes d'automates biréversibles}
 % \subtitle{}
 % \logo{}
 % \institute{}
@@ -148,7 +148,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Automate inversible, réversible et biréversible~i}
+  \frametitle{Automate inversible, réversible et biréversible~(i)}
 
   \begin{defi}
     Soit $\mathcal{A}=\left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ un automate de Mealy.
@@ -159,7 +159,7 @@
   \end{defi}
 
   \begin{figure}[!ht]
-    \begin{subfigure}[b]{0.4\textwidth}
+    \begin{subfigure}[b]{0.45\textwidth}
       \centering
       \begin{tabular}{|r|r|r|}
         \hline
@@ -173,7 +173,7 @@
       \caption{$\delta$ d'un automate réversible.}
     \end{subfigure}
     ~
-    \begin{subfigure}[b]{0.4\textwidth}
+    \begin{subfigure}[b]{0.45\textwidth}
       \centering
       \begin{tabular}{|r|r|r|}
         \hline
@@ -192,7 +192,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Automate inversible, réversible et biréversible~ii}
+  \frametitle{Automate inversible, réversible et biréversible~(ii)}
 
   \begin{defi}
     Si une machine de Mealy $\mathcal{M}$ est inversible, alors on peut construire son \textbf{\textit{inverse}}, noté $\mathcal{M}^{-1}$, en remplaçant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $p^{-1}\overset{y|x}{\longrightarrow}q^{-1}$.
@@ -233,7 +233,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Automate inversible, réversible et biréversible~iii}
+  \frametitle{Automate inversible, réversible et biréversible~(iii)}
 
   \begin{defi}
     Si une machine de Mealy est réversible, alors on peut construire son \textbf{\textit{dual}}, noté $\mathfrak{d}\mathcal{M}$, en remplacant chaque flèche $p\overset{x|y}{\longrightarrow}q$ par $x\overset{p|q}{\longrightarrow}y$.
@@ -274,7 +274,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Automate inversible, réversible et biréversible~iv}
+  \frametitle{Automate inversible, réversible et biréversible~(iv)}
 
   \begin{defi}
     On dit que $\mathcal{A}$ est \textbf{biréversible} s'il est inversible, réversible et que son inverse est réversible.
@@ -284,9 +284,9 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Produit d'automates~i}
+  \frametitle{Produit d'automates~(i)}
   \begin{defi}
-    Soient $\mathcal{A} = \left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B} = \left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates sur le même alphabet. On appelle \textbf{\textit{automate produit}} la machine $\mathcal{AB} = \left(\mathcal{Q}\times\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ avec
+    Soient $\mathcal{A} = \left(\mathcal{Q}, \Sigma, \delta, \rho\right)$ et $\mathcal{B} = \left(\mathcal{Q'}, \Sigma, \delta', \rho'\right)$ deux automates. On appelle \textbf{\textit{automate produit}} la machine $\mathcal{AB} = \left(\mathcal{Q}\times\mathcal{Q'}, \Sigma, \delta'', \rho''\right)$ avec
 
     \[ \delta_x''(p_0, p_1) = (\delta_x(p), \delta_{\rho_{p_0}(x)}'(q))\]
     et
@@ -295,9 +295,9 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Produit d'automates~ii}
+  \frametitle{Produit d'automates~(ii)}
   \begin{figure}[h!]
-    \begin{subfigure}[b]{0.3\textwidth}
+    \begin{subfigure}[b]{0.35\textwidth}
       \centering
       \begin{tikzpicture}
         \draw [->,>=latex] (-0.5, 1) node[left] {$p_0$} to (0.5, 1) node[right] {$q_0$};
@@ -309,11 +309,11 @@
       \caption{En haut l'automate $\mathcal{A}$ et en bas $\mathcal{B}$.}
     \end{subfigure}
     ~
-    \begin{subfigure}[b]{0.3\textwidth}
+    \begin{subfigure}[b]{0.35\textwidth}
       \centering
       \begin{tikzpicture}
-        \draw [->,>=latex] (-0.5, 0) node[left] {$p_0p_1$} to (0.5, 0) node[right] {$q_0q_1$};
-        \draw [->,>=latex] (0, 0.5) node[above] {$x$} to (0, -0.5) node[below] {$y$};
+        \draw [->,>=latex] (-0.5, 1) node[left] {$p_0p_1$} to (0.5, 1) node[right] {$q_0q_1$};
+        \draw [->,>=latex] (0, 1.5) node[above] {$x$} to (0, 0.5) node[below] {$y$};
       \end{tikzpicture}
       \caption{Une flèche de l'automate $\mathcal{AB}$.}
     \end{subfigure}
@@ -322,9 +322,9 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{(Semi-)groupe engendré par un automate de Mealy~i}
+  \frametitle{(Semi-)groupe engendré par un automate de Mealy~(i)}
 
-  On peut étendre l'ensemble de définition de $\rho$ à $\Sigma^*$ par induction comme suit.
+  On peut étendre l'ensemble de définition de $\rho$ à $\Sigma^*$ par induction :
 
   Soient $p\in\mathcal{Q}$, $x\in\Sigma$ et $\textbf{u}\in\Sigma^*$
   \begin{align*}
@@ -367,15 +367,15 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{(Semi-)groupe engendré par un automate de Mealy~ii}
+  \frametitle{(Semi-)groupe engendré par un automate de Mealy~(ii)}
 
   \begin{defi}
     On définit le \textbf{semi-groupe d'automate engendré par $\mathcal{A}$} comme
     \begin{equation*}
-      \left<\mathcal{A}\right>_+=\left<\rho_p, \forall p\in\mathcal{Q}\right>
+      \left<\mathcal{A}\right>_+=\left<\rho_p, p\in\mathcal{Q}\right>_+
     \end{equation*}
 
-    Si l'automate $\mathcal{A}$ est inversible, alors on peut aussi considérer l'inverse des $\rho_p$. Dans ce cas, l'automate engendre un groupe noté $\left<\mathcal{A}\right>$.
+    Si l'automate $\mathcal{A}$ est inversible, alors on peut aussi considérer l'inverse des $\rho_p$. L'automate engendre un groupe noté $\left<\mathcal{A}\right>$.
 
   \end{defi}
 \end{frame}
@@ -481,12 +481,12 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Objectif du Projet~i}
+  \frametitle{Objectif du Projet~(i)}
   \begin{thm}[Klimann~\cite{Klimann13}]
     Tout automate inversible-réversible à deux lettres et/ou deux états engendre un groupe fini si et seulement s'il est $\mathfrak{md}$-trivial.
   \end{thm}
 
-  Le but du projet était d'essayer d'étendre cette conjecture à des classes d'automates plus grandes.
+  Le but du projet était d'essayer d'étendre ce résultat à des classes d'automates plus grandes.
 \end{frame}
 
 \begin{frame}
@@ -496,6 +496,7 @@
     \scalebox{.5}{
       \centering
       \begin{tikzpicture}[scale=0.9]
+      
         \coordinate (A) at (-10,-2);
         \coordinate (B) at (-6,-2);
         \coordinate (C) at (-6,2);
@@ -576,6 +577,10 @@
             \begin{tikzpicture}
 
             % Automate de départ : fantastique2
+            
+            \node[minimum width = 2.5em] (B) at (-3.5,0) {};
+            
+            \draw[thick,->,>=latex] (B) to[out=165,in=195,looseness=8] node[midway, left]{$(\mathfrak{mdmd})^*$} (B);
 
             \coordinate (A1) at (0,0);
             \coordinate (B1) at (0:3);
@@ -600,7 +605,7 @@
 
             % égal
 
-            \draw (4,0) node {$=$};
+            \draw (4,0) node {\huge $=$};
 
             % Décomposition en produit
 
@@ -613,7 +618,7 @@
             \draw[thick,->,>=latex] (QB2) to[out=250,in=290,looseness=6] node[midway, below]{$0|2$} (QB2);
             \draw[thick,->,>=latex] (QB2) to[bend right] node[midway, right]{\begin{tabular}{c} $1|0$ \\ $2|1$ \end{tabular}} (QA2);
 
-            \draw (8,0) node {$\times$};
+            \draw (8,0) node {\huge $\times$};
 
             \coordinate (A3) at (10,2);
             \coordinate (B4) at (10,-2);
@@ -639,7 +644,7 @@
             \draw[thick,->,>=latex] (QB4) to[out=250,in=290,looseness=6] node[midway, below]{$1|0$} (QB4);
             \draw[thick,->,>=latex] (QB4) to[bend right] node[midway, right]{\begin{tabular}{c} $0|1$ \\ $2|2$ \end{tabular}} (QA3);
 
-            \draw (8,-9) node {$\times$};
+            \draw (8,-9) node {\huge $\times$};
 
             \coordinate (A2) at (10,-7);
             \coordinate (B2) at (10,-11);
@@ -652,7 +657,7 @@
 
             %égalité
 
-            \draw (4,-9) node {$=$};
+            \draw (4,-9) node {\huge $=$};
 
             %conjugué
 
@@ -672,6 +677,12 @@
             \draw[thick,->,>=latex] (QC2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|1$ \\ $2|0$ \end{tabular}} (QA2);
             \draw[thick,->,>=latex] (QD2) to[out=295,in=335,looseness=6] node[midway, below right]{$1|2$} (QD2);
             \draw[thick,->,>=latex] (QD2) to[bend left] node[midway, below]{\begin{tabular}{c} $0|0$ \\ $2|1$ \end{tabular}} (QB2);
+            
+            \draw[thick,->,>=latex] (-3.5, -9) to node[midway, above] {$(\mathfrak{mdmd})^*$} (-4.5, -9);
+            
+            \coordinate (A2) at (-6, -9);
+            \node[draw,thick,circle,minimum width = 2.5em] (QA2) at (A2) {};
+            \draw[thick,->,>=latex] (QA2) to[out=70,in=110,looseness=6] node[midway, above]{$0|0$} (QA2);
             \end{tikzpicture}
         }
     \end{center}
